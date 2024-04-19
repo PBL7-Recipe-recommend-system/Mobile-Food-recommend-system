@@ -6,24 +6,36 @@ const Splash = ({ navigation }) => {
   const onPressButton = () => {
     navigation.navigate("Login");
   };
+
   return (
     <ImageBackground source={image} resizeMode="cover" style={styles.image}>
       <View style={styles.container}>
         <View style={styles.title}>
           <Image source={logo}></Image>
-          <Text className="text-white text-2xl">100K+ Tasty Recipe</Text>
+          <Text className="text-2xl" style={{ color: "#fff" }}>
+            100K+ Tasty Recipe
+          </Text>
         </View>
         <View style={[styles.content]}>
-          <Text className="text-white text-[50px] font-semibold text-center mb-3">
+          <Text
+            className="text-[50px] font-semibold text-center mb-3"
+            style={{ color: "#fff" }}
+          >
             Get{"\n"}Cooking
           </Text>
-          <Text className="text-white text-center text-[16px] leading-6">
+          <Text
+            className="text-center text-[16px] leading-6"
+            style={{ color: "#fff" }}
+          >
             Simple way to findTasty Recipe
           </Text>
         </View>
         <CustomButton
           title="Start Cooking"
           onPressButton={onPressButton}
+          width={243}
+          height={54}
+          customStyle={styles.button}
         ></CustomButton>
       </View>
     </ImageBackground>
@@ -40,14 +52,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  text: {
-    fontFamily: "Poppins_400Regular",
-    color: "white",
-    fontSize: 42,
-    lineHeight: 84,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   content: {
     flex: 1,
   },
@@ -56,6 +60,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    position: "absolute",
+    top: "80%",
   },
 });
 export default Splash;
