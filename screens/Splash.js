@@ -27,7 +27,7 @@ const Splash = ({ navigation }) => {
             className="text-center text-[16px] leading-6"
             style={{ color: "#fff" }}
           >
-            Simple way to findTasty Recipe
+            Simple way to find Tasty Recipe
           </Text>
         </View>
         <CustomButton

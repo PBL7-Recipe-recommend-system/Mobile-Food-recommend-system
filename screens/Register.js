@@ -1,13 +1,6 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import SocialConnect from "../components/SocialConnect";
 import CustomButton from "../components/CustomButton";
 import AndroidWrapper from "../wrappers/AndroidWrapper";
 import CheckBox from "expo-checkbox";
@@ -15,8 +8,13 @@ import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 const Register = () => {
   const navigation = useNavigation();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState({
+    password: false,
+    confirmPassword: false,
+  });
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -27,7 +25,8 @@ const Register = () => {
 
   return (
     <AndroidWrapper>
-      <SafeAreaView style={register.container}>
+      {console.log(password)}
+      <View style={register.container}>
         <View style={register.title}>
           <Text className="text-2xl font-bold">Create an account</Text>
           <Text className="text-sm">
@@ -42,7 +41,7 @@ const Register = () => {
                 style={register.input}
                 // onChangeText={onChangeNumber}
                 // value={number}
-                placeholder="Enter email"
+                placeholder="Enter name"
               />
             </View>
             <View className="mt-4">
@@ -59,21 +58,29 @@ const Register = () => {
               <Text style={register.label}>Enter Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
+                  clearTextOnFocus={false}
                   style={register.input}
                   // onChangeText={onChangeNumber}
                   // value={number}
                   placeholder="Enter Password"
-                  keyboardType="default"
-                  secureTextEntry={!showPassword}
-                  textContentType="password"
+                  secureTextEntry={!showPassword.password}
+                  textContentType="none"
                   autoCorrect={false}
+                  autoCapitalize="none"
+                  value={password}
+                  onChangeText={setPassword}
                 />
                 <MaterialCommunityIcons
-                  name={showPassword ? "eye-off" : "eye"}
+                  name={showPassword.password ? "eye" : "eye-off"}
                   size={24}
                   color="#aaa"
                   style={register.eyeIcon}
-                  onPress={toggleShowPassword}
+                  onPress={() =>
+                    setShowPassword({
+                      ...showPassword,
+                      password: !showPassword.password,
+                    })
+                  }
                 />
               </View>
             </View>
@@ -81,21 +88,29 @@ const Register = () => {
               <Text style={register.label}>Confirm Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
+                  clearTextOnFocus={false}
                   style={register.input}
                   // onChangeText={onChangeNumber}
                   // value={number}
                   placeholder="Enter Password"
-                  keyboardType="default"
-                  secureTextEntry={!showPassword}
-                  textContentType="password"
+                  secureTextEntry={!showPassword.confirmPassword}
+                  textContentType="none"
                   autoCorrect={false}
+                  autoCapitalize="none"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
                 />
                 <MaterialCommunityIcons
-                  name={showPassword ? "eye-off" : "eye"}
+                  name={showPassword.confirmPassword ? "eye" : "eye-off"}
                   size={24}
                   color="#aaa"
                   style={register.eyeIcon}
-                  onPress={toggleShowPassword}
+                  onPress={() =>
+                    setShowPassword({
+                      ...showPassword,
+                      confirmPassword: !showPassword.confirmPassword,
+                    })
+                  }
                 />
               </View>
             </View>
@@ -104,14 +119,14 @@ const Register = () => {
                 disabled={false}
                 value={toggleCheckBox}
                 onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                className="rounded-md ml-1 border-[#ff9c00]"
+                className="rounded-md ml-1"
               />
               <TouchableOpacity className="ml-1">
                 <Text className="text-orangeText">Accept term & Condition</Text>
               </TouchableOpacity>
             </View>
             <CustomButton title="Sign Up" width={"100%"} height={62} />
-            <SocialConnect />
+            {/* <SocialConnect /> */}
           </View>
           <View className="flex flex-row text-center items-center justify-center mt-2">
             <Text>Already a member?</Text>
@@ -123,7 +138,7 @@ const Register = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     </AndroidWrapper>
   );
 };
@@ -133,7 +148,7 @@ const register = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     alignItems: "center",
-    padding: 30,
+    paddingHorizontal: 30,
     marginTop: 30,
     marginBottom: 30,
     alignItems: "flex-start",
