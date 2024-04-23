@@ -4,49 +4,64 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
-import AndroidWrapper from "../wrappers/AndroidWrapper";
 import SocialConnect from "../components/SocialConnect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome6 } from "@expo/vector-icons";
 import { useTogglePasswordVisibility } from "../hook/useTogglePasswordVisibility";
 import global from "../Styles";
 import ErrorText from "../components/ErrorText";
+import {
+  validateEmail,
+  validateLoginForm,
+  validatePassword,
+} from "../utils/validation";
+import AppWrapper from "../wrappers/AppWrapper";
+import { BackButton } from "../components/BackButton";
+import { HealthStepForm } from "./HealthInit/HealthStepForm";
+import { KeyboardWrapper } from "../wrappers/KeyboardWrapper";
+import { ErrorEmailMessage } from "../constants/messages";
+
 const Login = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
 
-  const validatePassword = (password) => {
-    if (password === "") return true;
-    // Regular expression for password validation
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/;
-    return passwordRegex.test(password);
-  };
-
-  const validateEmail = (email) => {
-    // Regular expression for email validation
-    if (email === "") return true;
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
+  useEffect(() => {
+    const resetForm = () => {
+      setIsValidEmail(true);
+      setIsValidPassword(true);
+    };
+    resetForm();
+  }, []);
   const handleChangeEmail = (text) => {
+    setEmail(text);
     setIsValidEmail(validateEmail(text));
   };
   const handleChangePassword = (text) => {
+    setPassword(text);
     setIsValidPassword(validatePassword(text));
   };
 
+  const handleSubmitForm = () => {
+    if (email === "") setIsValidEmail(false);
+    if (password === "") setIsValidPassword(false);
+    if (validateLoginForm(email, password)) {
+    } else {
+      navigation.navigate("HealthStepForm");
+      console.log("Invalid form");
+    }
+  };
+
   return (
-    <AndroidWrapper>
-      <View style={loginStyles.container}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="arrow-left" size={24} color="#129575" />
-        </TouchableOpacity>
+    <AppWrapper>
+      <View style={global.container}>
+        <BackButton navigation={navigation} />
         <View style={loginStyles.title}>
           <Text className="text-4xl font-bold">Hello,</Text>
           <Text className="text-2xl">Welcome back!</Text>
@@ -63,13 +78,10 @@ const Login = ({ navigation }) => {
                 keyboardType="email-address"
                 onChangeText={handleChangeEmail}
               />
-              <ErrorText
-                isValid={isValidEmail}
-                message={"Please enter a valid email address"}
-              />
+              <ErrorText isValid={isValidEmail} message={ErrorEmailMessage} />
             </View>
             <View className="mt-3">
-              <Text style={loginStyles.label}>Enter Password</Text>
+              <Text style={loginStyles.label}>Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
                   clearTextOnFocus={false}
@@ -103,8 +115,12 @@ const Login = ({ navigation }) => {
                 Forgot password?
               </Text>
             </TouchableOpacity>
-            <CustomButton title="Sign In" width={"100%"} height={62} />
-
+            <CustomButton
+              title="Sign In"
+              width={"100%"}
+              height={62}
+              onPressButton={handleSubmitForm}
+            />
             <SocialConnect />
           </View>
 
@@ -119,19 +135,11 @@ const Login = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </AndroidWrapper>
+    </AppWrapper>
   );
 };
 
 const loginStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    textAlign: "center",
-    alignItems: "center",
-    paddingHorizontal: 30,
-    marginVertical: 30,
-    alignItems: "flex-start",
-  },
   title: {
     marginVertical: 30,
   },

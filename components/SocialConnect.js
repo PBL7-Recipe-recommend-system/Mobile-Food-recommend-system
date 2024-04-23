@@ -4,14 +4,14 @@ import facebook from "../assets/icons/facebook.png";
 
 const SocialConnect = () => {
   return (
-    <View className="flex-auto">
+    <View>
       <View style={styles.divider}>
         <View style={[styles.line, { marginLeft: 40 }]}></View>
         <Text style={styles.text}>Or Sign In With</Text>
         <View style={[styles.line, { marginRight: 40 }]}></View>
       </View>
 
-      <View className="flex-auto flex flex-row items-start justify-center ">
+      <View className=" flex flex-row items-start justify-center ">
         <View style={styles.iconContainer}>
           <Image style={styles.icon} source={google}></Image>
         </View>
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   divider: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 10,
+    marginTop: 10,
   },
   line: {
     flex: 1,
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#D9D9D9",
   },
   text: {
-    marginHorizontal: 10,
     fontSize: 11,
     color: "#D9D9D9",
     fontWeight: "bold",
@@ -55,6 +54,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 3,
     marginHorizontal: 12,
+    marginTop: 12,
     justifyContent: "center",
     alignItems: "center",
   },

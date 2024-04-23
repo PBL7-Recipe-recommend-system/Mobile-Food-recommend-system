@@ -6,7 +6,7 @@ const ErrorText = ({ isValid, message }) => {
     <View>
       <Text
         style={[isValid ? { color: "#fff" } : { color: "red" }]}
-        className="mt-1 ml-1"
+        className="mt-1 text-[12px] font-light"
       >
         {message}
       </Text>

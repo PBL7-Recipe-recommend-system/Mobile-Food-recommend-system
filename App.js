@@ -3,27 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import Splash from "./screens/Splash";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
+import { AppNavigation } from "./navigation/AppNavigation";
 export default function App() {
   const Stack = createNativeStackNavigator();
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Start"
-          component={Splash}
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  return <AppNavigation />;
 }
