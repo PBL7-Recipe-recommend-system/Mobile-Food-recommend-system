@@ -16,6 +16,10 @@ export const validateLoginForm = (email, password) => {
   return validateEmail(email) && validatePassword(password);
 };
 
+export const validateConfirmPassword = (password, confirmPassword) => {
+  return password === confirmPassword;
+};
+
 export const validateRegisterForm = (
   name,
   email,

@@ -1,27 +1,37 @@
-import React, { useRef, useState } from "react";
-import AndroidWrapper from "../../wrappers/AppWrapper";
+import { useRef, useState, useEffect } from "react";
 import {
   View,
-  FlatList,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   Platform,
 } from "react-native";
-import global from "../../Styles";
 import { BackButton } from "../../components/BackButton";
 import Wizard, { WizardRef } from "react-native-wizard";
 import { NextButton } from "../../components/NextButton";
 import { Age } from "./Age";
 import { Weight } from "./Weight";
-import { Birthday, Height } from "./Height";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { Gender } from "./Gender";
+import { Height } from "./Height";
+import { Meals, WorkoutInput } from "./WorkoutInput";
 export const HealthStepForm = ({ navigation }) => {
   const wizard = useRef(null);
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isLastStep, setIsLastStep] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [weightSource, setWeightSource] = useState([]);
+  const [heightSource, setHeightSource] = useState([]);
+  useEffect(() => {
+    async function fetchData() {
+      const dataWeight = Array.from({ length: 150 }, (_, i) => i + 1);
+      const dataHeight = Array.from({ length: 150 }, (_, i) => i + 1);
+      setHeightSource(dataHeight);
+      setWeightSource(dataWeight);
+    }
+
+    fetchData();
+  }, []);
 
   const onNextStep = () => {
     wizard.current.next();
@@ -38,13 +48,16 @@ export const HealthStepForm = ({ navigation }) => {
       content: <Age />,
     },
     {
-      content: <Weight />,
+      content: <Weight dataSource={weightSource} />,
     },
     {
-      content: <Height />,
+      content: <Height dataSource={heightSource} />,
     },
     {
       content: <Gender />,
+    },
+    {
+      content: <WorkoutInput />,
     },
   ];
   return (
@@ -85,6 +98,8 @@ export const HealthStepForm = ({ navigation }) => {
               currentStep={({ currentStep, isLastStep, isFirstStep }) => {
                 setCurrentStep(currentStep);
               }}
+              nextStepAnimation="slideRight"
+              prevStepAnimation="slideLeft"
             />
           </View>
         </SafeAreaView>

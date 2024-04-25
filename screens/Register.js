@@ -3,11 +3,15 @@ import { TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../components/CustomButton";
 import CheckBox from "expo-checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import global from "../Styles";
 import ErrorText from "../components/ErrorText";
-import { validateEmail, validatePassword } from "../utils/validation";
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validatePassword,
+} from "../utils/validation";
 import { useTogglePasswordVisibility } from "../hook/useTogglePasswordVisibility";
 import AppWrapper from "../wrappers/AppWrapper";
 const Register = () => {
@@ -43,6 +47,17 @@ const Register = () => {
     });
     setIsValidData({ ...isValidData, password: validatePassword(text) });
   };
+
+  const handleChangeConfirmPassword = (text) => {
+    setDataForm({
+      ...dataForm,
+      confirmPassword: text,
+    });
+    setIsValidData({
+      ...isValidData,
+      confirmPassword: validateConfirmPassword(dataForm.password, text),
+    });
+  };
   const handleSubmitForm = () => {
     setIsValidData((prevData) => ({
       ...prevData,
@@ -54,6 +69,10 @@ const Register = () => {
         dataForm.password === dataForm.confirmPassword,
     }));
     console.log(isValidData);
+  };
+
+  const allFieldsValid = () => {
+    return Object.values(isValidData).every((value) => value === true);
   };
 
   return (
@@ -100,7 +119,7 @@ const Register = () => {
               />
             </View>
             <View className="mt-1">
-              <Text style={register.label}>Enter Password</Text>
+              <Text style={register.label}>Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
                   clearTextOnFocus={false}
@@ -108,7 +127,7 @@ const Register = () => {
                     isValidData.password ? global.input : global.errorInput
                   }
                   textContentType="newPassword"
-                  placeholder="Enter Password"
+                  placeholder="Enter password"
                   secureTextEntry={passwordVisibility}
                   autoCorrect={false}
                   autoCapitalize="none"
@@ -140,14 +159,12 @@ const Register = () => {
                       ? global.input
                       : global.errorInput
                   }
-                  placeholder="Confirm Password"
+                  placeholder="Confirm password"
                   secureTextEntry={passwordVisibility}
                   textContentType="none"
                   autoCorrect={false}
                   autoCapitalize="none"
-                  onChangeText={(text) => {
-                    setDataForm({ ...dataForm, confirmPassword: text });
-                  }}
+                  onChangeText={handleChangeConfirmPassword}
                 />
                 <TouchableOpacity
                   style={register.eyeIcon}
@@ -183,6 +200,7 @@ const Register = () => {
               width={"100%"}
               height={62}
               onPressButton={handleSubmitForm}
+              disabled={!allFieldsValid()}
             />
           </View>
           <View className="flex flex-row text-center items-center justify-center mt-2">

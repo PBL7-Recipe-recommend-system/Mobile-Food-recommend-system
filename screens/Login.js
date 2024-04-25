@@ -20,8 +20,6 @@ import {
 } from "../utils/validation";
 import AppWrapper from "../wrappers/AppWrapper";
 import { BackButton } from "../components/BackButton";
-import { HealthStepForm } from "./HealthInit/HealthStepForm";
-import { KeyboardWrapper } from "../wrappers/KeyboardWrapper";
 import { ErrorEmailMessage } from "../constants/messages";
 
 const Login = ({ navigation }) => {
@@ -88,7 +86,7 @@ const Login = ({ navigation }) => {
                   style={isValidPassword ? global.input : global.errorInput}
                   onChangeText={handleChangePassword}
                   textContentType="newPassword"
-                  placeholder="Enter Password"
+                  placeholder="Enter password"
                   secureTextEntry={passwordVisibility}
                   autoCorrect={false}
                   autoCapitalize="none"
@@ -112,7 +110,7 @@ const Login = ({ navigation }) => {
             </View>
             <TouchableOpacity className="my-3 ml-1">
               <Text className="text-orangeText font-medium ">
-                Forgot password?
+                Forgot Password?
               </Text>
             </TouchableOpacity>
             <CustomButton
@@ -130,7 +128,7 @@ const Login = ({ navigation }) => {
               className="ml-1"
               onPress={() => navigation.navigate("Register")}
             >
-              <Text className="text-orangeText">Sign up</Text>
+              <Text className="text-orangeText">Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>

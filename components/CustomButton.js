@@ -1,12 +1,25 @@
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
 
-const CustomButton = ({ title, onPressButton, width, height, customStyle }) => {
+const CustomButton = ({
+  title,
+  onPressButton,
+  width,
+  height,
+  customStyle,
+  disabled,
+}) => {
   return (
     <TouchableHighlight
       activeOpacity={0.6}
       underlayColor="#71B1A1"
-      style={[styles.button, { width: width, height: height }, customStyle]}
+      style={[
+        styles.button,
+        { width: width, height: height },
+        customStyle,
+        disabled && styles.disabled,
+      ]}
       onPress={onPressButton}
+      disabled={disabled}
     >
       <Text style={styles.text}>{title}</Text>
     </TouchableHighlight>
@@ -26,6 +39,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontWeight: "bold",
+  },
+  disabled: {
+    backgroundColor: "#71B1A1",
   },
 });
 export default CustomButton;

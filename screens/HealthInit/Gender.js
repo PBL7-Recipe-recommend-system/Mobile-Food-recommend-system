@@ -95,14 +95,13 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: "green",
+    borderColor: "#129575",
     marginHorizontal: 30,
     marginVertical: 10,
   },
   icon: {
     width: 60,
     height: 60,
-    color: "green",
   },
   activeButton: {
     backgroundColor: "#129575",

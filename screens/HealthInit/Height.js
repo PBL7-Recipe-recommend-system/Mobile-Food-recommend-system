@@ -3,18 +3,7 @@ import { Text, View, Platform, StyleSheet } from "react-native";
 import { CustomScrollPicker } from "../../components/CustomScrollPicker";
 import { useEffect, useState } from "react";
 
-export const Height = () => {
-  const [heightSource, setHeightSource] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = Array.from({ length: 150 }, (_, i) => i + 1);
-      setHeightSource(data);
-    }
-
-    fetchData();
-  }, []);
-
+export const Height = ({ dataSource }) => {
   return (
     <View>
       <Text
@@ -28,7 +17,7 @@ export const Height = () => {
         style={Platform.OS === "ios" && styles.iosScrollPicker}
       >
         <CustomScrollPicker
-          dataSource={heightSource}
+          dataSource={dataSource}
           selectedIndex={4}
           label="Height"
         />

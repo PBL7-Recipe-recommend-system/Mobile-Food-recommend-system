@@ -41,11 +41,7 @@ export const Age = ({ navigation }) => {
         style={Platform.OS === "ios" && styles.iosText}
       >
         Please complete your profile
-      </Text>
-      <Text
-        className="text-[18px] font-light text-center"
-        style={Platform.OS === "ios" && styles.iosText}
-      >
+        {"\n"}
         What is your birthday?
       </Text>
       <View

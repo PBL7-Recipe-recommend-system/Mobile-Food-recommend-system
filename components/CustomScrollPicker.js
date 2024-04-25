@@ -1,6 +1,6 @@
 import React from "react";
 import ScrollPicker from "react-native-wheel-scrollview-picker";
-import { ScrollView, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export const CustomScrollPicker = ({ dataSource, selectedIndex }) => {
   return (

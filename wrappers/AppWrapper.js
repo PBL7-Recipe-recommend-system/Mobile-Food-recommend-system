@@ -6,6 +6,7 @@ const AppWrapper = ({ children }) => {
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         automaticallyAdjustKeyboardInsets={true}
+        showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
