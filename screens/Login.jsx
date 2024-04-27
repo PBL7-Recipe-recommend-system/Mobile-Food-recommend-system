@@ -45,13 +45,13 @@ const Login = ({ navigation }) => {
     setPassword(text);
     setIsValidPassword(validatePassword(text));
   };
-
   const handleSubmitForm = () => {
     if (email === "") setIsValidEmail(false);
     if (password === "") setIsValidPassword(false);
     if (validateLoginForm(email, password)) {
     } else {
       navigation.navigate("HealthStepForm");
+
       console.log("Invalid form");
     }
   };
@@ -66,7 +66,7 @@ const Login = ({ navigation }) => {
         </View>
         <View className="flex-auto justify-between">
           <View className="flex justify-between">
-            <View className="mt-8">
+            <View className="my-1">
               <Text style={loginStyles.label}>Email</Text>
               <TextInput
                 style={isValidEmail ? global.input : global.errorInput}
@@ -78,7 +78,7 @@ const Login = ({ navigation }) => {
               />
               <ErrorText isValid={isValidEmail} message={ErrorEmailMessage} />
             </View>
-            <View className="mt-3">
+            <View className="my-2">
               <Text style={loginStyles.label}>Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
@@ -108,7 +108,7 @@ const Login = ({ navigation }) => {
                 message={"Please enter a valid password"}
               />
             </View>
-            <TouchableOpacity className="my-3 ml-1">
+            <TouchableOpacity className="my-3 mx-1">
               <Text className="text-orangeText font-medium ">
                 Forgot Password?
               </Text>
@@ -125,7 +125,7 @@ const Login = ({ navigation }) => {
           <View className="flex flex-row text-center items-center justify-center">
             <Text>Don't have an account?</Text>
             <TouchableOpacity
-              className="ml-1"
+              className="ml-1 my-4"
               onPress={() => navigation.navigate("Register")}
             >
               <Text className="text-orangeText">Sign Up</Text>

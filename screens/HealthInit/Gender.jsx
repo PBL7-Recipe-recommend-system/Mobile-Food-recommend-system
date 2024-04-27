@@ -13,11 +13,13 @@ import femaleWhiteIcon from "../../assets/icons/female-icon-white.png";
 import maleWhiteIcon from "../../assets/icons/male-icon-white.png";
 const MALE = "male";
 const FEMALE = "female";
-export const Gender = () => {
-  const [selectedGender, setSelectedGender] = useState(null);
-
+export const Gender = ({ updateValue, defaultValue }) => {
+  const [selectedGender, setSelectedGender] = useState(defaultValue);
+  useEffect(() => {
+    updateValue(selectedGender);
+  }, [selectedGender]);
   return (
-    <View>
+    <View style={styles.container}>
       <Text
         className="text-[18px] font-light text-center mb-[24px]"
         style={Platform.OS === "ios" && styles.iosText}
@@ -25,7 +27,7 @@ export const Gender = () => {
         What is your gender ?
       </Text>
       <View
-        className="flex flex-row mt-[180px] "
+        className="flex flex-row mt-[196px] "
         style={Platform.OS === "ios" && styles.iosScrollPicker}
       >
         <View style={styles.buttonContainer}>
@@ -73,13 +75,17 @@ export const Gender = () => {
   );
 };
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 30,
+    alignItems: "center",
+  },
   iosText: {
     fontSize: 22,
   },
   iosScrollPicker: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 220,
   },
   buttonContainer: {
     display: "flex",

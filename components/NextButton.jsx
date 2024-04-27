@@ -3,7 +3,7 @@ import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
 
-export const NextButton = ({ percentage, onPress, navigation }) => {
+export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
   const size = 86;
   const strokewidth = 4;
   const center = size / 2;
@@ -60,7 +60,7 @@ export const NextButton = ({ percentage, onPress, navigation }) => {
           />
           <Circle
             ref={progressRef}
-            stroke="#129575"
+            stroke={disabled ? "rgba(18, 149, 117, 0.5)" : "#129575"}
             cx={center}
             cy={center}
             r={radius}
@@ -71,9 +71,10 @@ export const NextButton = ({ percentage, onPress, navigation }) => {
         </G>
       </Svg>
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, disabled && styles.disabled]}
         activeOpacity={0.6}
         onPress={onPress}
+        disabled={disabled}
       >
         <AntDesign name="right" size={24} color="#fff" />
       </TouchableOpacity>
@@ -86,11 +87,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    bottom: 100,
   },
   button: {
     position: "absolute",
     backgroundColor: "#129575",
     padding: 20,
     borderRadius: 100,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
