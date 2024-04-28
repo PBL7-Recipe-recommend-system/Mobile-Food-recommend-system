@@ -4,13 +4,16 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { KeyboardWrapper } from "./KeyboardWrapper";
 const AppWrapper = ({ children }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
       {children}
+      {/* </TouchableWithoutFeedback> */}
     </SafeAreaView>
   );
 };

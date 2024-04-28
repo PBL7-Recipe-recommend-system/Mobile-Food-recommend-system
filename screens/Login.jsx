@@ -4,7 +4,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
 import SocialConnect from "../components/SocialConnect";
@@ -21,6 +22,8 @@ import {
 import AppWrapper from "../wrappers/AppWrapper";
 import { BackButton } from "../components/BackButton";
 import { ErrorEmailMessage } from "../constants/messages";
+import { authenticate } from "../api/auth";
+import { HealthStepForm } from "./HealthInit/HealthStepForm";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -45,94 +48,98 @@ const Login = ({ navigation }) => {
     setPassword(text);
     setIsValidPassword(validatePassword(text));
   };
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     if (email === "") setIsValidEmail(false);
     if (password === "") setIsValidPassword(false);
     if (validateLoginForm(email, password)) {
+      console.log("Valid form");
+      const response = await authenticate({ email, password });
+      console.log(email, password, response);
     } else {
       navigation.navigate("HealthStepForm");
-
       console.log("Invalid form");
     }
   };
 
   return (
     <AppWrapper>
-      <View style={global.container}>
-        <BackButton navigation={navigation} />
-        <View style={loginStyles.title}>
-          <Text className="text-4xl font-bold">Hello,</Text>
-          <Text className="text-2xl">Welcome back!</Text>
-        </View>
-        <View className="flex-auto justify-between">
-          <View className="flex justify-between">
-            <View className="my-1">
-              <Text style={loginStyles.label}>Email</Text>
-              <TextInput
-                style={isValidEmail ? global.input : global.errorInput}
-                // onChangeText={onChangeNumber}
-                // value={number}
-                placeholder="Enter email"
-                keyboardType="email-address"
-                onChangeText={handleChangeEmail}
-              />
-              <ErrorText isValid={isValidEmail} message={ErrorEmailMessage} />
-            </View>
-            <View className="my-2">
-              <Text style={loginStyles.label}>Password</Text>
-              <View className="flex-row items-center relative">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={global.container}>
+          <BackButton navigation={navigation} />
+          <View style={loginStyles.title}>
+            <Text className="text-4xl font-bold">Hello,</Text>
+            <Text className="text-2xl">Welcome back!</Text>
+          </View>
+          <View className="flex-auto justify-between">
+            <View className="flex justify-between">
+              <View className="my-1">
+                <Text style={loginStyles.label}>Email</Text>
                 <TextInput
-                  clearTextOnFocus={false}
-                  style={isValidPassword ? global.input : global.errorInput}
-                  onChangeText={handleChangePassword}
-                  textContentType="newPassword"
-                  placeholder="Enter password"
-                  secureTextEntry={passwordVisibility}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  enablesReturnKeyAutomatically
+                  style={isValidEmail ? global.input : global.errorInput}
+                  // onChangeText={onChangeNumber}
+                  // value={number}
+                  placeholder="Enter email"
+                  keyboardType="email-address"
+                  onChangeText={handleChangeEmail}
                 />
-                <TouchableOpacity
-                  style={loginStyles.eyeIcon}
-                  onPress={handlePasswordVisibility}
-                >
-                  <MaterialCommunityIcons
-                    name={rightIcon}
-                    size={24}
-                    color={isValidPassword ? "#aaa" : "red"}
-                  />
-                </TouchableOpacity>
+                <ErrorText isValid={isValidEmail} message={ErrorEmailMessage} />
               </View>
-              <ErrorText
-                isValid={isValidPassword}
-                message={"Please enter a valid password"}
+              <View className="my-2">
+                <Text style={loginStyles.label}>Password</Text>
+                <View className="flex-row items-center relative">
+                  <TextInput
+                    clearTextOnFocus={false}
+                    style={isValidPassword ? global.input : global.errorInput}
+                    onChangeText={handleChangePassword}
+                    textContentType="newPassword"
+                    placeholder="Enter password"
+                    secureTextEntry={passwordVisibility}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    enablesReturnKeyAutomatically
+                  />
+                  <TouchableOpacity
+                    style={loginStyles.eyeIcon}
+                    onPress={handlePasswordVisibility}
+                  >
+                    <MaterialCommunityIcons
+                      name={rightIcon}
+                      size={24}
+                      color={isValidPassword ? "#aaa" : "red"}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <ErrorText
+                  isValid={isValidPassword}
+                  message={"Please enter a valid password"}
+                />
+              </View>
+              <TouchableOpacity className="my-3 mx-1">
+                <Text className="text-orangeText font-medium ">
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
+              <CustomButton
+                title="Sign In"
+                width={"100%"}
+                height={62}
+                onPressButton={handleSubmitForm}
               />
+              <SocialConnect />
             </View>
-            <TouchableOpacity className="my-3 mx-1">
-              <Text className="text-orangeText font-medium ">
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
-            <CustomButton
-              title="Sign In"
-              width={"100%"}
-              height={62}
-              onPressButton={handleSubmitForm}
-            />
-            <SocialConnect />
-          </View>
 
-          <View className="flex flex-row text-center items-center justify-center">
-            <Text>Don't have an account?</Text>
-            <TouchableOpacity
-              className="ml-1 my-4"
-              onPress={() => navigation.navigate("Register")}
-            >
-              <Text className="text-orangeText">Sign Up</Text>
-            </TouchableOpacity>
+            <View className="flex flex-row text-center items-center justify-center">
+              <Text>Don't have an account?</Text>
+              <TouchableOpacity
+                className="ml-1 my-4"
+                onPress={() => navigation.navigate("Register")}
+              >
+                <Text className="text-orangeText">Sign Up</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </AppWrapper>
   );
 };

@@ -29,5 +29,5 @@ export const monthNames = [
 ];
 export const daysSource = Array.from({ length: 31 }, (_, i) => i + 1);
 
-export const dataWeight = Array.from({ length: 150 }, (_, i) => i + 1);
-export const dataHeight = Array.from({ length: 150 }, (_, i) => i + 1);
+export const dataWeight = Array.from({ length: 130 }, (_, i) => i + 1);
+export const dataHeight = Array.from({ length: 160 }, (_, i) => i + 51);
