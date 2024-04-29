@@ -88,7 +88,7 @@ const Register = () => {
     if (allFieldsValid) {
       const res = await registerAPI(dataForm);
       showErrorToast(res.message);
-      if (res.status === 400) {
+      if (res.status === 401) {
       } else {
         navigation.navigate("HealthStepForm");
       }

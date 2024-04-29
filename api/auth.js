@@ -11,7 +11,7 @@ export const authenticate = (email, password) => {
       if (res.status === 200) {
         AsyncStorage.setItem("token", res.data.accessToken);
         return res;
-      } else if (res.status === 400) {
+      } else if (res.status === 401) {
         return Promise.reject(res);
       }
     })
@@ -28,7 +28,7 @@ export const registerAPI = (data) => {
       if (res.status === 200) {
         AsyncStorage.setItem("token", res.data.accessToken);
         return res;
-      } else if (res.status === 400) {
+      } else if (res.status === 401) {
         return Promise.reject(res);
       }
     })
@@ -37,10 +37,6 @@ export const registerAPI = (data) => {
     });
   return res;
 };
-export const login = (data) => {
-  return http.post("/auth/authenticate", data);
-};
-
 export const hello = () => {
   return http.get("/hello");
 };

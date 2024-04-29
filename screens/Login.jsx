@@ -23,12 +23,6 @@ import AppWrapper from "../wrappers/AppWrapper";
 import { BackButton } from "../components/BackButton";
 import { ErrorEmailMessage, ErrorPasswordMessage } from "../constants/messages";
 import { authenticate, hello } from "../api/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  getTokenFromAsyncStorage,
-  removeTokenFromAsyncStorage,
-} from "../utils/token";
-import { HealthStepForm } from "./HealthInit/HealthStepForm";
 import { showErrorToast } from "../helper/errorToast";
 
 const Login = ({ navigation }) => {
@@ -65,7 +59,8 @@ const Login = ({ navigation }) => {
     if (password === "") setIsValidPassword(false);
     if (validateLoginForm(email, password)) {
       const res = await authenticate(email, password);
-      if (res.status === 400) {
+      console.log(res);
+      if (res.status === 401) {
         showErrorToast(res.message);
       } else {
         navigation.navigate("HealthStepForm");
