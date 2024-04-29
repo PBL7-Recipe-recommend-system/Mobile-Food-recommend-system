@@ -5,13 +5,12 @@ import Splash from "../screens/Splash";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
 import { HealthStepForm } from "../screens/HealthInit/HealthStepForm";
-import { Meals } from "../screens/HealthInit/MealsInput";
 export const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Start">
         <Stack.Screen
           name="Start"
           component={Splash}

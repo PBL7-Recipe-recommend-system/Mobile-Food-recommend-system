@@ -20,6 +20,14 @@ import {
 } from "../utils/validation";
 import { useTogglePasswordVisibility } from "../hook/useTogglePasswordVisibility";
 import AppWrapper from "../wrappers/AppWrapper";
+import { authenticate, registerAPI } from "../api/auth";
+import { showErrorToast } from "../helper/errorToast";
+import { HealthStepForm } from "./HealthInit/HealthStepForm";
+import {
+  ErrorEmailMessage,
+  ErrorNameMessage,
+  ErrorPasswordMessage,
+} from "../constants/messages";
 const Register = () => {
   const navigation = useNavigation();
   const [isValidData, setIsValidData] = useState({
@@ -63,7 +71,7 @@ const Register = () => {
       confirmPassword: validateConfirmPassword(dataForm.password, text),
     });
   };
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     setIsValidData((prevData) => ({
       ...prevData,
       name: dataForm.name !== "",
@@ -73,6 +81,18 @@ const Register = () => {
         dataForm.confirmPassword !== "" &&
         dataForm.password === dataForm.confirmPassword,
     }));
+    const allFieldsValid = Object.values(isValidData).every(
+      (value) => value === true
+    );
+
+    if (allFieldsValid) {
+      const res = await registerAPI(dataForm);
+      showErrorToast(res.message);
+      if (res.status === 400) {
+      } else {
+        navigation.navigate("HealthStepForm");
+      }
+    }
   };
 
   return (
@@ -108,7 +128,7 @@ const Register = () => {
                   />
                   <ErrorText
                     isValid={isValidData.name}
-                    message={"Name must not be empty"}
+                    message={ErrorNameMessage}
                   />
                 </View>
                 <View className="mt-1">
@@ -121,7 +141,7 @@ const Register = () => {
                   />
                   <ErrorText
                     isValid={isValidData.email}
-                    message={"Please enter a valid email address"}
+                    message={ErrorEmailMessage}
                   />
                 </View>
                 <View className="mt-1">
@@ -152,7 +172,7 @@ const Register = () => {
                   </View>
                   <ErrorText
                     isValid={isValidData.password}
-                    message={"Please enter a valid password"}
+                    message={ErrorPasswordMessage}
                   />
                 </View>
                 <View className="mt-1">
@@ -190,7 +210,7 @@ const Register = () => {
                     }
                   />
                 </View>
-                <View className="mb-4 mt-2 flex flex-row items-center">
+                {/* <View className="mb-4 mt-2 flex flex-row items-center">
                   <CheckBox
                     disabled={false}
                     value={toggleCheckBox}
@@ -202,7 +222,7 @@ const Register = () => {
                       Accept term & Condition
                     </Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
                 <CustomButton
                   title="Sign Up"
                   width={"100%"}

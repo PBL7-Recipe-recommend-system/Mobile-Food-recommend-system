@@ -32,7 +32,6 @@ export const HealthStepForm = ({ navigation }) => {
   });
   const updateFormValue = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
-    console.log(formValues);
   };
 
   const onNextStep = () => {
@@ -40,6 +39,7 @@ export const HealthStepForm = ({ navigation }) => {
       console.log("Last Step", formValues);
       return;
     }
+    console.log(formValues);
     wizard.current.next();
   };
 

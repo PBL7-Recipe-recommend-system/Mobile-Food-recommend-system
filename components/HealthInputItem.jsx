@@ -25,6 +25,7 @@ export const HealthInputItem = ({ selected, title, desc, onSelect }) => {
         <Checkbox
           disabled={false}
           value={selected}
+          color={"#129575"}
           className="rounded-full ml-1"
           onValueChange={onSelect}
         />

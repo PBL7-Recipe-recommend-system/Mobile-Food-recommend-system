@@ -21,9 +21,15 @@ import {
 } from "../utils/validation";
 import AppWrapper from "../wrappers/AppWrapper";
 import { BackButton } from "../components/BackButton";
-import { ErrorEmailMessage } from "../constants/messages";
-import { authenticate } from "../api/auth";
+import { ErrorEmailMessage, ErrorPasswordMessage } from "../constants/messages";
+import { authenticate, hello } from "../api/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  getTokenFromAsyncStorage,
+  removeTokenFromAsyncStorage,
+} from "../utils/token";
 import { HealthStepForm } from "./HealthInit/HealthStepForm";
+import { showErrorToast } from "../helper/errorToast";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -48,15 +54,23 @@ const Login = ({ navigation }) => {
     setPassword(text);
     setIsValidPassword(validatePassword(text));
   };
+
+  const handleHelloWorld = async () => {
+    const response = await hello();
+    console.log(response);
+  };
+
   const handleSubmitForm = async () => {
     if (email === "") setIsValidEmail(false);
     if (password === "") setIsValidPassword(false);
     if (validateLoginForm(email, password)) {
-      console.log("Valid form");
-      const response = await authenticate({ email, password });
-      console.log(email, password, response);
+      const res = await authenticate(email, password);
+      if (res.status === 400) {
+        showErrorToast(res.message);
+      } else {
+        navigation.navigate("HealthStepForm");
+      }
     } else {
-      navigation.navigate("HealthStepForm");
       console.log("Invalid form");
     }
   };
@@ -111,10 +125,13 @@ const Login = ({ navigation }) => {
                 </View>
                 <ErrorText
                   isValid={isValidPassword}
-                  message={"Please enter a valid password"}
+                  message={ErrorPasswordMessage}
                 />
               </View>
-              <TouchableOpacity className="my-3 mx-1">
+              <TouchableOpacity
+                className="my-3 mx-1"
+                onPress={handleHelloWorld}
+              >
                 <Text className="text-orangeText font-medium ">
                   Forgot Password?
                 </Text>
