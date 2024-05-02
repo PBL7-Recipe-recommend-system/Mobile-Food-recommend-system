@@ -29,26 +29,45 @@ export const Goal = () => {
       >
         What is your goal ?
       </Text>
+
       <View style={styles.contentContainer} className="shadow-sm">
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, selectedGoal === LOSE_WEIGHT && styles.active]}
           onPress={() => selectGoal(LOSE_WEIGHT)}
         >
-          <Text style={styles.text}>Lose weight</Text>
+          <Text
+            style={[
+              styles.text,
+              selectedGoal === LOSE_WEIGHT && styles.activeText,
+            ]}
+          >
+            Lose weight
+          </Text>
           <Image source={loseWeightIcon} style={styles.goalImage} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, selectedGoal === GAIN_WEIGHT && styles.active]}
           onPress={() => selectGoal(GAIN_WEIGHT)}
         >
-          <Text style={styles.text}>Gain weight</Text>
+          <Text
+            style={[
+              styles.text,
+              selectedGoal === GAIN_WEIGHT && styles.activeText,
+            ]}
+          >
+            Gain weight
+          </Text>
           <Image source={gainWeightIcon} style={styles.goalImage} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, selectedGoal === HEALTHY && styles.active]}
           onPress={() => selectGoal(HEALTHY)}
         >
-          <Text style={styles.text}>Healthy</Text>
+          <Text
+            style={[styles.text, selectedGoal === HEALTHY && styles.activeText]}
+          >
+            Healthy
+          </Text>
           <Image source={healthyIcon} style={styles.goalImage} />
         </TouchableOpacity>
       </View>
@@ -82,20 +101,16 @@ const styles = StyleSheet.create({
     height: 60,
     resizeMode: "contain",
   },
-  goalContent: {
-    borderWidth: 1,
-    borderColor: "red",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
+
   text: {
     color: "#617D79",
     fontWeight: "bold",
   },
   active: {
     backgroundColor: "#d5dbe0",
-    color: "#000",
+  },
+
+  activeText: {
+    color: "#000000",
   },
 });

@@ -59,7 +59,6 @@ const Login = ({ navigation }) => {
     if (password === "") setIsValidPassword(false);
     if (validateLoginForm(email, password)) {
       const res = await authenticate(email, password);
-      console.log(res);
       if (res.status === 401) {
         showErrorToast(res.message);
       } else {

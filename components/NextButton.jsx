@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,6 +12,7 @@ export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
 
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const progressRef = useRef(null);
+  const [isComplete, setIsComplete] = useState(false);
 
   const animation = (toValue) => {
     return Animated.timing(progressAnimation, {
@@ -26,24 +27,23 @@ export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
   }, [percentage]);
 
   useEffect(() => {
-    progressAnimation.addListener(
-      (value) => {
-        if (value.value >= 100) {
-          setTimeout(() => {
-            navigation.navigate("Login");
-          }, 500);
-        }
-        if (progressRef?.current) {
-          progressRef.current.setNativeProps({
-            strokeDashoffset:
-              circumference - (circumference * value.value) / 100,
-          });
-        }
-      },
-      [percentage]
-    );
+    const listener = progressAnimation.addListener((value) => {
+      const isFinished = value.value === 100;
+      setIsComplete(isFinished);
+      if (isFinished) {
+        setTimeout(() => {
+          // navigation.navigate("Login");
+        }, 500);
+      }
+      if (progressRef?.current) {
+        progressRef.current.setNativeProps({
+          strokeDashoffset: circumference - (circumference * value.value) / 100,
+        });
+      }
+    });
+
     return () => {
-      progressAnimation.removeAllListeners();
+      progressAnimation.removeListener(listener);
     };
   }, []);
 
@@ -76,7 +76,11 @@ export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
         onPress={onPress}
         disabled={disabled}
       >
-        <AntDesign name="right" size={24} color="#fff" />
+        {isComplete ? (
+          <AntDesign name="check" size={24} color="#fff" />
+        ) : (
+          <AntDesign name="right" size={24} color="#fff" />
+        )}
       </TouchableOpacity>
     </View>
   );

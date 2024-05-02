@@ -17,6 +17,7 @@ import { Height } from "./Height";
 import { WorkoutInput } from "./WorkoutInput";
 import { Meals, MealsInput } from "./MealsInput";
 import { Goal } from "./Goal";
+import { CompleteSetUp } from "./CompleteSetUp";
 export const HealthStepForm = ({ navigation }) => {
   const wizard = useRef(null);
   const [isFirstStep, setIsFirstStep] = useState(true);
@@ -35,11 +36,6 @@ export const HealthStepForm = ({ navigation }) => {
   };
 
   const onNextStep = () => {
-    if (isLastStep) {
-      console.log("Last Step", formValues);
-      return;
-    }
-    console.log(formValues);
     wizard.current.next();
   };
 
@@ -92,6 +88,10 @@ export const HealthStepForm = ({ navigation }) => {
         <Goal updateValue={(value) => updateFormValue("meals", value)} />
       ),
     },
+
+    {
+      content: <CompleteSetUp />,
+    },
   ];
   const isNextButtonDisabled = () => {
     switch (currentStep) {
@@ -130,6 +130,11 @@ export const HealthStepForm = ({ navigation }) => {
           //   console.log("Previous Step Called");
           // }}
           currentStep={({ currentStep, isLastStep, isFirstStep }) => {
+            if (isLastStep) {
+              setTimeout(() => {
+                console.log("Last Step timeout");
+              }, 2000);
+            }
             setCurrentStep(currentStep);
           }}
           nextStepAnimation="slideRight"
@@ -139,7 +144,7 @@ export const HealthStepForm = ({ navigation }) => {
 
       <View>
         <NextButton
-          percentage={(currentStep * 100) / stepList.length}
+          percentage={((currentStep + 1) * 100) / stepList.length}
           onPress={onNextStep}
           navigation={navigation}
           disabled={isNextButtonDisabled()}

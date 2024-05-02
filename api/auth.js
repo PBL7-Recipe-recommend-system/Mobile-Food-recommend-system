@@ -11,7 +11,7 @@ export const authenticate = (email, password) => {
       if (res.status === 200) {
         AsyncStorage.setItem("token", res.data.accessToken);
         return res;
-      } else if (res.status === 401) {
+      } else {
         return Promise.reject(res);
       }
     })
