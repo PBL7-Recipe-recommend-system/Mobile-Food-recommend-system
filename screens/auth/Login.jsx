@@ -7,23 +7,26 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import CustomButton from "../components/CustomButton";
-import SocialConnect from "../components/SocialConnect";
+import CustomButton from "../../components/CustomButton";
+import SocialConnect from "../../components/SocialConnect";
 import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTogglePasswordVisibility } from "../hook/useTogglePasswordVisibility";
-import global from "../Styles";
-import ErrorText from "../components/ErrorText";
+import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
+import global from "../../Styles";
+import ErrorText from "../../components/ErrorText";
 import {
   validateEmail,
   validateLoginForm,
   validatePassword,
-} from "../utils/validation";
-import AppWrapper from "../wrappers/AppWrapper";
-import { BackButton } from "../components/BackButton";
-import { ErrorEmailMessage, ErrorPasswordMessage } from "../constants/messages";
-import { authenticate, hello } from "../api/auth";
-import { showErrorToast } from "../helper/errorToast";
+} from "../../utils/validation";
+import AppWrapper from "../../wrappers/AppWrapper";
+import { BackButton } from "../../components/BackButton";
+import {
+  ErrorEmailMessage,
+  ErrorPasswordMessage,
+} from "../../constants/messages";
+import { authenticate, hello } from "../../api/auth";
+import { showErrorToast } from "../../helper/errorToast";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -49,9 +52,8 @@ const Login = ({ navigation }) => {
     setIsValidPassword(validatePassword(text));
   };
 
-  const handleHelloWorld = async () => {
-    const response = await hello();
-    console.log(response);
+  const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword");
   };
 
   const handleSubmitForm = async () => {
@@ -124,7 +126,7 @@ const Login = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 className="my-3 mx-1"
-                onPress={handleHelloWorld}
+                onPress={handleForgotPassword}
               >
                 <Text className="text-orangeText font-medium ">
                   Forgot Password?

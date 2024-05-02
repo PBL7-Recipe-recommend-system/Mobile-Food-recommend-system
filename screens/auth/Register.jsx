@@ -7,27 +7,27 @@ import {
 } from "react-native";
 import { TextInput, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../../components/CustomButton";
 import CheckBox from "expo-checkbox";
 import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import global from "../Styles";
-import ErrorText from "../components/ErrorText";
+import global from "../../Styles";
+import ErrorText from "../../components/ErrorText";
 import {
   validateConfirmPassword,
   validateEmail,
   validatePassword,
-} from "../utils/validation";
-import { useTogglePasswordVisibility } from "../hook/useTogglePasswordVisibility";
-import AppWrapper from "../wrappers/AppWrapper";
-import { authenticate, registerAPI } from "../api/auth";
-import { showErrorToast } from "../helper/errorToast";
-import { HealthStepForm } from "./HealthInit/HealthStepForm";
+} from "../../utils/validation";
+import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
+import AppWrapper from "../../wrappers/AppWrapper";
+import { authenticate, registerAPI } from "../../api/auth";
+import { showErrorToast } from "../../helper/errorToast";
+import { HealthStepForm } from "../HealthInit/HealthStepForm";
 import {
   ErrorEmailMessage,
   ErrorNameMessage,
   ErrorPasswordMessage,
-} from "../constants/messages";
+} from "../../constants/messages";
 const Register = () => {
   const navigation = useNavigation();
   const [isValidData, setIsValidData] = useState({
