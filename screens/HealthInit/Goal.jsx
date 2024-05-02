@@ -14,10 +14,12 @@ import healthyIcon from "../../assets/images/healthy.png";
 
 const LOSE_WEIGHT = 1;
 const GAIN_WEIGHT = 2;
-const HEALTHY = 3;
-export const Goal = () => {
-  const [selectedGoal, setSelectedGoal] = useState(null);
-
+const MAINTAIN_WEIGHT = 3;
+export const Goal = ({ updateValue, defaultValue }) => {
+  const [selectedGoal, setSelectedGoal] = useState(defaultValue);
+  useEffect(() => {
+    updateValue(selectedGoal);
+  }, [selectedGoal]);
   const selectGoal = (id) => {
     setSelectedGoal(id);
   };
@@ -60,13 +62,19 @@ export const Goal = () => {
           <Image source={gainWeightIcon} style={styles.goalImage} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, selectedGoal === HEALTHY && styles.active]}
-          onPress={() => selectGoal(HEALTHY)}
+          style={[
+            styles.button,
+            selectedGoal === MAINTAIN_WEIGHT && styles.active,
+          ]}
+          onPress={() => selectGoal(MAINTAIN_WEIGHT)}
         >
           <Text
-            style={[styles.text, selectedGoal === HEALTHY && styles.activeText]}
+            style={[
+              styles.text,
+              selectedGoal === MAINTAIN_WEIGHT && styles.activeText,
+            ]}
           >
-            Healthy
+            Maintain weight
           </Text>
           <Image source={healthyIcon} style={styles.goalImage} />
         </TouchableOpacity>

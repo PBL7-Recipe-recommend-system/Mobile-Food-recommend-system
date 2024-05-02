@@ -10,7 +10,7 @@ export const Age = ({ updateValue }) => {
   const currentYear = currentDate.getFullYear();
 
   const [selectedDay, setSelectedDay] = useState(currentDay);
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth + 1);
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
   const yearsSource = useMemo(
@@ -19,9 +19,12 @@ export const Age = ({ updateValue }) => {
   );
 
   useEffect(() => {
-    const date = `${selectedDay}-${selectedMonth}-${selectedYear}`;
+    const dayWithTwoDigits = String(selectedDay).padStart(2, "0");
+    const monthWithTwoDigits = String(selectedMonth).padStart(2, "0");
+    const date = `${dayWithTwoDigits}-${monthWithTwoDigits}-${selectedYear}`;
+
     updateValue(date);
-  }, [selectedDay, selectedMonth, selectedYear]);
+  }, [selectedDay, selectedMonth, selectedYear]); // Assuming updateValue does not change or is wrapped with useCallback
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 30 }}>

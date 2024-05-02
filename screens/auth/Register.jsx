@@ -22,7 +22,7 @@ import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibil
 import AppWrapper from "../../wrappers/AppWrapper";
 import { authenticate, registerAPI } from "../../api/auth";
 import { showErrorToast } from "../../helper/errorToast";
-import { HealthStepForm } from "../HealthInit/HealthStepForm";
+import { HealthStepForm } from "../healthInit/HealthStepForm";
 import {
   ErrorEmailMessage,
   ErrorNameMessage,

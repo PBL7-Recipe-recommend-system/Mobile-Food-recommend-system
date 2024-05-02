@@ -22,32 +22,32 @@ export const WorkoutInput = ({ updateValue, defaultValue }) => {
         <HealthInputItem
           title="Never"
           desc="0 times a week"
-          selected={selectedItem === "Never"}
-          onSelect={() => handleSelectItem("Never")}
+          selected={selectedItem === "never"}
+          onSelect={() => handleSelectItem("never")}
         />
         <HealthInputItem
           title="Sometimes"
           desc="1-2 times a week"
-          selected={selectedItem === "Sometimes"}
-          onSelect={() => handleSelectItem("Sometimes")}
+          selected={selectedItem === "sometimes"}
+          onSelect={() => handleSelectItem("sometimes")}
         />
         <HealthInputItem
           title="Regularly"
           desc="3-4 times a week"
-          selected={selectedItem === "Regularly"}
-          onSelect={() => handleSelectItem("Regularly")}
+          selected={selectedItem === "regularly"}
+          onSelect={() => handleSelectItem("regularly")}
         />
         <HealthInputItem
           title="Often"
           desc="5-6 times a week"
-          selected={selectedItem === "Often"}
-          onSelect={() => handleSelectItem("Often")}
+          selected={selectedItem === "often"}
+          onSelect={() => handleSelectItem("often")}
         />
         <HealthInputItem
           title="Daily"
           desc="&ge; 7 times a week"
-          selected={selectedItem === "Daily"}
-          onSelect={() => handleSelectItem("Daily")}
+          selected={selectedItem === "daily"}
+          onSelect={() => handleSelectItem("daily")}
         />
       </View>
     </View>

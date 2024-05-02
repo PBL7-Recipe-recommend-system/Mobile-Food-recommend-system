@@ -11,43 +11,37 @@ import Wizard, { WizardRef } from "react-native-wizard";
 import { NextButton } from "../../components/NextButton";
 import { Age } from "./Age";
 import { Weight } from "./Weight";
-import AppWrapper from "../../wrappers/AppWrapper";
-import { Gender } from "./Gender";
 import { Height } from "./Height";
+import { Gender } from "./Gender";
 import { WorkoutInput } from "./WorkoutInput";
-import { Meals, MealsInput } from "./MealsInput";
+import { MealsInput } from "./MealsInput";
 import { Goal } from "./Goal";
 import { CompleteSetUp } from "./CompleteSetUp";
+import AppWrapper from "../../wrappers/AppWrapper";
+import { getUserIdFromToken } from "../../utils/token";
+import { setUpPersonalize } from "../../api/users";
+
 export const HealthStepForm = ({ navigation }) => {
   const wizard = useRef(null);
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isLastStep, setIsLastStep] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [formValues, setFormValues] = useState({
-    age: null,
+    birthday: null,
     weight: null,
     height: null,
     gender: null,
-    workout: null,
+    dailyActivities: null,
     meals: null,
+    dietaryGoal: null,
+    ingredients: [],
   });
-  const updateFormValue = (key, value) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }));
-  };
 
-  const onNextStep = () => {
-    wizard.current.next();
-  };
-
-  const onPrevStep = () => {
-    if (currentStep === 0) {
-      navigation.navigate("Login");
-    }
-    wizard.current.prev();
-  };
   const stepList = [
     {
-      content: <Age updateValue={(value) => updateFormValue("age", value)} />,
+      content: (
+        <Age updateValue={(value) => updateFormValue("birthday", value)} />
+      ),
     },
     {
       content: (
@@ -70,8 +64,8 @@ export const HealthStepForm = ({ navigation }) => {
     {
       content: (
         <WorkoutInput
-          updateValue={(value) => updateFormValue("workout", value)}
-          defaultValue={formValues.workout}
+          updateValue={(value) => updateFormValue("dailyActivities", value)}
+          defaultValue={formValues.dailyActivities}
         />
       ),
     },
@@ -85,7 +79,10 @@ export const HealthStepForm = ({ navigation }) => {
     },
     {
       content: (
-        <Goal updateValue={(value) => updateFormValue("meals", value)} />
+        <Goal
+          updateValue={(value) => updateFormValue("dietaryGoal", value)}
+          defaultValue={formValues.dietaryGoal}
+        />
       ),
     },
 
@@ -93,6 +90,22 @@ export const HealthStepForm = ({ navigation }) => {
       content: <CompleteSetUp />,
     },
   ];
+
+  const updateFormValue = (key, value) => {
+    setFormValues((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const onNextStep = () => {
+    wizard.current.next();
+  };
+
+  const onPrevStep = () => {
+    if (currentStep === 0) {
+      navigation.navigate("Login");
+    }
+    wizard.current.prev();
+  };
+
   const isNextButtonDisabled = () => {
     switch (currentStep) {
       case 0:
@@ -104,12 +117,19 @@ export const HealthStepForm = ({ navigation }) => {
       case 3:
         return formValues.gender === null;
       case 4:
-        return formValues.workout === null;
+        return formValues.dailyActivities === null;
       case 5:
         return formValues.meals === null;
+      case 6:
+        return formValues.dietaryGoal === null;
       default:
         return false;
     }
+  };
+
+  const handleCompleteSetUp = async () => {
+    const res = await setUpPersonalize(formValues);
+    console.log(res);
   };
   return (
     <AppWrapper>
@@ -130,11 +150,6 @@ export const HealthStepForm = ({ navigation }) => {
           //   console.log("Previous Step Called");
           // }}
           currentStep={({ currentStep, isLastStep, isFirstStep }) => {
-            if (isLastStep) {
-              setTimeout(() => {
-                console.log("Last Step timeout");
-              }, 2000);
-            }
             setCurrentStep(currentStep);
           }}
           nextStepAnimation="slideRight"
@@ -148,6 +163,7 @@ export const HealthStepForm = ({ navigation }) => {
           onPress={onNextStep}
           navigation={navigation}
           disabled={isNextButtonDisabled()}
+          handleCompleteSetUp={handleCompleteSetUp}
         />
       </View>
     </AppWrapper>

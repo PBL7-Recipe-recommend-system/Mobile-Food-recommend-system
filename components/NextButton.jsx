@@ -3,7 +3,12 @@ import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
 
-export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
+export const NextButton = ({
+  percentage,
+  onPress,
+  disabled,
+  handleCompleteSetUp,
+}) => {
   const size = 86;
   const strokewidth = 4;
   const center = size / 2;
@@ -23,6 +28,12 @@ export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
   };
 
   useEffect(() => {
+    if (isComplete) {
+      handleCompleteSetUp();
+    }
+  }, [isComplete]);
+
+  useEffect(() => {
     animation(percentage);
   }, [percentage]);
 
@@ -30,11 +41,6 @@ export const NextButton = ({ percentage, onPress, navigation, disabled }) => {
     const listener = progressAnimation.addListener((value) => {
       const isFinished = value.value === 100;
       setIsComplete(isFinished);
-      if (isFinished) {
-        setTimeout(() => {
-          // navigation.navigate("Login");
-        }, 500);
-      }
       if (progressRef?.current) {
         progressRef.current.setNativeProps({
           strokeDashoffset: circumference - (circumference * value.value) / 100,

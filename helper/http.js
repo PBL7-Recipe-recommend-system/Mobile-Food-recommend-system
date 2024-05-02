@@ -1,10 +1,10 @@
 import axios from "axios";
-import { LOCAL_API_PATH } from "../utils/path";
+import { LOCAL_COMPANY_API_PATH } from "../utils/path";
 import { getTokenFromAsyncStorage } from "../utils/token";
 class Http {
   constructor() {
     this.instance = axios.create({
-      baseURL: LOCAL_API_PATH,
+      baseURL: LOCAL_COMPANY_API_PATH,
       name: "Food recommendation App",
       timeout: 10000,
       headers: {
