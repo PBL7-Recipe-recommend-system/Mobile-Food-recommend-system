@@ -1,19 +1,15 @@
-import {
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 const AppWrapper = ({ children }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
-      {children}
-      {/* </TouchableWithoutFeedback> */}
+      <LinearGradient
+        colors={["#fff", "#fafafa"]}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+        {children}
+      </LinearGradient>
     </SafeAreaView>
   );
 };

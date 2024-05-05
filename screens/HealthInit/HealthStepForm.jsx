@@ -20,6 +20,7 @@ import { CompleteSetUp } from "./CompleteSetUp";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { getUserIdFromToken } from "../../utils/token";
 import { setUpPersonalize } from "../../api/users";
+import { HomeNavigation } from "../../navigation/HomeNavigation";
 
 export const HealthStepForm = ({ navigation }) => {
   const wizard = useRef(null);
@@ -96,6 +97,9 @@ export const HealthStepForm = ({ navigation }) => {
   };
 
   const onNextStep = () => {
+    if (isLastStep) {
+      navigation.navigate("HomeNavigation");
+    }
     wizard.current.next();
   };
 

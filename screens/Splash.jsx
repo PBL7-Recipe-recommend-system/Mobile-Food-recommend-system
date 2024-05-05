@@ -2,6 +2,7 @@ import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import image from "../assets/images/splash.jpg";
 import logo from "../assets/images/logo.png";
 import CustomButton from "../components/CustomButton";
+import { LinearGradient } from "expo-linear-gradient";
 const Splash = ({ navigation }) => {
   const onPressButton = () => {
     navigation.navigate("Login");
@@ -9,35 +10,40 @@ const Splash = ({ navigation }) => {
 
   return (
     <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-      <View style={styles.container}>
-        <View style={styles.title}>
-          <Image source={logo}></Image>
-          <Text className="text-2xl" style={{ color: "#fff" }}>
-            100K+ Tasty Recipe
-          </Text>
+      <LinearGradient
+        colors={["#00000000", "#000000"]}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <Image source={logo}></Image>
+            <Text className="text-2xl" style={{ color: "#fff" }}>
+              100K+ Tasty Recipe
+            </Text>
+          </View>
+          <View style={[styles.content]}>
+            <Text
+              className="text-[50px] font-semibold text-center mb-3"
+              style={{ color: "#fff" }}
+            >
+              Get{"\n"}Cooking
+            </Text>
+            <Text
+              className="text-center text-[16px] leading-6"
+              style={{ color: "#fff" }}
+            >
+              Simple way to find Tasty Recipe
+            </Text>
+          </View>
+          <CustomButton
+            title="Start Cooking"
+            onPressButton={onPressButton}
+            width={243}
+            height={54}
+            customStyle={styles.button}
+          ></CustomButton>
         </View>
-        <View style={[styles.content]}>
-          <Text
-            className="text-[50px] font-semibold text-center mb-3"
-            style={{ color: "#fff" }}
-          >
-            Get{"\n"}Cooking
-          </Text>
-          <Text
-            className="text-center text-[16px] leading-6"
-            style={{ color: "#fff" }}
-          >
-            Simple way to find Tasty Recipe
-          </Text>
-        </View>
-        <CustomButton
-          title="Start Cooking"
-          onPressButton={onPressButton}
-          width={243}
-          height={54}
-          customStyle={styles.button}
-        ></CustomButton>
-      </View>
+      </LinearGradient>
     </ImageBackground>
   );
 };
