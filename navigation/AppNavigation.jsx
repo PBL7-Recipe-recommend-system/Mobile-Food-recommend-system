@@ -8,6 +8,7 @@ import { HealthStepForm } from "../screens/healthInit/HealthStepForm";
 import { ForgotPassword } from "./../screens/auth/ForgotPassword";
 import { ResetPassword } from "./../screens/auth/ResetPassword";
 import { HomeNavigation } from "./HomeNavigation";
+import { Search } from "./../screens/home/Search";
 export const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ export const AppNavigation = () => {
         <Stack.Screen
           name="HomeNavigation"
           component={HomeNavigation}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
           options={{ headerShown: false, gestureEnabled: false }}
         />
       </Stack.Navigator>

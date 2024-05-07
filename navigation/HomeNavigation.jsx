@@ -14,6 +14,7 @@ export const HomeNavigation = () => {
         name="Home"
         component={Home}
         options={{
+          tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: false,
           tabBarIcon: () => (

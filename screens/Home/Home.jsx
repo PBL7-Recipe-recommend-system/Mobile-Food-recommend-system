@@ -1,57 +1,115 @@
-import React from "react";
-import AppWrapper from "../../wrappers/AppWrapper";
+import React, { useRef, useState } from "react";
 import {
-  Image,
+  Animated,
+  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
-import defaultAvt from "../../assets/images/avatar.png";
-import global from "../../Styles";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { SearchBar } from "../../components/SearchBar";
-import { SelectionButton } from "../../components/SelectionButton";
-import { CategoryList } from "../../components/category/CategoryList";
+import AppWrapper from "../../wrappers/AppWrapper";
+import { SearchBar } from "../../components/search/SearchBar";
 import { RecipeList } from "../../components/recipe/RecipeList";
-export const Home = () => {
-  const onSearchBarPress = () => {
-    console.log("Search bar pressed");
+import { Header } from "./Header";
+import { CategoryBar } from "./CategoryBar";
+import { SearchHeader } from "../../components/search/SearchHeader";
+import { RecentSearchList } from "../../components/search/RecentSearchList";
+import { PRIMARY_COLOR } from "../../constants/color";
+
+export const Home = ({ navigation }) => {
+  // Animated values to control search bar and other components' opacity
+  const translateY = useRef(new Animated.Value(0)).current;
+  const otherComponentsOpacity = useRef(new Animated.Value(1)).current;
+  const searchHeaderOpacity = useRef(new Animated.Value(0)).current;
+  const [searchActive, setSearchActive] = useState(false);
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  const targetTopPosition = -20;
+
+  const scrollViewRef = useRef(null);
+
+  const toggleSearchBarPosition = () => {
+    const toValue = searchActive ? 0 : targetTopPosition;
+    const otherOpacity = searchActive ? 1 : 0;
+    const searchHeaderOpacityValue = searchActive ? 0 : 1;
+
+    Animated.timing(translateY, {
+      toValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(otherComponentsOpacity, {
+      toValue: otherOpacity,
+      duration: 700,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(searchHeaderOpacity, {
+      toValue: searchHeaderOpacityValue,
+      duration: 700,
+      useNativeDriver: true,
+    }).start();
+
+    setSearchActive(!searchActive);
+    Keyboard.dismiss();
+    if (!searchActive && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
   };
+
+  const handleScroll = (event) => {
+    const currentOffset = event.nativeEvent.contentOffset.y;
+    setScrollOffset(currentOffset);
+  };
+
   return (
     <AppWrapper>
-      <ScrollView contentContainerStyle={[style.container]}>
-        <View style={style.headerContainer}>
-          <View>
-            <View style={style.greeting}>
-              <Feather name="sun" size={24} color="#129575" />
-              <Text className="text-[14px] ml-1">Good Morning</Text>
-            </View>
-            <Text className="font-extrabold text-2xl text-[#0A2533]">
-              Alena Sabyan
-            </Text>
-          </View>
-          <Image source={defaultAvt} style={style.avt} />
-        </View>
-        <View style={style.searchContainer}>
-          <SearchBar onSearchBarPress={onSearchBarPress} />
-          <TouchableOpacity style={style.filterButton}>
-            <Ionicons name="filter-outline" size={26} color="white" />
-          </TouchableOpacity>
-        </View>
-        <View style={style.categoryContainer} className="w-full">
-          <Text className="text-xl font-black">Category</Text>
-          <TouchableOpacity>
-            <Text style={style.seeAllText}>See all</Text>
-          </TouchableOpacity>
-        </View>
-        <View className="h-16 items-center ">
-          <CategoryList />
-        </View>
-        <RecipeList title="Your recipes" />
-        <RecipeList title="Popular recipes" />
-      </ScrollView>
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        // scrollEnabled={!searchActive}
+        nestedScrollEnabled={true}
+        contentContainerStyle={[style.container]}
+        onScroll={handleScroll}
+      >
+        {searchActive ? (
+          <Animated.View style={[{ opacity: searchHeaderOpacity }]}>
+            <SearchHeader goBack={toggleSearchBarPosition} />
+          </Animated.View>
+        ) : (
+          <Animated.View style={{ opacity: otherComponentsOpacity }}>
+            <Header />
+          </Animated.View>
+        )}
+
+        <Animated.View style={{ transform: [{ translateY }] }}>
+          <SearchBar
+            navigation={navigation}
+            toggleSearchBar={toggleSearchBarPosition}
+            activeSearch={searchActive}
+          />
+        </Animated.View>
+        {searchActive ? (
+          <Animated.View
+            style={[
+              {
+                flex: 1,
+                opacity: searchHeaderOpacity,
+                width: "100%",
+              },
+            ]}
+          >
+            <Text className="text-xl font-bold">Recent Search</Text>
+            <RecentSearchList />
+          </Animated.View>
+        ) : (
+          <Animated.View style={{ opacity: otherComponentsOpacity }}>
+            <CategoryBar />
+            <RecipeList title="Your recipes" />
+            <RecipeList title="Popular recipes" />
+          </Animated.View>
+        )}
+      </Animated.ScrollView>
     </AppWrapper>
   );
 };
@@ -62,44 +120,9 @@ const style = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     paddingHorizontal: 30,
-    marginVertical: 30,
+    marginBottom: 10,
     paddingBottom: 60,
     alignItems: "flex-start",
-  },
-  filterButton: {
-    width: 50,
-    height: 50,
-    backgroundColor: "#129575",
-    borderRadius: 16,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerContainer: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  greeting: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  avt: {
-    width: 50,
-    height: 50,
-    borderRadius: 12,
-    resizeMode: "contain",
-    backgroundColor: "#FFCE80",
-  },
-  searchContainer: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
   categoryContainer: {
     display: "flex",
@@ -107,13 +130,30 @@ const style = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  fixedHeader: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    zIndex: 10,
+  },
+  fixedSearchBar: {
+    position: "absolute",
+    top: 60,
+    width: "100%",
+    zIndex: 9,
+  },
   titleText: {
     fontSize: 24,
     fontWeight: "bold",
   },
   seeAllText: {
     fontSize: 14,
-    color: "#129575",
+    color: PRIMARY_COLOR,
     fontWeight: "900",
+  },
+  otherComponentsContainer: {
+    width: "100%",
+    alignItems: "center",
   },
 });

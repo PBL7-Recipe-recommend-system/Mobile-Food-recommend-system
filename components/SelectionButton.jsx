@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { PRIMARY_COLOR } from "../constants/color";
 
 export const SelectionButton = ({ title, isSelected, onPressButton }) => {
   return (
@@ -24,7 +25,7 @@ const style = StyleSheet.create({
   },
 
   activeContainer: {
-    backgroundColor: "#129575",
+    backgroundColor: PRIMARY_COLOR,
     borderRadius: 24,
     marginRight: 12,
   },

@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useState } from "react";
+import { PRIMARY_COLOR } from "../constants/color";
 
 export const HealthInputItem = ({ selected, title, desc, onSelect }) => {
   const handlePress = () => {
@@ -25,7 +26,7 @@ export const HealthInputItem = ({ selected, title, desc, onSelect }) => {
         <Checkbox
           disabled={false}
           value={selected}
-          color={"#129575"}
+          color={PRIMARY_COLOR}
           className="rounded-full ml-1"
           onValueChange={onSelect}
         />

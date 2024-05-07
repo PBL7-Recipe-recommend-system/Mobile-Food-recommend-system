@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
+import { PRIMARY_COLOR } from "../constants/color";
 
 const CustomButton = ({
   title,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#129575",
+    backgroundColor: PRIMARY_COLOR,
     borderRadius: 10,
     marginVertical: 8,
   },

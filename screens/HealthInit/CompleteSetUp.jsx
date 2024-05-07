@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Image, Text } from "react-native";
 import complete from "../../assets/images/complete.png";
+import { PRIMARY_COLOR } from "./../../constants/color";
 
 export const CompleteSetUp = () => {
   return (
@@ -13,7 +14,8 @@ export const CompleteSetUp = () => {
       >
         <Image source={complete} style={styles.image} />
         <Text className="text-[28px] font-bold flex-row flex-nowrap text-center">
-          Your personal <Text className="text-[#129575] ">program</Text> {"\n"}
+          Your personal <Text className="text-[PRIMARY_COLOR] ">program</Text>{" "}
+          {"\n"}
           is ready
         </Text>
       </View>

@@ -1,6 +1,7 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { PRIMARY_COLOR } from "../constants/color";
 
 export const BackButton = ({ navigation, onPress }) => {
   const handlePress = () => {
@@ -12,8 +13,15 @@ export const BackButton = ({ navigation, onPress }) => {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress}>
-      <FontAwesome6 name="arrow-left" size={24} color="#129575" />
+    <TouchableOpacity
+      style={{
+        width: 60,
+        height: 40,
+        justifyContent: "center",
+      }}
+      onPress={handlePress}
+    >
+      <FontAwesome6 name="arrow-left" size={24} color={PRIMARY_COLOR} />
     </TouchableOpacity>
   );
 };

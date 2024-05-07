@@ -11,6 +11,7 @@ import femaleIcon from "../../assets/icons/female-icon.png";
 import maleIcon from "../../assets/icons/male-icon.png";
 import femaleWhiteIcon from "../../assets/icons/female-icon-white.png";
 import maleWhiteIcon from "../../assets/icons/male-icon-white.png";
+import { PRIMARY_COLOR } from "../../constants/color";
 const MALE = "male";
 const FEMALE = "female";
 export const Gender = ({ updateValue, defaultValue }) => {
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: "#129575",
+    borderColor: PRIMARY_COLOR,
     marginHorizontal: 30,
     marginVertical: 10,
   },
@@ -110,9 +111,9 @@ const styles = StyleSheet.create({
     height: 60,
   },
   activeButton: {
-    backgroundColor: "#129575",
+    backgroundColor: PRIMARY_COLOR,
   },
   activeText: {
-    color: "#129575",
+    color: PRIMARY_COLOR,
   },
 });

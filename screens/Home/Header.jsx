@@ -1,0 +1,44 @@
+import React from "react";
+import { Image, Text, View, StyleSheet } from "react-native";
+import defaultAvt from "../../assets/images/avatar.png";
+import { Feather } from "@expo/vector-icons";
+import { PRIMARY_COLOR } from "../../constants/color";
+
+export const Header = () => {
+  return (
+    <View style={style.headerContainer}>
+      <View>
+        <View style={style.greeting}>
+          <Feather name="sun" size={24} color={PRIMARY_COLOR} />
+          <Text className="text-[14px] ml-1">Good Morning</Text>
+        </View>
+        <Text className="font-extrabold text-2xl text-[#0A2533]">
+          Alena Sabyan
+        </Text>
+      </View>
+      <Image source={defaultAvt} style={style.avt} />
+    </View>
+  );
+};
+const style = StyleSheet.create({
+  headerContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 16,
+    justifyContent: "space-between",
+  },
+  greeting: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  avt: {
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    resizeMode: "contain",
+    backgroundColor: "#FFCE80",
+  },
+});

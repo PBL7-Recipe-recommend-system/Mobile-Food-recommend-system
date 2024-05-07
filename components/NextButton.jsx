@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
+import { PRIMARY_COLOR } from "../constants/color";
 
 export const NextButton = ({
   percentage,
@@ -66,7 +67,7 @@ export const NextButton = ({
           />
           <Circle
             ref={progressRef}
-            stroke={disabled ? "rgba(18, 149, 117, 0.5)" : "#129575"}
+            stroke={disabled ? "rgba(18, 149, 117, 0.5)" : PRIMARY_COLOR}
             cx={center}
             cy={center}
             r={radius}
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    backgroundColor: "#129575",
+    backgroundColor: PRIMARY_COLOR,
     padding: 20,
     borderRadius: 100,
   },

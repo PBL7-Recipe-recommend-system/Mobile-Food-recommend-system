@@ -7,10 +7,11 @@ import {
   ScrollView,
 } from "react-native";
 import { RecipeItem } from "./RecipeItem";
+import { PRIMARY_COLOR } from "../../constants/color";
 
 export const RecipeList = ({ title }) => {
   return (
-    <View style={{ height: "36%" }}>
+    <View style={{ height: "40%" }}>
       <View style={style.categoryContainer}>
         <Text className="text-xl font-bold">{title}</Text>
         <TouchableOpacity>
@@ -18,6 +19,12 @@ export const RecipeList = ({ title }) => {
         </TouchableOpacity>
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        <RecipeItem />
+        <RecipeItem />
+        <RecipeItem />
+        <RecipeItem />
+        <RecipeItem />
+        <RecipeItem />
         <RecipeItem />
         <RecipeItem />
         <RecipeItem />
@@ -37,7 +44,7 @@ const style = StyleSheet.create({
 
   seeAllText: {
     fontSize: 14,
-    color: "#129575",
+    color: PRIMARY_COLOR,
     fontWeight: "900",
   },
 });
