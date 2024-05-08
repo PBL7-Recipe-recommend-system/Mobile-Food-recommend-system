@@ -46,7 +46,7 @@ export const CustomScrollPicker = ({
       itemHeight={52}
       highlightColor="#ccc"
       highlightBorderWidth={2}
-      wrapperBackground="#fff"
+      wrapperBackground="transparent"
     />
   );
 };

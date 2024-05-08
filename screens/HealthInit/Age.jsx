@@ -18,6 +18,30 @@ export const Age = ({ updateValue }) => {
     [currentYear]
   );
 
+  const daysInMonth = useMemo(() => {
+    if ([4, 6, 9, 11].includes(selectedMonth)) {
+      return 30;
+    } else if (selectedMonth === 2) {
+      return selectedYear % 4 === 0 &&
+        (selectedYear % 100 !== 0 || selectedYear % 400 === 0)
+        ? 29
+        : 28;
+    } else {
+      return 31;
+    }
+  }, [selectedMonth, selectedYear]);
+
+  const daysSource = useMemo(
+    () => Array.from({ length: daysInMonth }, (_, i) => i + 1),
+    [daysInMonth]
+  );
+
+  useEffect(() => {
+    if (selectedDay > daysInMonth) {
+      setSelectedDay(daysInMonth);
+    }
+  }, [daysInMonth]);
+
   useEffect(() => {
     const dayWithTwoDigits = String(selectedDay).padStart(2, "0");
     const monthWithTwoDigits = String(selectedMonth).padStart(2, "0");

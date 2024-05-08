@@ -14,7 +14,7 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeNavigation">
+      <Stack.Navigator initialRouteName="HealthStepForm">
         <Stack.Screen
           name="Start"
           component={Splash}
