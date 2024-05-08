@@ -23,6 +23,7 @@ export const Home = ({ navigation }) => {
   const searchHeaderOpacity = useRef(new Animated.Value(0)).current;
   const [searchActive, setSearchActive] = useState(false);
   const [scrollOffset, setScrollOffset] = useState(0);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   const targetTopPosition = -20;
 
@@ -87,6 +88,8 @@ export const Home = ({ navigation }) => {
             navigation={navigation}
             toggleSearchBar={toggleSearchBarPosition}
             activeSearch={searchActive}
+            onOpen={() => setIsOverlayVisible(true)}
+            onClose={() => setIsOverlayVisible(false)}
           />
         </Animated.View>
         {searchActive ? (
@@ -108,6 +111,18 @@ export const Home = ({ navigation }) => {
             <RecipeList title="Your recipes" />
             <RecipeList title="Popular recipes" />
           </Animated.View>
+        )}
+        {isOverlayVisible && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+          />
         )}
       </Animated.ScrollView>
     </AppWrapper>

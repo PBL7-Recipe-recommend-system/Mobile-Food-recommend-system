@@ -1,11 +1,26 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Text,
+} from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { PRIMARY_COLOR } from "../../constants/color";
-export const SearchBar = ({ navigation, toggleSearchBar, activeSearch }) => {
+import { useRef } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { FilterSearch } from "./FilterSearch";
+export const SearchBar = ({
+  navigation,
+  toggleSearchBar,
+  activeSearch,
+  onOpen,
+  onClose,
+}) => {
   const [value, setValue] = useState("");
-  const inputRef = React.useRef();
-
+  const inputRef = useRef();
+  const refRBSheet = useRef();
   return (
     <View style={style.searchContainer}>
       <TouchableOpacity
@@ -18,7 +33,7 @@ export const SearchBar = ({ navigation, toggleSearchBar, activeSearch }) => {
         <View
           style={{
             borderWidth: 2,
-            borderRadius: 16,
+            borderRadius: 14,
             borderColor: "#E5E5E5",
             width: "100%",
             height: 50,
@@ -53,9 +68,40 @@ export const SearchBar = ({ navigation, toggleSearchBar, activeSearch }) => {
           </View>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={style.filterButton}>
+      <TouchableOpacity
+        style={[style.filterButton]}
+        onPress={() => refRBSheet.current.open()}
+      >
         <Ionicons name="filter-outline" size={26} color="white" />
       </TouchableOpacity>
+      <RBSheet
+        ref={refRBSheet}
+        onOpen={onOpen}
+        onClose={onClose}
+        useNativeDriver={false}
+        customStyles={{
+          wrapper: {
+            backgroundColor: "transparent",
+          },
+          container: {
+            height: "70%",
+            borderTopLeftRadius: 60,
+            borderTopRightRadius: 60,
+          },
+          draggableIcon: {
+            backgroundColor: "#000",
+          },
+        }}
+        customModalProps={{
+          animationType: "slide",
+          statusBarTranslucent: true,
+        }}
+        customAvoidingViewProps={{
+          enabled: false,
+        }}
+      >
+        <FilterSearch />
+      </RBSheet>
     </View>
   );
 };
@@ -76,5 +122,12 @@ const style = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  filterSheet: {
+    height: 300,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: "#FFFFFF",
+    padding: 20,
   },
 });

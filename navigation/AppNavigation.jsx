@@ -14,7 +14,7 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HealthStepForm">
+      <Stack.Navigator initialRouteName="HomeNavigation">
         <Stack.Screen
           name="Start"
           component={Splash}
@@ -48,11 +48,6 @@ export const AppNavigation = () => {
         <Stack.Screen
           name="HomeNavigation"
           component={HomeNavigation}
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen
-          name="Search"
-          component={Search}
           options={{ headerShown: false, gestureEnabled: false }}
         />
       </Stack.Navigator>
