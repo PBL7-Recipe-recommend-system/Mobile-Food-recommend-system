@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, View, StyleSheet, Text } from "react-native";
 import { RecentSearchItem } from "./RecentSearchItem";
 
 const data = [
@@ -18,7 +18,6 @@ const data = [
   { id: "13" },
 ];
 
-// Function to group the data into pairs of two
 const groupItems = (items) => {
   const grouped = [];
   for (let i = 0; i < items.length; i += 2) {
@@ -30,7 +29,6 @@ const groupItems = (items) => {
 export const RecentSearchList = () => {
   const groupedData = groupItems(data);
 
-  // Render two items per row
   const renderItem = ({ item }) => {
     return (
       <View style={styles.row}>
@@ -47,13 +45,16 @@ export const RecentSearchList = () => {
   };
 
   return (
-    <FlatList
-      data={groupedData}
-      renderItem={renderItem}
-      scrollEnabled={false}
-      keyExtractor={(item, index) => `row-${index}`}
-      contentContainerStyle={styles.container}
-    />
+    <View>
+      <Text className="text-xl font-bold">Recent Search</Text>
+      <FlatList
+        data={groupedData}
+        renderItem={renderItem}
+        scrollEnabled={false}
+        keyExtractor={(item, index) => `row-${index}`}
+        contentContainerStyle={styles.container}
+      />
+    </View>
   );
 };
 

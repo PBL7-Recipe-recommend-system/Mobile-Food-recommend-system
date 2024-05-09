@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -11,16 +11,41 @@ import { PRIMARY_COLOR } from "../../constants/color";
 import { useRef } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { FilterSearch } from "./FilterSearch";
+import { searchRecipes } from "../../api/search";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const SearchBar = ({
-  navigation,
   toggleSearchBar,
   activeSearch,
   onOpen,
   onClose,
 }) => {
   const [value, setValue] = useState("");
+  const [resultSearch, setResultSearch] = useState([]);
   const inputRef = useRef();
   const refRBSheet = useRef();
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (value.length !== 0) {
+        const results = await searchRecipes(value);
+        setResultSearch(results.data.content);
+        await AsyncStorage.setItem(
+          "searchResults",
+          JSON.stringify(results.data.content)
+        );
+      } else if (value.length === 0) {
+        setResultSearch([]);
+        await AsyncStorage.removeItem("searchResults");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [value]);
+
+  const handleSearch = async (text) => {
+    setValue(text);
+  };
+
   return (
     <View style={style.searchContainer}>
       <TouchableOpacity
@@ -57,7 +82,7 @@ export const SearchBar = ({
                 placeholder="Search recipe"
                 maxLength={40}
                 autoComplete="off"
-                onChangeText={(text) => setValue(text)}
+                onChangeText={(text) => handleSearch(text)}
                 value={value}
                 height={46}
                 style={{ paddingLeft: 10, width: "90%" }}

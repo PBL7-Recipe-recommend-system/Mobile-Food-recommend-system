@@ -27,6 +27,7 @@ import {
 } from "../../constants/messages";
 import { authenticate, hello } from "../../api/auth";
 import { showErrorToast } from "../../helper/errorToast";
+import { HomeNavigation } from "../../navigation/HomeNavigation";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -64,7 +65,7 @@ const Login = ({ navigation }) => {
       if (res.status === 401) {
         showErrorToast(res.message);
       } else {
-        navigation.navigate("HealthStepForm");
+        navigation.navigate("HomeNavigation");
       }
     } else {
       console.log("Invalid form");

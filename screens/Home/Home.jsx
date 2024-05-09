@@ -31,7 +31,9 @@ export const Home = ({ navigation }) => {
 
   const toggleSearchBarPosition = () => {
     const toValue = searchActive ? 0 : targetTopPosition;
+
     const otherOpacity = searchActive ? 1 : 0;
+
     const searchHeaderOpacityValue = searchActive ? 0 : 1;
 
     Animated.timing(translateY, {
@@ -51,7 +53,6 @@ export const Home = ({ navigation }) => {
       duration: 700,
       useNativeDriver: true,
     }).start();
-
     setSearchActive(!searchActive);
     Keyboard.dismiss();
     if (!searchActive && scrollViewRef.current) {
@@ -68,7 +69,6 @@ export const Home = ({ navigation }) => {
     <AppWrapper>
       <Animated.ScrollView
         ref={scrollViewRef}
-        // scrollEnabled={!searchActive}
         nestedScrollEnabled={true}
         contentContainerStyle={[style.container]}
         onScroll={handleScroll}
@@ -102,7 +102,6 @@ export const Home = ({ navigation }) => {
               },
             ]}
           >
-            <Text className="text-xl font-bold">Recent Search</Text>
             <RecentSearchList />
           </Animated.View>
         ) : (

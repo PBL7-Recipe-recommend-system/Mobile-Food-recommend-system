@@ -1,9 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import http from "../helper/http";
+import axiosClient from "../helper/http";
+import { endpoints } from "../utils/path";
+
+const AUTH_ENDPOINT = endpoints.AUTH;
 
 export const authenticate = (email, password) => {
-  const res = http
-    .post("/auth/authenticate", {
+  const res = axiosClient
+    .post(`${AUTH_ENDPOINT}/authenticate`, {
       email: email,
       password: password,
     })
@@ -22,8 +25,8 @@ export const authenticate = (email, password) => {
 };
 
 export const registerAPI = (data) => {
-  const res = http
-    .post("/auth/register", data)
+  const res = axiosClient
+    .post(`${AUTH_ENDPOINT}/register`, data)
     .then((res) => {
       if (res.status === 200) {
         AsyncStorage.setItem("token", res.data.accessToken);
@@ -38,5 +41,5 @@ export const registerAPI = (data) => {
   return res;
 };
 export const hello = () => {
-  return http.get("/hello");
+  return axiosClient.get("/hello");
 };

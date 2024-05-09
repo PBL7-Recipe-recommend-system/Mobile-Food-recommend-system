@@ -57,6 +57,6 @@ class Http {
   }
 }
 
-const http = new Http();
+const axiosClient = new Http();
 
-export default http;
+export default axiosClient;
