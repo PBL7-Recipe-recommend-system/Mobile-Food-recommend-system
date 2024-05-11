@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOCAL_COMPANY_API_PATH } from "../utils/path";
+import { LOCAL_COMPANY_API_PATH, LOCAL_HOME_API_PATH } from "../utils/path";
 import { getTokenFromAsyncStorage } from "../utils/token";
 class Http {
   constructor() {
@@ -12,6 +12,7 @@ class Http {
         "Content-Type": "application/json",
       },
     });
+
     this.instance.interceptors.response.use(
       (response) => {
         return response.data;

@@ -5,3 +5,7 @@ const RECIPE_ENDPOINT = endpoints.RECIPES;
 export const searchRecipes = (keyword) => {
   return axiosClient.get(`${RECIPE_ENDPOINT}/search?name=${keyword}`);
 };
+
+export const recentSearch = () => {
+  return axiosClient.get(`${RECIPE_ENDPOINT}/recent-search`);
+};

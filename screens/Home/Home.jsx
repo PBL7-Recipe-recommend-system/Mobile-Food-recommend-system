@@ -1,29 +1,24 @@
-import React, { useRef, useState } from "react";
-import {
-  Animated,
-  Keyboard,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { Animated, Keyboard, StyleSheet, View } from "react-native";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { SearchBar } from "../../components/search/SearchBar";
 import { RecipeList } from "../../components/recipe/RecipeList";
 import { Header } from "./Header";
 import { CategoryBar } from "./CategoryBar";
 import { SearchHeader } from "../../components/search/SearchHeader";
-import { RecentSearchList } from "../../components/search/RecentSearchList";
+import { SearchList } from "../../components/search/SearchList";
 import { PRIMARY_COLOR } from "../../constants/color";
 
 export const Home = ({ navigation }) => {
-  // Animated values to control search bar and other components' opacity
   const translateY = useRef(new Animated.Value(0)).current;
   const otherComponentsOpacity = useRef(new Animated.Value(1)).current;
   const searchHeaderOpacity = useRef(new Animated.Value(0)).current;
   const [searchActive, setSearchActive] = useState(false);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [dataSearch, setDataSearch] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const targetTopPosition = -20;
 
@@ -90,6 +85,10 @@ export const Home = ({ navigation }) => {
             activeSearch={searchActive}
             onOpen={() => setIsOverlayVisible(true)}
             onClose={() => setIsOverlayVisible(false)}
+            isSearching={isSearching}
+            setIsSearching={(value) => setIsSearching(value)}
+            setDataSearch={(value) => setDataSearch(value)}
+            setIsLoading={(value) => setIsLoading(value)}
           />
         </Animated.View>
         {searchActive ? (
@@ -102,7 +101,11 @@ export const Home = ({ navigation }) => {
               },
             ]}
           >
-            <RecentSearchList />
+            <SearchList
+              isSearching={isSearching}
+              dataSource={dataSearch}
+              isLoading={isLoading}
+            />
           </Animated.View>
         ) : (
           <Animated.View style={{ opacity: otherComponentsOpacity }}>

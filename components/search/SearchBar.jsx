@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Text,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { useRef } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { FilterSearch } from "./FilterSearch";
-import { searchRecipes } from "../../api/search";
+import { searchRecipes, recentSearch } from "../../api/search";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const SearchBar = ({
   toggleSearchBar,
   activeSearch,
   onOpen,
   onClose,
+  setIsSearching,
+  setDataSearch,
+  setIsLoading,
+  isSearching,
 }) => {
   const [value, setValue] = useState("");
   const [resultSearch, setResultSearch] = useState([]);
@@ -25,25 +23,57 @@ export const SearchBar = ({
   const refRBSheet = useRef();
 
   useEffect(() => {
+    setValue("");
+  }, [activeSearch]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const results = await recentSearch();
+      setDataSearch(results.data);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(async () => {
       if (value.length !== 0) {
+        setIsLoading(true);
         const results = await searchRecipes(value);
         setResultSearch(results.data.content);
-        await AsyncStorage.setItem(
-          "searchResults",
-          JSON.stringify(results.data.content)
-        );
-      } else if (value.length === 0) {
+        setDataSearch(results.data.content);
+        setIsLoading(false);
+      } else if (value.length === 0 || value === undefined) {
+        if (!isSearching) {
+          const results = await recentSearch();
+          setResultSearch(results.data.content);
+        }
         setResultSearch([]);
-        await AsyncStorage.removeItem("searchResults");
+        setDataSearch([]);
       }
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [value]);
 
   const handleSearch = async (text) => {
+    if (text !== null && text !== "" && text !== undefined) {
+      setIsSearching(true, async () => {
+        await AsyncStorage.setItem("isSearching", JSON.stringify(true));
+      });
+    } else {
+      setIsSearching(false, async () => {
+        await AsyncStorage.setItem("isSearching", JSON.stringify(false));
+      });
+    }
     setValue(text);
+  };
+
+  const handlePress = () => {
+    if (!activeSearch) {
+      toggleSearchBar();
+      inputRef.current.focus();
+    }
   };
 
   return (
@@ -53,7 +83,7 @@ export const SearchBar = ({
           width: "80%",
           marginVertical: 24,
         }}
-        onPress={toggleSearchBar}
+        onPress={handlePress}
       >
         <View
           style={{

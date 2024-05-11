@@ -7,14 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import mockFoodImage from "../../assets/mock/food2.png";
 import { LinearGradient } from "expo-linear-gradient";
 import starIcon from "../../assets/icons/star.png";
-export const RecentSearchItem = () => {
+export const SearchItem = ({ data }) => {
   return (
     <TouchableOpacity style={style.container}>
       <ImageBackground
-        source={mockFoodImage}
+        source={{ uri: data.images }}
         resizeMode="cover"
         style={style.image}
         imageStyle={{ borderRadius: 16 }}
@@ -26,13 +25,13 @@ export const RecentSearchItem = () => {
           <View style={style.contentContainer}>
             <View style={style.rating}>
               <Image source={starIcon} style={style.starIcon} />
-              <Text style={{ textAlign: "center", fontSize: 12 }}>4.5</Text>
+              <Text style={{ textAlign: "center", fontSize: 12 }}>
+                {data.rating}
+              </Text>
             </View>
             <View>
-              <Text style={style.title}>
-                Lamb chops with fruity couscous and mint
-              </Text>
-              <Text style={style.author}>By Spicy Nelly</Text>
+              <Text style={style.title}>{data.name}</Text>
+              <Text style={style.author}>{data.authorName}</Text>
             </View>
           </View>
         </LinearGradient>
