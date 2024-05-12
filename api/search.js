@@ -7,5 +7,5 @@ export const searchRecipes = (keyword) => {
 };
 
 export const recentSearch = () => {
-  return axiosClient.get(`${RECIPE_ENDPOINT}/recent-search`);
+  return axiosClient.get(`${RECIPE_ENDPOINT}/recent`);
 };

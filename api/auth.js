@@ -60,7 +60,7 @@ export const sendOTP = (email) => {
 
 export const verifyOTP = (email, value) => {
   const res = axiosClient
-    .put(`${AUTH_ENDPOINT}/verify-account?email=${email}&otp=${value}`)
+    .post(`${AUTH_ENDPOINT}/otp-verification?email=${email}`, value)
     .then((res) => {
       if (res.status === 200) {
         return res;
