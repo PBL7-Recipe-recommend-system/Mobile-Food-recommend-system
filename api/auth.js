@@ -40,6 +40,52 @@ export const registerAPI = (data) => {
     });
   return res;
 };
-export const hello = () => {
-  return axiosClient.get("/hello");
+
+export const sendOTP = (email) => {
+  const res = axiosClient
+    .put(`${AUTH_ENDPOINT}/regenerate-otp?email=${email}`)
+    .then((res) => {
+      if (res.status === 200) {
+        AsyncStorage.setItem("emailReset", email);
+        return res;
+      } else if (res.status !== 200) {
+        return Promise.reject(res);
+      }
+    })
+    .catch((error) => {
+      return error;
+    });
+  return res;
+};
+
+export const verifyOTP = (email, value) => {
+  const res = axiosClient
+    .put(`${AUTH_ENDPOINT}/verify-account?email=${email}&otp=${value}`)
+    .then((res) => {
+      if (res.status === 200) {
+        return res;
+      } else if (res.status !== 200) {
+        return Promise.reject(res);
+      }
+    })
+    .catch((error) => {
+      return error;
+    });
+  return res;
+};
+export const updateNewPassword = (email, value) => {
+  const res = axiosClient
+    .put(`${AUTH_ENDPOINT}/set-password?email=${email}`, value)
+    .then((res) => {
+      if (res.status === 200) {
+        AsyncStorage.setItem("token", res.data.accessToken);
+        return res;
+      } else if (res.status !== 200) {
+        return Promise.reject(res);
+      }
+    })
+    .catch((error) => {
+      return error;
+    });
+  return res;
 };

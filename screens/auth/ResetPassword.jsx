@@ -1,29 +1,30 @@
-import React from "react";
-import AppWrapper from "../../wrappers/AppWrapper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  TouchableOpacity,
 } from "react-native";
+import Spinner from "react-native-loading-spinner-overlay";
 import global from "../../Styles";
+import { updateNewPassword } from "../../api/auth";
 import { BackButton } from "../../components/BackButton";
-import { useState } from "react";
-import ErrorText from "../../components/ErrorText";
-import {
-  ErrorEmailMessage,
-  ErrorPasswordMessage,
-} from "../../constants/messages";
 import CustomButton from "../../components/CustomButton";
+import ErrorText from "../../components/ErrorText";
+import { PRIMARY_COLOR } from "../../constants/color";
+import { ErrorPasswordMessage, LoadingMessage } from "../../constants/messages";
+import { showErrorToast } from "../../helper/errorToast";
+import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
 import {
   validateConfirmPassword,
   validatePassword,
 } from "../../utils/validation";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
+import AppWrapper from "../../wrappers/AppWrapper";
 
 export const ResetPassword = ({ navigation }) => {
   const [isValidPassword, setIsValidPassword] = useState(true);
@@ -32,6 +33,16 @@ export const ResetPassword = ({ navigation }) => {
   const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getEmail = async () => {
+      const email = await AsyncStorage.getItem("emailReset");
+      setEmail(email);
+    };
+    getEmail();
+  }, []);
   const handleChangePassword = (text) => {
     setPassword(text);
     setIsValidPassword(validatePassword(text));
@@ -42,9 +53,30 @@ export const ResetPassword = ({ navigation }) => {
     setIsValidConfirmPassword(validateConfirmPassword(password, text));
   };
 
-  const handleSubmitForm = () => {};
+  const handleSubmitForm = async () => {
+    setLoading(true);
+    try {
+      const res = await updateNewPassword(email, { newPassword: password });
+      console.log(res);
+      if (res.status === 200) {
+        navigation.navigate("HomeNavigation");
+      } else {
+        showErrorToast(res.message);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <AppWrapper>
+      <Spinner
+        visible={loading}
+        textContent={LoadingMessage}
+        textStyle={{ color: "#000" }}
+        color={PRIMARY_COLOR}
+        overlayColor="rgba(0, 0, 0, 0.5)"
+      />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
           <BackButton navigation={navigation} />
@@ -122,6 +154,12 @@ export const ResetPassword = ({ navigation }) => {
             width={"100%"}
             height={62}
             onPressButton={handleSubmitForm}
+            disabled={
+              !isValidPassword ||
+              !isValidConfirmPassword ||
+              password === "" ||
+              confirmPassword === ""
+            }
           />
         </View>
       </TouchableWithoutFeedback>

@@ -1,34 +1,61 @@
-import React from "react";
-import AppWrapper from "../../wrappers/AppWrapper";
+import React, { useState } from "react";
 import {
   Keyboard,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  TouchableOpacity,
 } from "react-native";
+import Spinner from "react-native-loading-spinner-overlay";
 import global from "../../Styles";
+import { sendOTP } from "../../api/auth";
 import { BackButton } from "../../components/BackButton";
-import { useState } from "react";
-import { validateEmail } from "../../utils/validation";
-import ErrorText from "../../components/ErrorText";
-import { ErrorEmailMessage } from "../../constants/messages";
 import CustomButton from "../../components/CustomButton";
+import ErrorText from "../../components/ErrorText";
+import { PRIMARY_COLOR } from "../../constants/color";
+import {
+  ErrorAccountNotFoundMessage,
+  ErrorEmailMessage,
+} from "../../constants/messages";
+import { validateEmail } from "../../utils/validation";
+import AppWrapper from "../../wrappers/AppWrapper";
+
 export const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(ErrorEmailMessage);
+  const [loading, setLoading] = useState(false);
   const handleChangeEmail = (text) => {
     setEmail(text);
     setIsValidEmail(validateEmail(text));
   };
 
-  const handleSubmitForm = () => {
-    navigation.navigate("ResetPassword");
+  const handleSubmitForm = async () => {
+    setLoading(true);
+    try {
+      const res = await sendOTP(email);
+      if (res.status === 200) {
+        navigation.navigate("OPTInput");
+      } else if (res.status === 401) {
+        setIsValidEmail(false);
+        setErrorMessage(ErrorAccountNotFoundMessage);
+      }
+    } catch (error) {
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <AppWrapper>
+      <Spinner
+        visible={loading}
+        textStyle={{ color: "#000" }}
+        color={PRIMARY_COLOR}
+        overlayColor="rgba(0, 0, 0, 0.5)"
+      />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
           <BackButton navigation={navigation} />
@@ -48,13 +75,14 @@ export const ForgotPassword = ({ navigation }) => {
               keyboardType="email-address"
               onChangeText={handleChangeEmail}
             />
-            <ErrorText isValid={isValidEmail} message={ErrorEmailMessage} />
+            <ErrorText isValid={isValidEmail} message={errorMessage} />
           </View>
           <CustomButton
-            title="Send Email"
+            title="Send Code"
             width={"100%"}
             height={62}
             onPressButton={handleSubmitForm}
+            disabled={!isValidEmail || email === ""}
           />
           <View style={style.accountText} className="">
             <Text>Don't have an account?</Text>

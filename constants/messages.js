@@ -10,3 +10,8 @@ export const ErrorEmptyEmailMessage = "Email must not be empty";
 export const ErrorEmptyPasswordMessage = "Password must not be empty";
 export const ErrorEmptyConfirmPasswordMessage =
   "Confirm password must not be empty";
+
+export const ErrorEmptyOTPMessage = "OTP must not be empty";
+export const ErrorAccountExistsMessage = "Account already exists";
+export const ErrorAccountNotFoundMessage = "Account not found";
+export const LoadingMessage = "Please wait...";

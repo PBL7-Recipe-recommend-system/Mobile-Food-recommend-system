@@ -1,33 +1,33 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import {
+  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { TextInput, Keyboard, TouchableWithoutFeedback } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import CustomButton from "../../components/CustomButton";
-import CheckBox from "expo-checkbox";
-import { useEffect, useState } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import global from "../../Styles";
+import { registerAPI } from "../../api/auth";
+import CustomButton from "../../components/CustomButton";
 import ErrorText from "../../components/ErrorText";
-import {
-  validateConfirmPassword,
-  validateEmail,
-  validatePassword,
-} from "../../utils/validation";
-import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
-import AppWrapper from "../../wrappers/AppWrapper";
-import { authenticate, registerAPI } from "../../api/auth";
-import { showErrorToast } from "../../helper/errorToast";
-import { HealthStepForm } from "../healthInit/HealthStepForm";
 import {
   ErrorEmailMessage,
   ErrorNameMessage,
   ErrorPasswordMessage,
 } from "../../constants/messages";
+import { showErrorToast } from "../../helper/errorToast";
+import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validatePassword,
+} from "../../utils/validation";
+import AppWrapper from "../../wrappers/AppWrapper";
 const Register = () => {
   const navigation = useNavigation();
   const [isValidData, setIsValidData] = useState({
@@ -228,6 +228,13 @@ const Register = () => {
                   width={"100%"}
                   height={62}
                   onPressButton={handleSubmitForm}
+                  disabled={
+                    !Object.values(isValidData).every((value) => value) ||
+                    dataForm.email === "" ||
+                    dataForm.password === "" ||
+                    dataForm.name === "" ||
+                    dataForm.confirmPassword === ""
+                  }
                 />
               </View>
               <View className="flex flex-row text-center items-center justify-center mt-2">

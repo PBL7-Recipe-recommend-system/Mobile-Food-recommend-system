@@ -8,12 +8,13 @@ import { HealthStepForm } from "../screens/healthInit/HealthStepForm";
 import { ForgotPassword } from "./../screens/auth/ForgotPassword";
 import { ResetPassword } from "./../screens/auth/ResetPassword";
 import { HomeNavigation } from "./HomeNavigation";
+import OPTInput from "../screens/auth/OPTInput";
 export const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeNavigation">
+      <Stack.Navigator initialRouteName="Start">
         <Stack.Screen
           name="Start"
           component={Splash}
@@ -27,6 +28,11 @@ export const AppNavigation = () => {
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPassword}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="OPTInput"
+          component={OPTInput}
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen
