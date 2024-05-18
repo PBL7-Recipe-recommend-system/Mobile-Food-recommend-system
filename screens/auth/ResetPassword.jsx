@@ -10,14 +10,13 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Spinner from "react-native-loading-spinner-overlay";
 import global from "../../Styles";
 import { updateNewPassword } from "../../api/auth";
 import { BackButton } from "../../components/BackButton";
 import CustomButton from "../../components/CustomButton";
 import ErrorText from "../../components/ErrorText";
-import { PRIMARY_COLOR } from "../../constants/color";
-import { ErrorPasswordMessage, LoadingMessage } from "../../constants/messages";
+import { Loading } from "../../components/Loading";
+import { ErrorPasswordMessage } from "../../constants/messages";
 import { showErrorToast } from "../../helper/errorToast";
 import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
 import {
@@ -56,8 +55,7 @@ export const ResetPassword = ({ navigation }) => {
   const handleSubmitForm = async () => {
     setLoading(true);
     try {
-      const res = await updateNewPassword(email, { newPassword: password });
-      console.log(res);
+      const res = await updateNewPassword(email, password);
       if (res.status === 200) {
         navigation.navigate("HomeNavigation");
       } else {
@@ -70,13 +68,7 @@ export const ResetPassword = ({ navigation }) => {
   };
   return (
     <AppWrapper>
-      <Spinner
-        visible={loading}
-        textContent={LoadingMessage}
-        textStyle={{ color: "#000" }}
-        color={PRIMARY_COLOR}
-        overlayColor="rgba(0, 0, 0, 0.5)"
-      />
+      <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
           <BackButton navigation={navigation} />

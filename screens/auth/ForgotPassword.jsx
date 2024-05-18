@@ -21,6 +21,7 @@ import {
 } from "../../constants/messages";
 import { validateEmail } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
+import { Loading } from "../../components/Loading";
 
 export const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -50,12 +51,7 @@ export const ForgotPassword = ({ navigation }) => {
   };
   return (
     <AppWrapper>
-      <Spinner
-        visible={loading}
-        textStyle={{ color: "#000" }}
-        color={PRIMARY_COLOR}
-        overlayColor="rgba(0, 0, 0, 0.5)"
-      />
+      <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
           <BackButton navigation={navigation} />

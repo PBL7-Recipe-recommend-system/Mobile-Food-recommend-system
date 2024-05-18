@@ -28,10 +28,12 @@ import {
   validatePassword,
 } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
+import { Loading } from "../../components/Loading";
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("dactai2k2@gmail.com");
+  const [password, setPassword] = useState("Tai2211@");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
@@ -61,19 +63,25 @@ const Login = ({ navigation }) => {
     if (email === "") setIsValidEmail(false);
     if (password === "") setIsValidPassword(false);
     if (validateLoginForm(email, password)) {
-      const res = await authenticate(email, password);
-      if (res.status === 401) {
-        showErrorToast(res.message);
-      } else {
-        navigation.navigate("HomeNavigation");
+      setLoading(true);
+      try {
+        const res = await authenticate(email, password);
+        if (res.status !== 200) {
+          showErrorToast(res.message);
+        } else {
+          navigation.navigate("HomeNavigation");
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
       }
     } else {
-      console.log("Invalid form");
     }
   };
 
   return (
     <AppWrapper>
+      <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
           <BackButton navigation={navigation} />

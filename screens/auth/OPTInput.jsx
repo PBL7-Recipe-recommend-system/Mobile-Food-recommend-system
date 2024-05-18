@@ -8,14 +8,12 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Spinner from "react-native-loading-spinner-overlay";
 import { OtpInput } from "react-native-otp-entry";
 import global from "../../Styles";
 import { sendOTP, verifyOTP } from "../../api/auth";
 import { BackButton } from "../../components/BackButton";
 import CustomButton from "../../components/CustomButton";
-import { PRIMARY_COLOR } from "../../constants/color";
-import { LoadingMessage } from "../../constants/messages";
+import { Loading } from "../../components/Loading";
 import { showErrorToast } from "../../helper/errorToast";
 import AppWrapper from "../../wrappers/AppWrapper";
 
@@ -55,7 +53,6 @@ const OPTInput = ({ navigation }) => {
     setLoading(true);
     try {
       const res = await verifyOTP(email, value);
-      console.log(res);
       if (res.status === 200) {
         navigation.navigate("ResetPassword");
       } else {
@@ -71,7 +68,6 @@ const OPTInput = ({ navigation }) => {
     setLoading(true);
     try {
       const res = await sendOTP(email);
-      console.log(res);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -81,13 +77,7 @@ const OPTInput = ({ navigation }) => {
   };
   return (
     <AppWrapper>
-      <Spinner
-        visible={loading}
-        textContent={LoadingMessage}
-        textStyle={{ color: "#000" }}
-        color={PRIMARY_COLOR}
-        overlayColor="rgba(0, 0, 0, 0.5)"
-      />
+      <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={[global.container, style.customContainer]}>
           <View>

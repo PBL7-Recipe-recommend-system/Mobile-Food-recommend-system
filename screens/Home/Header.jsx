@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Text, View, StyleSheet } from "react-native";
 import defaultAvt from "../../assets/images/avatar.png";
 import { Feather } from "@expo/vector-icons";
 import { PRIMARY_COLOR } from "../../constants/color";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Header = () => {
+  const [userName, setUserName] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await AsyncStorage.getItem("user");
+      const parsedUser = JSON.parse(user);
+      setUserName(parsedUser.name);
+    };
+
+    fetchUser();
+  }, []);
   return (
     <View style={style.headerContainer}>
       <View>
@@ -13,7 +24,7 @@ export const Header = () => {
           <Text className="text-[14px] ml-1">Good Morning</Text>
         </View>
         <Text className="font-extrabold text-2xl text-[#0A2533]">
-          Alena Sabyan
+          {userName ? userName : "User"}
         </Text>
       </View>
       <Image source={defaultAvt} style={style.avt} />

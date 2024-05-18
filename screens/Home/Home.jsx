@@ -8,6 +8,8 @@ import { CategoryBar } from "./CategoryBar";
 import { SearchHeader } from "../../components/search/SearchHeader";
 import { SearchList } from "../../components/search/SearchList";
 import { PRIMARY_COLOR } from "../../constants/color";
+import { me } from "../../api/users";
+import { recentSearch } from "../../api/search";
 
 export const Home = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -23,6 +25,16 @@ export const Home = ({ navigation }) => {
   const targetTopPosition = -20;
 
   const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      await me();
+      const results = await recentSearch();
+      setDataSearch(results.data);
+    };
+
+    fetchDataUser();
+  }, []);
 
   const toggleSearchBarPosition = () => {
     const toValue = searchActive ? 0 : targetTopPosition;

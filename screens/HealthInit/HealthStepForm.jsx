@@ -133,7 +133,6 @@ export const HealthStepForm = ({ navigation }) => {
 
   const handleCompleteSetUp = async () => {
     const res = await setUpPersonalize(formValues);
-    console.log(res);
   };
   return (
     <AppWrapper>

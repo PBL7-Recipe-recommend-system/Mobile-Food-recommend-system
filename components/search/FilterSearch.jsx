@@ -1,9 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CustomButton from "../CustomButton";
 import { FilterButton } from "./FilterButton";
+import {
+  categoryFilters,
+  rateFilters,
+  timeFilters,
+} from "../../constants/filterSelection";
 
-export const FilterSearch = () => {
+export const FilterSearch = ({ value, setValue, onPress }) => {
+  const [selectedTime, setSelectedTime] = useState(value.time);
+  const [selectedRate, setSelectedRate] = useState(value.rate);
+  const [selectedCategory, setSelectedCategory] = useState(value.category);
+
+  const handleSelectTime = (filter) => {
+    setSelectedTime(filter);
+    setValue({
+      time: filter,
+      ...value,
+    });
+  };
+  const handleSelectRate = (filter) => {
+    setSelectedRate(filter);
+    setValue({
+      rate: filter,
+      ...value,
+    });
+  };
+
+  const handleSelectCategory = (filter) => {
+    setSelectedCategory(filter);
+    setValue({
+      category: filter,
+      ...value,
+    });
+  };
+
   return (
     <View style={style.container}>
       <Text style={style.filterTitle}>Filter search</Text>
@@ -11,43 +43,57 @@ export const FilterSearch = () => {
         <View style={style.filterItemContainer}>
           <Text style={style.filterItemTitle}>Time</Text>
           <View style={style.filterItemList}>
-            <FilterButton textLine1="All" />
-            <FilterButton textLine1="Newest" />
-            <FilterButton textLine1="Oldest" />
-            <FilterButton textLine1="Popularity" />
+            {timeFilters.map((filter, index) => (
+              <FilterButton
+                key={filter.name}
+                data={filter}
+                selected={selectedTime === filter.value}
+                onPress={() => handleSelectTime(filter.value)}
+              />
+            ))}
           </View>
         </View>
 
         <View style={style.filterItemContainer}>
           <Text style={style.filterItemTitle}>Rate</Text>
           <View style={style.filterItemList}>
-            <FilterButton textLine1="All" />
-            <FilterButton textLine1="Newest" />
-            <FilterButton textLine1="Oldest" />
-            <FilterButton textLine1="Popularity" />
+            {rateFilters.map((filter) => (
+              <FilterButton
+                key={filter.name}
+                data={filter}
+                selected={selectedRate === filter.value}
+                onPress={() => handleSelectRate(filter.value)}
+              />
+            ))}
           </View>
         </View>
 
         <View style={style.filterItemContainer}>
           <Text style={style.filterItemTitle}>Category</Text>
           <View style={style.filterItemList}>
-            <FilterButton textLine1="All" />
-            <FilterButton textLine1="Newest" />
-            <FilterButton textLine1="Oldest" />
-            <FilterButton textLine1="Vegetables" />
-
-            <FilterButton textLine1="All" />
-            <FilterButton textLine1="Newest" />
-            <FilterButton textLine1="Breakfast" />
-            <FilterButton textLine1="Popularity" />
-
-            <FilterButton textLine1="Spanish" />
-            <FilterButton textLine1="Newest" />
-            <FilterButton textLine1="Oldest" />
+            {categoryFilters.map((filter) => (
+              <FilterButton
+                key={filter.name}
+                data={filter}
+                selected={selectedCategory === filter.value}
+                onPress={() => handleSelectCategory(filter.value)}
+              />
+            ))}
           </View>
         </View>
       </View>
-      <CustomButton title={"Filter"} width={"72%"} height={60} />
+      <CustomButton
+        title={"Filter"}
+        width={"72%"}
+        height={60}
+        onPressButton={() =>
+          onPress({
+            time: selectedTime,
+            rate: selectedRate,
+            category: selectedCategory,
+          })
+        }
+      />
     </View>
   );
 };

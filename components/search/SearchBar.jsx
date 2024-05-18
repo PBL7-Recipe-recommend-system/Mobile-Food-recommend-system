@@ -18,37 +18,57 @@ export const SearchBar = ({
   isSearching,
 }) => {
   const [value, setValue] = useState("");
-  const [resultSearch, setResultSearch] = useState([]);
+  const [filterValue, setFilterValue] = useState({
+    time: 1,
+    rate: null,
+    category: null,
+  });
   const inputRef = useRef();
   const refRBSheet = useRef();
 
   useEffect(() => {
-    setValue("");
-  }, [activeSearch]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const results = await recentSearch();
-      setDataSearch(results.data);
+    const resetValue = async () => {
+      if (activeSearch === false) {
+        setValue("");
+        await AsyncStorage.setItem(
+          "searchOption",
+          JSON.stringify({
+            name: "",
+            time: null,
+            rate: null,
+            category: null,
+          })
+        );
+        setFilterValue({ time: 1, rate: null, category: null });
+        const results = await recentSearch();
+        setDataSearch(results.data);
+      }
     };
-
-    fetchData();
-  }, []);
+    resetValue();
+  }, [activeSearch]);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (value.length !== 0) {
         setIsLoading(true);
-        const results = await searchRecipes(value);
-        setResultSearch(results.data.content);
+        const results = await searchRecipes(
+          value,
+          filterValue.time,
+          filterValue.rate,
+          filterValue.category
+        );
+        await AsyncStorage.setItem(
+          "searchOption",
+          JSON.stringify({
+            name: value,
+            time: filterValue.time,
+            rate: filterValue.rate,
+            category: filterValue.category,
+          })
+        );
         setDataSearch(results.data.content);
         setIsLoading(false);
       } else if (value.length === 0 || value === undefined) {
-        if (!isSearching) {
-          const results = await recentSearch();
-          setResultSearch(results.data.content);
-        }
-        setResultSearch([]);
         setDataSearch([]);
       }
     }, 500);
@@ -74,6 +94,32 @@ export const SearchBar = ({
       toggleSearchBar();
       inputRef.current.focus();
     }
+  };
+
+  const handleOnPressFilter = async (filter) => {
+    setFilterValue(filter);
+    refRBSheet.current.close();
+    setIsLoading(true);
+    const results = await searchRecipes(
+      value,
+      filter.time,
+      filter.rate,
+      filter.category
+    );
+    await AsyncStorage.setItem(
+      "searchOption",
+      JSON.stringify({
+        name: value,
+        time: filterValue.time,
+        rate: filterValue.rate,
+        category: filterValue.category,
+      })
+    );
+    setIsSearching(true, async () => {
+      await AsyncStorage.setItem("isSearching", JSON.stringify(true));
+    });
+    setDataSearch(results.data.content);
+    setIsLoading(false);
   };
 
   return (
@@ -132,7 +178,9 @@ export const SearchBar = ({
       <RBSheet
         ref={refRBSheet}
         onOpen={onOpen}
-        onClose={onClose}
+        onClose={() => {
+          onClose();
+        }}
         useNativeDriver={false}
         customStyles={{
           wrapper: {
@@ -140,8 +188,8 @@ export const SearchBar = ({
           },
           container: {
             height: "70%",
-            borderTopLeftRadius: 60,
-            borderTopRightRadius: 60,
+            borderTopLeftRadius: 32,
+            borderTopRightRadius: 32,
           },
           draggableIcon: {
             backgroundColor: "#000",
@@ -155,7 +203,11 @@ export const SearchBar = ({
           enabled: false,
         }}
       >
-        <FilterSearch />
+        <FilterSearch
+          value={filterValue}
+          setValue={setFilterValue}
+          onPress={handleOnPressFilter}
+        />
       </RBSheet>
     </View>
   );

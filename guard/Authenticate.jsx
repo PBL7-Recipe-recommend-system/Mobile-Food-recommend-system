@@ -9,7 +9,6 @@ const Authenticate = ({ children }) => {
   useEffect(() => {
     const getToken = async () => {
       setToken(await getTokenFromAsyncStorage());
-      console.log("You must log in");
     };
     getToken();
   }, []);

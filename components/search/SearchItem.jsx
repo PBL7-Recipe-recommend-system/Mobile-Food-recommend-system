@@ -30,7 +30,9 @@ export const SearchItem = ({ data }) => {
               </Text>
             </View>
             <View>
-              <Text style={style.title}>{data.name}</Text>
+              <Text style={style.title} numberOfLines={2} ellipsizeMode="tail">
+                {data.name}
+              </Text>
               <Text style={style.author}>{data.authorName}</Text>
             </View>
           </View>
@@ -72,7 +74,7 @@ const style = StyleSheet.create({
   },
   author: {
     color: "#a9a9a9",
-    fontSize: 8,
+    fontSize: 10,
     marginHorizontal: 8,
   },
 

@@ -24,6 +24,23 @@ export const authenticate = (email, password) => {
   return res;
 };
 
+export const logOut = () => {
+  const res = axiosClient
+    .post(`${AUTH_ENDPOINT}/logout`)
+    .then((res) => {
+      if (res.status === 200) {
+        AsyncStorage.removeItem("token");
+        return res;
+      } else {
+        return Promise.reject(res);
+      }
+    })
+    .catch((error) => {
+      return error;
+    });
+  return res;
+};
+
 export const registerAPI = (data) => {
   const res = axiosClient
     .post(`${AUTH_ENDPOINT}/register`, data)

@@ -1,21 +1,22 @@
 import React from "react";
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
 
-export const FilterButton = ({ textLine1, textLine2, onPress }) => {
+export const FilterButton = ({ data, onPress, selected }) => {
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity
+      style={[styles.button, selected && { backgroundColor: PRIMARY_COLOR }]}
+      onPress={onPress}
+    >
       <Text
-        style={[styles.buttonText, Platform.OS !== "ios" && { fontSize: 10 }]}
+        style={[
+          styles.buttonText,
+          Platform.OS !== "ios" && { fontSize: 10 },
+          selected && { color: "#fff" },
+        ]}
         className="text-xs"
       >
-        {textLine1} <Text style={styles.highlightText}>{textLine2}</Text>
+        {data.name}
       </Text>
     </TouchableOpacity>
   );
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
     marginRight: 16,
   },
+
   buttonText: {
     color: PRIMARY_COLOR, // Text color for the main text
     textAlign: "center",

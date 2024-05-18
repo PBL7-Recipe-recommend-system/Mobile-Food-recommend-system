@@ -6,26 +6,20 @@ export const getTokenFromAsyncStorage = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
     return token;
-  } catch (error) {
-    console.log(`Get token ::`, error);
-  }
+  } catch (error) {}
 };
 
 export const removeTokenFromAsyncStorage = async () => {
   try {
     await AsyncStorage.removeItem("token");
-  } catch (error) {
-    console.log(`Remove token ::`, error);
-  }
+  } catch (error) {}
 };
 
 export const checkLogin = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
     return token ? true : false;
-  } catch (error) {
-    console.log(`Get token ::`, error);
-  }
+  } catch (error) {}
 };
 
 export const getUserIdFromToken = async () => {
@@ -33,7 +27,5 @@ export const getUserIdFromToken = async () => {
     const token = await AsyncStorage.getItem("token");
     var decoded = jwtDecode(token);
     return decoded.userId;
-  } catch (error) {
-    console.log(`Get token ::`, error);
-  }
+  } catch (error) {}
 };
