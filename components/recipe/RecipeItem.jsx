@@ -10,24 +10,33 @@ import {
 import mockFoodImage from "../../assets/mock/food1.jpg";
 import caloriesIcon from "../../assets/icons/calories.png";
 import clockIcon from "../../assets/icons/clock.png";
+import { useNavigation } from "@react-navigation/native";
 
-export const RecipeItem = () => {
+export const RecipeItem = ({ item }) => {
+  const navigation = useNavigation();
+
+  const handleClickItem = () => {
+    navigation.navigate("DetailedRecipe", { id: item.id });
+  };
   return (
     <TouchableOpacity
       style={[
         style.shadowBox,
         Platform.OS === "android" ? style.androidContainer : style.container,
       ]}
+      onPress={handleClickItem}
     >
       <View className="m-4 ">
         <Image
-          source={mockFoodImage}
+          source={{ uri: item.images }}
           style={Platform.OS === "android" ? style.androidImage : style.image}
         />
         <Text
           style={Platform.OS === "android" ? style.androidTitle : style.title}
+          numberOfLines={1}
+          ellipsizeMode="tail"
         >
-          Healthy Taco Salad with fresh vegetable
+          {item.name}
         </Text>
         <View className="flex flex-row items-center justify-between">
           <View style={style.iconContainer}>
@@ -42,7 +51,7 @@ export const RecipeItem = () => {
                   : style.iconText
               }
             >
-              350 Kcal
+              {item.calories}
             </Text>
           </View>
           <View style={style.iconContainer}>
@@ -57,7 +66,7 @@ export const RecipeItem = () => {
                   : style.iconText
               }
             >
-              20 Min
+              {item.totalTime}
             </Text>
           </View>
         </View>

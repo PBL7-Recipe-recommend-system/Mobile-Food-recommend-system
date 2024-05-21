@@ -137,7 +137,7 @@ export const HealthStepForm = ({ navigation }) => {
   return (
     <AppWrapper>
       <View className="ml-[30px] text-center mt-3">
-        <BackButton navigation={navigation} onPress={onPrevStep} />
+        <BackButton onPress={onPrevStep} />
       </View>
       <View style={styles.container}>
         <Wizard

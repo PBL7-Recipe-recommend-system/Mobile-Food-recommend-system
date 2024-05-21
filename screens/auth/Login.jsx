@@ -84,7 +84,6 @@ const Login = ({ navigation }) => {
       <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
-          <BackButton navigation={navigation} />
           <ScrollView
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}

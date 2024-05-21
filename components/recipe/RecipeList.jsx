@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,12 @@ import {
 import { RecipeItem } from "./RecipeItem";
 import { PRIMARY_COLOR } from "../../constants/color";
 
-export const RecipeList = ({ title }) => {
+export const RecipeList = ({ title, dataSource }) => {
+  const [data, setData] = useState(dataSource);
+
+  useEffect(() => {
+    setData(dataSource);
+  }, [dataSource]);
   return (
     <View style={{ height: "40%" }}>
       <View style={style.categoryContainer}>
@@ -19,15 +24,9 @@ export const RecipeList = ({ title }) => {
         </TouchableOpacity>
       </View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
-        <RecipeItem />
+        {data &&
+          data.length > 0 &&
+          data.map((recipe) => <RecipeItem key={recipe.id} item={recipe} />)}
       </ScrollView>
     </View>
   );

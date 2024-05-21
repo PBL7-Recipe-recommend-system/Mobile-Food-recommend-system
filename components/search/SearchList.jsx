@@ -78,7 +78,7 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
   };
 
   const ListEndLoader = async () => {
-    setPage((prevPage) => prevPage + 1);
+    // setPage((prevPage) => prevPage + 1);
     console.log("end of list >> ", page + 1);
   };
   return (
@@ -118,7 +118,7 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
             justifyContent: "center",
           }}
         >
-          <Image source={RESULT_IMAGE} style={styles.contain} size="lg" con />
+          <Image source={RESULT_IMAGE} style={styles.contain} size="lg" />
           <Text className="text-lg font-bold">No results...</Text>
         </View>
       )}
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     width: 220,
     height: 220,
     resizeMode: "contain",
+    backgroundColor: "transparent",
   },
   loaderStyle: {
     flex: 1,

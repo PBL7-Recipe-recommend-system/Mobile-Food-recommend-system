@@ -10,6 +10,7 @@ import { SearchList } from "../../components/search/SearchList";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { me } from "../../api/users";
 import { recentSearch } from "../../api/search";
+import { getPopularRecipes } from "../../api/recipes";
 
 export const Home = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -21,6 +22,7 @@ export const Home = ({ navigation }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [dataSearch, setDataSearch] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [popularRecipes, setPopularRecipes] = useState([]);
 
   const targetTopPosition = -20;
 
@@ -31,6 +33,10 @@ export const Home = ({ navigation }) => {
       await me();
       const results = await recentSearch();
       setDataSearch(results.data);
+
+      const popularResponse = await getPopularRecipes();
+      console.log("popularResponse", popularResponse);
+      setPopularRecipes(popularResponse.data.content);
     };
 
     fetchDataUser();
@@ -122,8 +128,8 @@ export const Home = ({ navigation }) => {
         ) : (
           <Animated.View style={{ opacity: otherComponentsOpacity }}>
             <CategoryBar />
-            <RecipeList title="Your recipes" />
-            <RecipeList title="Popular recipes" />
+            <RecipeList title="Your recipes" dataSource={popularRecipes} />
+            <RecipeList title="Popular recipes" dataSource={popularRecipes} />
           </Animated.View>
         )}
         {isOverlayVisible && (

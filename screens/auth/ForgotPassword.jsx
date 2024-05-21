@@ -54,7 +54,7 @@ export const ForgotPassword = ({ navigation }) => {
       <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
-          <BackButton navigation={navigation} />
+          <BackButton />
           <View className="my-8">
             <Text className="text-3xl font-bold">Forgot Password</Text>
             <Text className="my-4 text-[16px]">

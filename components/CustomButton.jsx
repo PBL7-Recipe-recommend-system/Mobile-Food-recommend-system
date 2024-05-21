@@ -8,6 +8,7 @@ const CustomButton = ({
   height,
   customStyle,
   disabled,
+  textColor,
 }) => {
   return (
     <TouchableHighlight
@@ -22,7 +23,7 @@ const CustomButton = ({
       onPress={onPressButton}
       disabled={disabled}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, { color: textColor || "#fff" }]}>{title}</Text>
     </TouchableHighlight>
   );
 };
@@ -36,7 +37,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   text: {
-    color: "white",
     fontSize: 16,
     lineHeight: 24,
     fontWeight: "bold",

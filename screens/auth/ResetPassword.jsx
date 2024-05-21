@@ -71,7 +71,7 @@ export const ResetPassword = ({ navigation }) => {
       <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
-          <BackButton navigation={navigation} />
+          <BackButton />
           <View className="my-8">
             <Text className="text-3xl font-bold">Reset Password</Text>
             <Text className="my-4 text-[16px]">

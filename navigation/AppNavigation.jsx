@@ -9,6 +9,7 @@ import { ForgotPassword } from "./../screens/auth/ForgotPassword";
 import { ResetPassword } from "./../screens/auth/ResetPassword";
 import { HomeNavigation } from "./HomeNavigation";
 import OPTInput from "../screens/auth/OPTInput";
+import { DetailedRecipe } from "../screens/recipes/DetailedRecipe";
 export const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,11 @@ export const AppNavigation = () => {
         <Stack.Screen
           name="HomeNavigation"
           component={HomeNavigation}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="DetailedRecipe"
+          component={DetailedRecipe}
           options={{ headerShown: false, gestureEnabled: false }}
         />
       </Stack.Navigator>

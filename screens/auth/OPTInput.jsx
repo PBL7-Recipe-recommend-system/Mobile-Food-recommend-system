@@ -51,8 +51,9 @@ const OPTInput = ({ navigation }) => {
 
   const handleSubmitForm = async () => {
     setLoading(true);
+    console.log(value);
     try {
-      const res = await verifyOTP(email, value);
+      const res = await verifyOTP(email, { otp: value });
       if (res.status === 200) {
         navigation.navigate("ResetPassword");
       } else {
@@ -67,7 +68,7 @@ const OPTInput = ({ navigation }) => {
   const resendCode = async () => {
     setLoading(true);
     try {
-      const res = await sendOTP(email);
+      await sendOTP(email);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -81,7 +82,7 @@ const OPTInput = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={[global.container, style.customContainer]}>
           <View>
-            <BackButton navigation={navigation} />
+            <BackButton />
             <View className="my-8">
               <Text className="text-3xl font-bold">
                 Please Check Your Email
@@ -105,7 +106,7 @@ const OPTInput = ({ navigation }) => {
               ref={otpInput}
               numberOfDigits={6}
               focusColor="green"
-              focusStickBlinkingDuration={500}
+              focusStickBlinkingDuration={100}
               onTextChange={(text) => setValue(text)}
               onFilled={(text) => setValue(text)}
               textInputProps={{

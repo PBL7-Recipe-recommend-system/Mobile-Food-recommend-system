@@ -28,7 +28,9 @@ import {
   validatePassword,
 } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
+import { Loading } from "../../components/Loading";
 const Register = () => {
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const [isValidData, setIsValidData] = useState({
     name: true,
@@ -42,7 +44,6 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
 
@@ -72,6 +73,7 @@ const Register = () => {
     });
   };
   const handleSubmitForm = async () => {
+    setLoading(true);
     setIsValidData((prevData) => ({
       ...prevData,
       name: dataForm.name !== "",
@@ -93,10 +95,12 @@ const Register = () => {
         navigation.navigate("HealthStepForm");
       }
     }
+    setLoading(false);
   };
 
   return (
     <AppWrapper>
+      <Loading loading={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={global.container}>
           <ScrollView

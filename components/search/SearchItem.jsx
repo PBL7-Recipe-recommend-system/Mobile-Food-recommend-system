@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Image,
   ImageBackground,
@@ -9,9 +9,15 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import starIcon from "../../assets/icons/star.png";
+import { useNavigation } from "@react-navigation/native";
 export const SearchItem = ({ data }) => {
+  const navigation = useNavigation();
+
+  const handleClickItem = () => {
+    navigation.navigate("DetailedRecipe", { id: data.id });
+  };
   return (
-    <TouchableOpacity style={style.container}>
+    <TouchableOpacity style={style.container} onPress={handleClickItem}>
       <ImageBackground
         source={{ uri: data.images }}
         resizeMode="cover"
