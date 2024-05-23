@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { SelectionButton } from "../SelectionButton";
-
-const BREAKFAST = "Breakfast";
-const MORNING_SNACK = "Morning Snack";
-const LUNCH = "Lunch";
-const AFTERNOON_SNACK = "Afternoon Snack";
-const DINNER = "Dinner";
+import { BREAKFAST, generateNumberOfMeals } from "../../utils/meals";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const CategoryList = () => {
   const [selected, isSelected] = useState(BREAKFAST);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = await AsyncStorage.getItem("user");
+      console.log(user);
+    };
+    fetchData();
+  }, []);
+
+  const mealsList = generateNumberOfMeals(3);
 
   const onPressButton = (item) => {
     isSelected(item);
@@ -20,37 +26,22 @@ export const CategoryList = () => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={style.categorySelection}
     >
-      <SelectionButton
-        title={BREAKFAST}
-        isSelected={selected === BREAKFAST}
-        onPressButton={onPressButton}
-      />
-      <SelectionButton
-        title={MORNING_SNACK}
-        isSelected={selected === MORNING_SNACK}
-        onPressButton={onPressButton}
-      />
-      <SelectionButton
-        title={LUNCH}
-        isSelected={selected === LUNCH}
-        onPressButton={onPressButton}
-      />
-      <SelectionButton
-        title={AFTERNOON_SNACK}
-        isSelected={selected === AFTERNOON_SNACK}
-        onPressButton={onPressButton}
-      />
-      <SelectionButton
-        title={DINNER}
-        isSelected={selected === DINNER}
-        onPressButton={onPressButton}
-      />
+      {mealsList.map((meal) => (
+        <SelectionButton
+          key={meal}
+          title={meal}
+          isSelected={selected === meal}
+          onPressButton={onPressButton}
+        />
+      ))}
     </ScrollView>
   );
 };
 
 const style = StyleSheet.create({
   categorySelection: {
+    width: "120%",
     marginVertical: 12,
+    left: 30,
   },
 });

@@ -40,6 +40,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     marginVertical: 16,
     justifyContent: "space-between",
+    paddingHorizontal: 30,
   },
   greeting: {
     display: "flex",

@@ -24,6 +24,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingHorizontal: 30,
   },
   seeAllText: {
     fontSize: 14,

@@ -20,10 +20,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     color: "#000",
   },
-  contentContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
-  },
 });
 
 export default AppWrapper;

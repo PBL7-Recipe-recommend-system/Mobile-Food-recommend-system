@@ -2,11 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { BackButton } from "../BackButton";
 
-export const SearchHeader = ({ navigation, goBack }) => {
+export const CustomHeader = ({ goBack, title }) => {
   return (
     <View style={styles.container}>
       <BackButton onPress={goBack} />
-      <Text style={styles.title}>Search recipes</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   );
 };
@@ -23,12 +23,11 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   title: {
-    textAlign: "center",
     fontSize: 18,
     fontWeight: "600",
     color: "#000000",
     position: "absolute",
     left: "50%",
-    transform: [{ translateX: -58 }],
+    transform: [{ translateX: -50 }],
   },
 });

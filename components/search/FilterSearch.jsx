@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 import CustomButton from "../CustomButton";
 import { FilterButton } from "./FilterButton";
 import {
@@ -39,7 +39,10 @@ export const FilterSearch = ({ value, setValue, onPress }) => {
   return (
     <View style={style.container}>
       <Text style={style.filterTitle}>Filter search</Text>
-      <View className="my-8" style={{ flex: 1, width: "100%" }}>
+      <View
+        className={Platform.OS === "ios" ? "my-9" : "my-2"}
+        style={[{ flex: 1, width: "100%" }]}
+      >
         <View style={style.filterItemContainer}>
           <Text style={style.filterItemTitle}>Time</Text>
           <View style={style.filterItemList}>

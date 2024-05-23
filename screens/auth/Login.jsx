@@ -29,6 +29,8 @@ import {
 } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { Loading } from "../../components/Loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { me } from "../../api/users";
 
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -40,7 +42,7 @@ const Login = ({ navigation }) => {
     useTogglePasswordVisibility();
 
   useEffect(() => {
-    const resetForm = () => {
+    const resetForm = async () => {
       setIsValidEmail(true);
       setIsValidPassword(true);
     };
@@ -69,6 +71,12 @@ const Login = ({ navigation }) => {
         if (res.status !== 200) {
           showErrorToast(res.message);
         } else {
+          try {
+            const res = await me();
+            await AsyncStorage.setItem("user", JSON.stringify(res.data));
+          } catch (error) {
+            console.log(error);
+          }
           navigation.navigate("HomeNavigation");
         }
       } catch (error) {

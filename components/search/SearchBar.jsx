@@ -187,7 +187,7 @@ export const SearchBar = ({
             backgroundColor: "transparent",
           },
           container: {
-            height: "70%",
+            height: "66%",
             borderTopLeftRadius: 32,
             borderTopRightRadius: 32,
           },
@@ -220,6 +220,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 30,
   },
   filterButton: {
     width: 50,

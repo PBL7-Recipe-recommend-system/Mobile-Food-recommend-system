@@ -1,11 +1,20 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Animated, Keyboard, StyleSheet, View } from "react-native";
+import {
+  Animated,
+  Keyboard,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { SearchBar } from "../../components/search/SearchBar";
 import { RecipeList } from "../../components/recipe/RecipeList";
 import { Header } from "./Header";
 import { CategoryBar } from "./CategoryBar";
-import { SearchHeader } from "../../components/search/SearchHeader";
+import {
+  SearchHeader,
+  CustomHeader,
+} from "../../components/search/CustomHeader";
 import { SearchList } from "../../components/search/SearchList";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { me } from "../../api/users";
@@ -28,14 +37,28 @@ export const Home = ({ navigation }) => {
 
   const scrollViewRef = useRef(null);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      const refreshData = async () => {
+        const results = await recentSearch();
+        setDataSearch(results.data);
+
+        const popularResponse = await getPopularRecipes();
+        setPopularRecipes(popularResponse.data.content);
+      };
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   useEffect(() => {
     const fetchDataUser = async () => {
-      await me();
       const results = await recentSearch();
       setDataSearch(results.data);
 
       const popularResponse = await getPopularRecipes();
-      console.log("popularResponse", popularResponse);
       setPopularRecipes(popularResponse.data.content);
     };
 
@@ -85,10 +108,24 @@ export const Home = ({ navigation }) => {
         nestedScrollEnabled={true}
         contentContainerStyle={[style.container]}
         onScroll={handleScroll}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {searchActive ? (
-          <Animated.View style={[{ opacity: searchHeaderOpacity }]}>
-            <SearchHeader goBack={toggleSearchBarPosition} />
+          <Animated.View
+            style={[
+              {
+                opacity: searchHeaderOpacity,
+                paddingHorizontal: 30,
+                width: "100%",
+              },
+            ]}
+          >
+            <CustomHeader
+              goBack={toggleSearchBarPosition}
+              title="Search Recipes"
+            />
           </Animated.View>
         ) : (
           <Animated.View style={{ opacity: otherComponentsOpacity }}>
@@ -116,6 +153,7 @@ export const Home = ({ navigation }) => {
                 flex: 1,
                 opacity: searchHeaderOpacity,
                 width: "100%",
+                paddingHorizontal: 30,
               },
             ]}
           >
@@ -126,7 +164,11 @@ export const Home = ({ navigation }) => {
             />
           </Animated.View>
         ) : (
-          <Animated.View style={{ opacity: otherComponentsOpacity }}>
+          <Animated.View
+            style={{
+              opacity: otherComponentsOpacity,
+            }}
+          >
             <CategoryBar />
             <RecipeList title="Your recipes" dataSource={popularRecipes} />
             <RecipeList title="Popular recipes" dataSource={popularRecipes} />
@@ -154,7 +196,7 @@ const style = StyleSheet.create({
     flexGrow: 1,
     textAlign: "center",
     alignItems: "center",
-    paddingHorizontal: 30,
+    // paddingHorizontal: 30,
     marginBottom: 10,
     paddingBottom: 60,
     alignItems: "flex-start",
