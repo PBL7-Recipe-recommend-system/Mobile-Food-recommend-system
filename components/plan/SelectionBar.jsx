@@ -2,24 +2,20 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-export const SelectionBar = ({ title, dataSource }) => {
+export const SelectionBar = ({ title, setValue, value }) => {
   const mealsList = [
     { title: "3 meals per day", value: 3 },
     { title: "4 meals per day", value: 4 },
     { title: "5 meals per day", value: 5 },
   ];
-  const [selectedAmount, setSelectedAmount] = useState(0);
-  useEffect(() => {
-    console.log(selectedAmount);
-  }, [selectedAmount]);
+
   return (
     <View className="my-2">
       <Text className="text-[16px] font-bold">{title}</Text>
       <SelectDropdown
         data={mealsList}
         onSelect={(selectedItem, index) => {
-          setSelectedAmount(selectedItem.title.charAt(0));
-          console.log(selectedItem, index);
+          setValue({ ...value, mealCount: selectedItem.value });
         }}
         defaultValue={mealsList[0]}
         renderButton={(selectedItem, isOpened) => {

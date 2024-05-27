@@ -14,7 +14,7 @@ export const SearchItem = ({ data }) => {
   const navigation = useNavigation();
 
   const handleClickItem = () => {
-    navigation.navigate("DetailedRecipe", { id: data.id });
+    navigation.navigate("DetailedRecipe", { id: data.recipeId });
   };
   return (
     <TouchableOpacity style={style.container} onPress={handleClickItem}>

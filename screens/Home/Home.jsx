@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Keyboard,
@@ -6,20 +6,28 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import AppWrapper from "../../wrappers/AppWrapper";
-import { SearchBar } from "../../components/search/SearchBar";
+import { getPopularRecipes } from "../../api/recipes";
+import { recentSearch } from "../../api/search";
 import { RecipeList } from "../../components/recipe/RecipeList";
-import { Header } from "./Header";
-import { CategoryBar } from "./CategoryBar";
-import {
-  SearchHeader,
-  CustomHeader,
-} from "../../components/search/CustomHeader";
+import { CustomHeader } from "../../components/search/CustomHeader";
+import { SearchBar } from "../../components/search/SearchBar";
 import { SearchList } from "../../components/search/SearchList";
 import { PRIMARY_COLOR } from "../../constants/color";
-import { me } from "../../api/users";
-import { recentSearch } from "../../api/search";
-import { getPopularRecipes } from "../../api/recipes";
+import AppWrapper from "../../wrappers/AppWrapper";
+import { CategoryBar } from "./CategoryBar";
+import { Header } from "./Header";
+import {
+  getFormattedRecommendation,
+  getRecommendation,
+} from "../../api/recommendation";
+import {
+  BREAKFAST,
+  getRecommendationFromStorage,
+  getRecommendationFromStorageByMeals,
+  getTodayMeals,
+} from "../../utils/meals";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setMealAddingToStorage } from "../../utils/asyncStorageUtils";
 
 export const Home = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -32,6 +40,8 @@ export const Home = ({ navigation }) => {
   const [dataSearch, setDataSearch] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [popularRecipes, setPopularRecipes] = useState([]);
+  const [yourRecipes, setYourRecipes] = useState([]);
+  const [categoryValue, setCategoryValue] = useState(BREAKFAST);
 
   const targetTopPosition = -20;
 
@@ -55,17 +65,32 @@ export const Home = ({ navigation }) => {
 
   useEffect(() => {
     const fetchDataUser = async () => {
+      await setMealAddingToStorage(null);
       const results = await recentSearch();
       setDataSearch(results.data);
 
       const popularResponse = await getPopularRecipes();
       setPopularRecipes(popularResponse.data.content);
+
+      const recommendation = await getTodayMeals();
+      setYourRecipes(recommendation.breakfast);
     };
 
     fetchDataUser();
   }, []);
 
-  const toggleSearchBarPosition = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const results = await getTodayMeals(categoryValue.toLowerCase());
+      setYourRecipes(results);
+    };
+
+    fetchData();
+  }, [categoryValue]);
+
+  const toggleSearchBarPosition = async () => {
+    await AsyncStorage.setItem("isAddingMeal", "false");
+
     const toValue = searchActive ? 0 : targetTopPosition;
 
     const otherOpacity = searchActive ? 1 : 0;
@@ -108,9 +133,9 @@ export const Home = ({ navigation }) => {
         nestedScrollEnabled={true}
         contentContainerStyle={[style.container]}
         onScroll={handleScroll}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
       >
         {searchActive ? (
           <Animated.View
@@ -135,7 +160,6 @@ export const Home = ({ navigation }) => {
 
         <Animated.View style={{ transform: [{ translateY }] }}>
           <SearchBar
-            navigation={navigation}
             toggleSearchBar={toggleSearchBarPosition}
             activeSearch={searchActive}
             onOpen={() => setIsOverlayVisible(true)}
@@ -169,8 +193,8 @@ export const Home = ({ navigation }) => {
               opacity: otherComponentsOpacity,
             }}
           >
-            <CategoryBar />
-            <RecipeList title="Your recipes" dataSource={popularRecipes} />
+            <CategoryBar value={categoryValue} setValue={setCategoryValue} />
+            <RecipeList title="Your recipes" dataSource={yourRecipes} />
             <RecipeList title="Popular recipes" dataSource={popularRecipes} />
           </Animated.View>
         )}

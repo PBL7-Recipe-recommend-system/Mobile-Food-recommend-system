@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import AnimatedProgressWheel from "react-native-progress-wheel";
 import { PRIMARY_COLOR, SECONDARY_COLOR } from "../../constants/color";
-import CustomButton from "../CustomButton";
+
 export const NutritionBoard = () => {
   return (
     <View style={style.container}>
@@ -14,9 +14,8 @@ export const NutritionBoard = () => {
             width={10}
             rotation={"-90deg"}
             color={"#957DC9"}
-            progress={60}
-            animateFromValue={0}
-            duration={3000}
+            progress={10}
+            duration={100}
             backgroundColor={SECONDARY_COLOR}
             showProgressLabel={true}
             rounded={true}
@@ -30,9 +29,8 @@ export const NutritionBoard = () => {
             width={10}
             rotation={"-90deg"}
             color={"#86BA32"}
-            progress={60}
-            animateFromValue={0}
-            duration={3000}
+            progress={10}
+            duration={100}
             backgroundColor={SECONDARY_COLOR}
             showProgressLabel={true}
             rounded={true}
@@ -46,9 +44,8 @@ export const NutritionBoard = () => {
             width={10}
             rotation={"-90deg"}
             color={"#AD5523"}
-            progress={60}
-            animateFromValue={0}
-            duration={3000}
+            progress={10}
+            duration={100}
             backgroundColor={SECONDARY_COLOR}
             showProgressLabel={true}
             rounded={true}
@@ -60,18 +57,13 @@ export const NutritionBoard = () => {
         <Text style={style.nutritionText}>Total:</Text>
         <Text style={style.nutritionText}>1982 kcal</Text>
       </View>
-      <CustomButton
-        title={"Save changes"}
-        height={"16%"}
-        width={"60%"}
-        customStyle={style.button}
-      />
     </View>
   );
 };
 
 const style = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 30,
   },
   content: {
@@ -90,8 +82,5 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginVertical: 10,
-  },
-  button: {
-    marginHorizontal: "auto",
   },
 });

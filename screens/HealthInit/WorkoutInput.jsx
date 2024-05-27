@@ -20,34 +20,38 @@ export const WorkoutInput = ({ updateValue, defaultValue }) => {
       </Text>
       <View style={[styles.itemContainer]}>
         <HealthInputItem
-          title="Never"
-          desc="0 times a week"
-          selected={selectedItem === "never"}
-          onSelect={() => handleSelectItem("never")}
+          title="Little/no exercise"
+          desc="0-1 times a week"
+          selected={selectedItem === "Little/no exercise"}
+          onSelect={() => handleSelectItem("Little/no exercise")}
         />
         <HealthInputItem
-          title="Sometimes"
+          title="Light exercise"
           desc="1-2 times a week"
-          selected={selectedItem === "sometimes"}
-          onSelect={() => handleSelectItem("sometimes")}
+          selected={selectedItem === "Light exercise"}
+          onSelect={() => handleSelectItem("Light exercise")}
         />
         <HealthInputItem
-          title="Regularly"
-          desc="3-4 times a week"
-          selected={selectedItem === "regularly"}
-          onSelect={() => handleSelectItem("regularly")}
+          title="Moderate exercise"
+          desc="3-5 times a week"
+          selected={selectedItem === "Moderate exercise (3-5 days/wk)"}
+          onSelect={() => handleSelectItem("Moderate exercise (3-5 days/wk)")}
         />
         <HealthInputItem
-          title="Often"
-          desc="5-6 times a week"
-          selected={selectedItem === "often"}
-          onSelect={() => handleSelectItem("often")}
+          title="Very active"
+          desc="6-7 times a week"
+          selected={selectedItem === "Very active (6-7 days/wk)"}
+          onSelect={() => handleSelectItem("Very active (6-7 days/wk)")}
         />
         <HealthInputItem
-          title="Daily"
-          desc="&ge; 7 times a week"
-          selected={selectedItem === "daily"}
-          onSelect={() => handleSelectItem("daily")}
+          title="Extra active "
+          desc="Very active & physical job"
+          selected={
+            selectedItem === "Extra active (very active & physical job)"
+          }
+          onSelect={() =>
+            handleSelectItem("Extra active (very active & physical job)")
+          }
         />
       </View>
     </View>

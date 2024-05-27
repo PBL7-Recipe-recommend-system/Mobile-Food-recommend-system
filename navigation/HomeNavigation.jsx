@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../screens/home/Home";
-import { Profile } from "./../screens/home/Profile";
 import { Image } from "react-native";
 import homeIcon from "../assets/icons/home.png";
 import profileIcon from "../assets/icons/profile.png";
 import planIcon from "../assets/icons/plan.png";
-import { Plan } from "../screens/plan/Plan";
+import { Profile } from "../screens/profile/Profile";
+import { PlanStackNavigator } from "./PlanStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +20,6 @@ export const HomeNavigation = () => {
           headerShown: false,
           gestureEnabled: true,
           unmountOnBlur: true,
-
           tabBarIcon: () => (
             <Image
               source={homeIcon}
@@ -34,10 +33,12 @@ export const HomeNavigation = () => {
       />
       <Tab.Screen
         name="Plan"
-        component={Plan}
+        component={PlanStackNavigator}
         options={{
+          tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: false,
+          unmountOnBlur: true,
           tabBarIcon: () => (
             <Image
               source={planIcon}
@@ -56,6 +57,7 @@ export const HomeNavigation = () => {
           tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: false,
+          unmountOnBlur: true,
           tabBarIcon: () => (
             <Image
               source={profileIcon}

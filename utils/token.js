@@ -6,7 +6,9 @@ export const getTokenFromAsyncStorage = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
     return token;
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const removeTokenFromAsyncStorage = async () => {
@@ -27,5 +29,12 @@ export const getUserIdFromToken = async () => {
     const token = await AsyncStorage.getItem("token");
     var decoded = jwtDecode(token);
     return decoded.userId;
+  } catch (error) {}
+};
+
+export const getUserRoleFromToken = async () => {
+  try {
+    const user = await AsyncStorage.getItem("user");
+    return user;
   } catch (error) {}
 };

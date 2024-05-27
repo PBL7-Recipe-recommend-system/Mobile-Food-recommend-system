@@ -27,7 +27,7 @@ class Http {
     );
     this.instance.interceptors.request.use(
       async (config) => {
-        console.log(config.baseURL + config.url);
+        console.log(config.method + ": " + config.baseURL + config.url);
         if (!config.url.includes("/auth")) {
           const token = await getTokenFromAsyncStorage();
           config.headers.Authorization = `Bearer ${token}`;

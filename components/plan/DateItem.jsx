@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   GRAY_TEXT_COLOR,
   PRIMARY_COLOR,
   SECONDARY_COLOR,
 } from "../../constants/color";
 
-export const DateItem = ({ value, active }) => {
-  const formatDate = value.split(" ")[0];
-  const formatDay = value.split(" ")[1];
+export const DateItem = ({ value, active, view, onPress }) => {
+  const formatDate = view.split(" ")[0];
+  const formatDay = view.split(" ")[1];
   const getContainerStyle = () => {
     return active ? [style.container, style.activeContainer] : style.container;
   };
@@ -17,11 +17,15 @@ export const DateItem = ({ value, active }) => {
     return active ? [style.content, style.activeContent] : style.content;
   };
   return (
-    <View style={getContainerStyle()}>
-      <Text style={getContentStyle()}>
-        {formatDate} {"\n"} {formatDay}
-      </Text>
-    </View>
+    <TouchableOpacity
+      style={getContainerStyle()}
+      onPress={() => {
+        onPress(value);
+      }}
+    >
+      <Text style={getContentStyle()}>{formatDate}</Text>
+      <Text style={getContentStyle()}>{formatDay}</Text>
+    </TouchableOpacity>
   );
 };
 
@@ -33,7 +37,6 @@ const style = StyleSheet.create({
     borderRadius: 34,
     marginHorizontal: 10,
     justifyContent: "center",
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

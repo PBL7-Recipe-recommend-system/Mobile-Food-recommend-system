@@ -4,7 +4,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { PRIMARY_COLOR } from "../constants/color";
 import { useNavigation } from "@react-navigation/native";
 
-export const BackButton = ({ onPress, color }) => {
+export const BackButton = ({ onPress, color, style }) => {
   const navigation = useNavigation();
   const handlePress = () => {
     if (onPress) {

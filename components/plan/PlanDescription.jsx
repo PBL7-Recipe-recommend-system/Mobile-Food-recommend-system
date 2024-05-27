@@ -1,34 +1,85 @@
 import { Feather } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
-export const PlanDescription = () => {
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import { RECOMMEND_TAB } from "../../constants/plan";
+import { getGoal } from "../../utils/formatData";
+import { getTodayMeals } from "../../utils/meals";
+import { getMealPlan } from "../../api/plan";
+export const PlanDescription = ({ planType }) => {
+  const [dataForm, setDataForm] = useState({
+    description: "",
+    firstProp: "",
+    secondProp: "",
+    thirdProp: "",
+  });
+  const [dataTitle, setDataTitle] = useState({
+    title: "",
+    description: "",
+    firstProp: "",
+    secondProp: "",
+    thirdProp: "",
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      if (planType === RECOMMEND_TAB) {
+        const user = await getUserFromStorage();
+        setDataTitle({
+          title: "Recommend plan",
+          description: "Description",
+          firstProp: "Meals per day",
+          secondProp: "Recommend calories",
+          thirdProp: "Goal",
+        });
+        setDataForm({
+          description: `Thin and lean. Plan for a "skinny guy" who have a hard time gaining weight.`,
+          firstProp: `${user.meals} meals`,
+          secondProp: `${user.recommendCalories} kcal`,
+          thirdProp: getGoal(user.dietaryGoal),
+        });
+      } else {
+        const data = await getMealPlan();
+        setDataTitle({
+          title: "My meal plan",
+          description: "Description",
+          firstProp: "Meals per day",
+          secondProp: "Daily calories",
+          thirdProp: "Total calories",
+        });
+        setDataForm({
+          description: `${data.data[0].description}`,
+          firstProp: `${data.data[0].mealCount} meals`,
+          secondProp: `${data.data[0].dailyCalories} kcal`,
+          thirdProp: `${data.data[0].totalCalories}`,
+        });
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <View style={style.mealDescription}>
       <View style={style.header}>
-        <Text style={style.planName}>My Meal Plan</Text>
+        <Text style={style.planName}>{dataTitle.title}</Text>
         <View style={style.editButton}>
           <Feather name="edit-3" size={24} color={PRIMARY_COLOR} />
         </View>
       </View>
       <View>
-        <Text style={style.textDescription}>Description</Text>
-        <Text style={style.textContent}>
-          Thin and lean. Plan for a "skinny guy" who have a hard time gaining
-          weight.
-        </Text>
+        <Text style={style.textDescription}>{dataTitle.description}</Text>
+        <Text style={style.textContent}>{dataForm.description}</Text>
       </View>
       <View style={style.textContainer}>
-        <Text style={style.textDescription}>Meals per day</Text>
-        <Text style={style.textContent}>3 meals</Text>
+        <Text style={style.textDescription}>{dataTitle.firstProp}</Text>
+        <Text style={style.textContent}>{dataForm.firstProp}</Text>
       </View>
       <View style={style.textContainer}>
-        <Text style={style.textDescription}>Daily calories</Text>
-        <Text style={style.textContent}>3 meals</Text>
+        <Text style={style.textDescription}>{dataTitle.secondProp}</Text>
+        <Text style={style.textContent}>{dataForm.secondProp}</Text>
       </View>
       <View style={style.textContainer}>
-        <Text style={style.textDescription}>Total meals</Text>
-        <Text style={style.textContent}>3 meals</Text>
+        <Text style={style.textDescription}>{dataTitle.thirdProp}</Text>
+        <Text style={style.textContent}>{dataForm.thirdProp}</Text>
       </View>
     </View>
   );

@@ -51,7 +51,6 @@ const OPTInput = ({ navigation }) => {
 
   const handleSubmitForm = async () => {
     setLoading(true);
-    console.log(value);
     try {
       const res = await verifyOTP(email, { otp: value });
       if (res.status === 200) {

@@ -3,17 +3,43 @@ import {
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import mockData from "../../assets/mock/food1.jpg";
 import { GRAY_TEXT_COLOR } from "../../constants/color";
-export const FoodItem = () => {
+import { useNavigation } from "@react-navigation/native";
+import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
+
+export const FoodItem = ({ item, meal, planType }) => {
+  const [mealIndex, setMealIndex] = useState(0);
+  const [data, setData] = useState(item);
+  const navigation = useNavigation();
+
+  const getImage = (obj) => {
+    if (planType === RECOMMEND_TAB) {
+      return obj.images[0];
+    } else return obj.image;
+  };
+
+  useEffect(() => {
+    setData(item);
+  }, [item]);
+
+  const handleDetailClick = () => {
+    navigation.navigate("DetailedRecipe", { id: item[mealIndex].recipeId });
+  };
+  const handleChangeReload = () => {
+    if (mealIndex === data.length - 1) {
+      setMealIndex(0);
+    } else setMealIndex(mealIndex + 1);
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleDetailClick}>
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>Breakfast</Text>
+        <Text style={styles.title}>{meal}</Text>
         <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">
-          Smoothie bowl
+          {item[mealIndex].name}
         </Text>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsText}>
@@ -29,7 +55,7 @@ export const FoodItem = () => {
                 fontWeight: "bold",
               }}
             >
-              30 min
+              {item[mealIndex].totalTime}
             </Text>
           </View>
 
@@ -42,16 +68,25 @@ export const FoodItem = () => {
                 fontWeight: "bold",
               }}
             >
-              450 kcal
+              {item[mealIndex].calories} kcal
             </Text>
           </View>
         </View>
       </View>
       <View style={styles.imageContainer}>
-        <Image source={mockData} style={styles.image} />
+        <Image
+          source={{ uri: getImage(item[mealIndex]) }}
+          style={styles.image}
+        />
       </View>
 
-      <TouchableOpacity style={styles.reloadButton}>
+      <TouchableOpacity
+        style={[
+          styles.reloadButton,
+          planType === CUSTOM_TAB && { display: "none" },
+        ]}
+        onPress={handleChangeReload}
+      >
         <Feather name="refresh-cw" size={24} color="black" />
       </TouchableOpacity>
     </TouchableOpacity>
@@ -122,6 +157,6 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
     backgroundColor: "#fff",
-    borderRadius: "50%",
+    borderRadius: 20,
   },
 });

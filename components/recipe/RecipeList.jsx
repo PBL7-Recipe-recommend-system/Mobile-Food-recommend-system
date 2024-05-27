@@ -12,7 +12,6 @@ import { Loading } from "../Loading";
 
 export const RecipeList = ({ title, dataSource }) => {
   const [data, setData] = useState(dataSource);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setData(dataSource);
@@ -31,9 +30,11 @@ export const RecipeList = ({ title, dataSource }) => {
         contentContainerStyle={style.recipeList}
       >
         {data && data.length > 0 ? (
-          data.map((recipe) => <RecipeItem key={recipe.id} item={recipe} />)
+          data.map((recipe) => {
+            return <RecipeItem key={recipe.recipeId} item={recipe} />;
+          })
         ) : (
-          <Loading loading={true} />
+          <Loading loading={false} />
         )}
       </ScrollView>
     </View>
@@ -57,5 +58,6 @@ const style = StyleSheet.create({
   },
   recipeList: {
     left: 30,
+    paddingRight: 60,
   },
 });

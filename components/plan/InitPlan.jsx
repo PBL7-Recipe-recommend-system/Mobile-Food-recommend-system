@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import CustomButton from "../CustomButton";
 import { PlanForm } from "./PlanForm";
+import { addMealPlan } from "../../api/plan";
+import { formatDate } from "../../utils/formatData";
 
 export const InitPlan = () => {
-  const handleContinue = () => {};
+  const [formValue, setFormValue] = useState({
+    description: "",
+    date: "01-12-2024",
+    mealCount: 3,
+    dailyCalorie: 2000,
+    totalCalorie: 8000,
+  });
+  useEffect(() => {}, [formValue]);
+
+  const handleSubmitForm = async () => {
+    const currentDate = new Date();
+    formValue.date = formatDate(currentDate);
+    const res = await addMealPlan(formValue);
+  };
+
   return (
     <View style={style.container}>
       <View
@@ -12,13 +28,14 @@ export const InitPlan = () => {
           paddingHorizontal: 30,
         }}
       >
-        <PlanForm />
+        <PlanForm value={formValue} setValue={setFormValue} />
       </View>
       <View style={style.button}>
         <CustomButton
           title={"Continue"}
           customStyle={style.customButton}
           width={"50%"}
+          onPressButton={handleSubmitForm}
         />
       </View>
     </View>

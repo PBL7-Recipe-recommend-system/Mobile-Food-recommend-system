@@ -31,10 +31,11 @@ import AppWrapper from "../../wrappers/AppWrapper";
 import { Loading } from "../../components/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { me } from "../../api/users";
+import { getRecommendation } from "../../api/recommendation";
 
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("dactai2k2@gmail.com");
+  const [email, setEmail] = useState("user6@gmail.com");
   const [password, setPassword] = useState("Tai2211@");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
@@ -71,12 +72,9 @@ const Login = ({ navigation }) => {
         if (res.status !== 200) {
           showErrorToast(res.message);
         } else {
-          try {
-            const res = await me();
-            await AsyncStorage.setItem("user", JSON.stringify(res.data));
-          } catch (error) {
-            console.log(error);
-          }
+          await me();
+          await getRecommendation();
+          console.log("Login >>> ");
           navigation.navigate("HomeNavigation");
         }
       } catch (error) {

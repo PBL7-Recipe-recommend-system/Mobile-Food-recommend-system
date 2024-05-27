@@ -2,23 +2,21 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { SelectionButton } from "../SelectionButton";
 import { BREAKFAST, generateNumberOfMeals } from "../../utils/meals";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 
-export const CategoryList = () => {
-  const [selected, isSelected] = useState(BREAKFAST);
+export const CategoryList = ({ value, setValue }) => {
+  const [mealsList, setMealsList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const user = await AsyncStorage.getItem("user");
-      console.log(user);
+      const user = await getUserFromStorage();
+      setMealsList(generateNumberOfMeals(user.meals));
     };
     fetchData();
   }, []);
 
-  const mealsList = generateNumberOfMeals(3);
-
   const onPressButton = (item) => {
-    isSelected(item);
+    setValue(item);
   };
   return (
     <ScrollView
@@ -30,7 +28,7 @@ export const CategoryList = () => {
         <SelectionButton
           key={meal}
           title={meal}
-          isSelected={selected === meal}
+          isSelected={value === meal}
           onPressButton={onPressButton}
         />
       ))}
@@ -40,8 +38,8 @@ export const CategoryList = () => {
 
 const style = StyleSheet.create({
   categorySelection: {
-    width: "120%",
     marginVertical: 12,
+    paddingRight: 30,
     left: 30,
   },
 });

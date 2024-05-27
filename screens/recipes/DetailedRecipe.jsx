@@ -1,33 +1,27 @@
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import RBSheet from "react-native-raw-bottom-sheet";
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuProvider,
+  MenuTrigger,
+} from "react-native-popup-menu";
+import { getDetailedRecipes } from "../../api/recipes";
 import { BackButton } from "../../components/BackButton";
 import CustomButton from "../../components/CustomButton";
 import { RecipeContentSheet } from "../../components/recipe/RecipeContentSheet";
-import { PRIMARY_COLOR } from "../../constants/color";
-import { useRoute } from "@react-navigation/native";
-import { getDetailedRecipes } from "../../api/recipes";
-import { Loading } from "../../components/Loading";
 import { StepContentSheet } from "../../components/recipe/StepContentSheet";
-import { MenuProvider } from "react-native-popup-menu";
-import { Fontisto } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
+import { PRIMARY_COLOR } from "../../constants/color";
+import { getMealAddingFromStorage } from "./../../utils/asyncStorageUtils";
 export const DetailedRecipe = () => {
   const refRBSheet = useRef(null);
   const [isCooking, setIsCooking] = useState(false);
 
   useEffect(() => {
     if (refRBSheet.current) {
-      console.log("open");
       refRBSheet.current.open();
     }
   }, [refRBSheet]);
@@ -35,6 +29,7 @@ export const DetailedRecipe = () => {
   const route = useRoute();
   const id = route.params.id;
   const [data, setData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const results = await getDetailedRecipes(id);
@@ -54,14 +49,14 @@ export const DetailedRecipe = () => {
               style={styles.image}
             >
               <View style={styles.headerContainer}>
-                <BackButton color={"#fff"} />
+                <BackButton color={PRIMARY_COLOR} />
                 <Menu>
                   <MenuTrigger
                     children={
                       <Entypo
                         name="dots-three-horizontal"
                         size={24}
-                        color={"#fff"}
+                        color={PRIMARY_COLOR}
                       />
                     }
                   />
@@ -174,7 +169,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 16,
-    marginVertical: 48,
+    marginVertical: "16%",
     alignItems: "center",
   },
   contentContainer: {

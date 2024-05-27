@@ -13,6 +13,10 @@ import RESULT_IMAGE from "../../assets/images/no-results.jpg";
 import { searchRecipes } from "../../api/search";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const groupItems = (items) => {
+  if (!items) {
+    return [];
+  }
+
   const grouped = [];
   for (let i = 0; i < items.length; i += 2) {
     grouped.push(items.slice(i, i + 2));
@@ -78,7 +82,6 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
   };
 
   const ListEndLoader = async () => {
-    // setPage((prevPage) => prevPage + 1);
     console.log("end of list >> ", page + 1);
   };
   return (
@@ -112,7 +115,6 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
       ) : (
         <View
           style={{
-            flex: 1,
             marginVertical: 50,
             alignItems: "center",
             justifyContent: "center",

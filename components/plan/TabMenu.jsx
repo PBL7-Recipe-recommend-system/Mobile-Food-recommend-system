@@ -1,34 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
+import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
 
-export const TabMenu = () => {
-  const [activeTab, setActiveTab] = useState("Custom Plan");
-  useEffect(() => {
-    console.log(activeTab);
-  }, [activeTab]);
-
+export const TabMenu = ({ tabValue, handleChangeTab }) => {
   return (
     <View style={style.container}>
       <TouchableOpacity
-        style={[style.tab, activeTab === "Custom Plan" && style.tabActive]}
-        onPress={() => setActiveTab("Custom Plan")}
+        style={[style.tab, tabValue === CUSTOM_TAB && style.tabActive]}
+        onPress={() => handleChangeTab(CUSTOM_TAB)}
       >
-        <Text
-          style={[style.text, activeTab === "Custom Plan" && style.textActive]}
-        >
+        <Text style={[style.text, tabValue === CUSTOM_TAB && style.textActive]}>
           Custom Plan
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[style.tab, activeTab === "Recommend Plan" && style.tabActive]}
-        onPress={() => setActiveTab("Recommend Plan")}
+        style={[style.tab, tabValue === RECOMMEND_TAB && style.tabActive]}
+        onPress={() => handleChangeTab(RECOMMEND_TAB)}
       >
         <Text
-          style={[
-            style.text,
-            activeTab === "Recommend Plan" && style.textActive,
-          ]}
+          style={[style.text, tabValue === RECOMMEND_TAB && style.textActive]}
         >
           Recommend Plan
         </Text>

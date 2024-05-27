@@ -1,9 +1,28 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { IngredientList } from "./IngredientList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PRIMARY_COLOR } from "../../constants/color";
+import {
+  getDateAddingFromStorage,
+  getMealAddingFromStorage,
+  getMealPlanFromStorage,
+} from "../../utils/asyncStorageUtils";
 export const RecipeContentSheet = ({ data }) => {
   const [serving, setServing] = useState(2);
+  const [isAddingMeal, setIsAddingMeal] = useState(false);
+  const [mealAdding, setMealAdding] = useState(null);
+
+  useEffect(() => {
+    const getIsAddingMeal = async () => {
+      const addingMeal = await AsyncStorage.getItem("isAddingMeal");
+      const mealAddingValue = await getMealAddingFromStorage();
+      setMealAdding(mealAddingValue);
+      setIsAddingMeal(addingMeal);
+    };
+    getIsAddingMeal();
+  }, []);
 
   const ingredientsList = data?.recipeIngredientsParts || [];
 
@@ -23,6 +42,15 @@ export const RecipeContentSheet = ({ data }) => {
       setServing(serving - 1);
     }
   };
+
+  const handleAddFood = async () => {
+    const getMealPLan = await getMealPlanFromStorage();
+    const date = await getDateAddingFromStorage();
+    console.log(getMealPLan);
+    console.log(data.recipeId);
+    console.log(date);
+    console.log("====================================");
+  };
   return (
     <View style={style.container}>
       <View style={style.contentHeader}>
@@ -41,6 +69,30 @@ export const RecipeContentSheet = ({ data }) => {
           <Text className="text-center" style={style.category}>
             Lunch / {formatTime(data?.totalTime)}
           </Text>
+        </View>
+        <View>
+          {isAddingMeal === "true" && (
+            <TouchableOpacity
+              onPress={handleAddFood}
+              style={{
+                backgroundColor: PRIMARY_COLOR,
+                borderRadius: 6,
+                paddingHorizontal: "4%",
+                paddingVertical: "12%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  textAlign: "center",
+                  fontSize: 18,
+                  fontWeight: "bold",
+                }}
+              >
+                +
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View style={style.nutritionContainer}>
@@ -100,16 +152,20 @@ const style = StyleSheet.create({
     marginHorizontal: 16,
     position: "relative",
     marginBottom: 24,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
-  reloadButton: {
-    position: "absolute",
-    top: 0,
-  },
+  reloadButton: {},
 
   title: {
     fontSize: 16,
     fontWeight: "bold",
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   category: {
     fontSize: 14,

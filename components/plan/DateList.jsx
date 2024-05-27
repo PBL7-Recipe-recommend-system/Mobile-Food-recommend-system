@@ -1,22 +1,32 @@
 import React, { useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
+import { generateDays } from "../../utils/meals";
 import { DateItem } from "./DateItem";
-import { SECONDARY_COLOR } from "../../constants/color";
+import { setDateAddingToStorage } from "../../utils/asyncStorageUtils";
 
-export const DateList = () => {
-  const [active, setActive] = useState("13 Tue");
+export const DateList = ({ value, setValue }) => {
+  const dayList = generateDays(7);
+  const [active, setActive] = useState(value);
+  const handleClickDate = async (date) => {
+    await setDateAddingToStorage(date);
+    setValue(date);
+    setActive(date);
+  };
   return (
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={style.container}
     >
-      <DateItem value={"13 Tue"} active={true} />
-      <DateItem value={"14 Wed"} />
-      <DateItem value={"15 Thu"} />
-      <DateItem value={"16 Fri"} />
-      <DateItem value={"17 Sat"} />
-      <DateItem value={"18 Sun"} />
+      {dayList.map((day) => (
+        <DateItem
+          key={day.date}
+          value={day.date}
+          view={day.dateOfWeek}
+          active={active === day.date}
+          onPress={() => handleClickDate(day.date)}
+        />
+      ))}
     </ScrollView>
   );
 };
@@ -24,6 +34,7 @@ const style = StyleSheet.create({
   container: {
     flexGrow: 1,
     marginLeft: 22,
+    paddingRight: 22,
     paddingVertical: 10,
   },
 });

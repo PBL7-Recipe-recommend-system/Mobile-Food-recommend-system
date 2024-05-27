@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Image,
   Platform,
@@ -15,8 +15,10 @@ import { useNavigation } from "@react-navigation/native";
 export const RecipeItem = ({ item }) => {
   const navigation = useNavigation();
 
+  const image = Array.isArray(item.images) ? item.images[0] : item.images;
+
   const handleClickItem = () => {
-    navigation.navigate("DetailedRecipe", { id: item.id });
+    navigation.navigate("DetailedRecipe", { id: item.recipeId });
   };
   return (
     <TouchableOpacity
@@ -28,7 +30,7 @@ export const RecipeItem = ({ item }) => {
     >
       <View className="m-4 ">
         <Image
-          source={{ uri: item.images }}
+          source={{ uri: image }}
           style={Platform.OS === "android" ? style.androidImage : style.image}
         />
         <Text
