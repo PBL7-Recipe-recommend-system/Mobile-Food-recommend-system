@@ -30,7 +30,7 @@ export const Search = () => {
   return (
     <AppWrapper>
       <KeyboardWrapper>
-        <View>
+        <View style={{ flex: 1 }}>
           <View
             style={[
               {
