@@ -10,34 +10,69 @@ import { getRecommendationFromStorage } from "../../utils/meals";
 import { RECOMMEND_TAB } from "../../constants/plan";
 import CustomButton from "../CustomButton";
 import {
+  getDateAddingFromStorage,
   getMealPlanFromStorage,
   setDateAddingToStorage,
 } from "../../utils/asyncStorageUtils";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const PlanMeal = ({ planType }) => {
   const [dataSource, setDataSource] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        const dateAdding = await getDateAddingFromStorage();
+        let data;
+        if (planType === RECOMMEND_TAB) {
+          const response = await getRecommendationFromStorage();
+          data = response.recommendations;
+        } else {
+          const response = await getMealPlanFromStorage();
+          data = response;
+          console.log(data);
+        }
+        setDataSource(data);
+
+        const dataForSelectedDate = data.find(
+          (item) => item.date === dateAdding
+        );
+        setSelectedData(dataForSelectedDate);
+      };
+      fetchData();
+    }, [])
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
+    const handleChangeTab = async () => {
+      const date = formatDate(new Date());
+      await setDateAddingToStorage(date);
+      setSelectedDate(date);
       let data;
       if (planType === RECOMMEND_TAB) {
         const response = await getRecommendationFromStorage();
         data = response.recommendations;
       } else {
-        const response = await getMealPlan();
-        data = response.data;
+        const response = await getMealPlanFromStorage();
+        data = response;
       }
       setDataSource(data);
 
-      const dataForSelectedDate = data.find(
-        (item) => item.date === selectedDate
-      );
-      await setDateAddingToStorage(selectedDate);
+      const dataForSelectedDate = data.find((item) => item.date === date);
       setSelectedData(dataForSelectedDate);
     };
-    fetchData();
+    handleChangeTab();
+  }, [planType]);
+
+  useEffect(() => {
+    const fetchDate = async () => {
+      const dateAdding = await getDateAddingFromStorage();
+      setSelectedDate(dateAdding);
+      console.log(dateAdding);
+    };
+    fetchDate();
   }, []);
 
   useEffect(() => {
@@ -46,7 +81,6 @@ export const PlanMeal = ({ planType }) => {
         let dataForSelectedDate = dataSource.find(
           (item) => item.date === selectedDate
         );
-
         dataForSelectedDate = dataForSelectedDate ? dataForSelectedDate : null;
         setSelectedData(dataForSelectedDate);
       }
@@ -56,7 +90,6 @@ export const PlanMeal = ({ planType }) => {
 
   const handleSaveChange = async () => {
     const data = await getMealPlanFromStorage();
-    console.log(data);
   };
 
   return (
@@ -76,11 +109,11 @@ export const PlanMeal = ({ planType }) => {
       </View>
       <MealList dataSource={selectedData} planType={planType} />
       <NutritionBoard />
-      <CustomButton
+      {/* <CustomButton
         title={"Save changes"}
         customStyle={style.button}
         onPressButton={handleSaveChange}
-      />
+      /> */}
     </Animated.ScrollView>
   );
 };

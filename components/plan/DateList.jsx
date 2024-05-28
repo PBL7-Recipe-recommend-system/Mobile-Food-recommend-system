@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { generateDays } from "../../utils/meals";
 import { DateItem } from "./DateItem";
-import { setDateAddingToStorage } from "../../utils/asyncStorageUtils";
+import {
+  getDateAddingFromStorage,
+  getMealAddingFromStorage,
+  setDateAddingToStorage,
+} from "../../utils/asyncStorageUtils";
 
 export const DateList = ({ value, setValue }) => {
+  console.log("value", value);
   const dayList = generateDays(7);
   const [active, setActive] = useState(value);
+
+  useEffect(() => {
+    setActive(value);
+  }, [value]);
+
   const handleClickDate = async (date) => {
     await setDateAddingToStorage(date);
     setValue(date);

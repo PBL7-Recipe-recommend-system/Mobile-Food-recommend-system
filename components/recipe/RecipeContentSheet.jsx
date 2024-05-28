@@ -9,10 +9,16 @@ import {
   getMealAddingFromStorage,
   getMealPlanFromStorage,
 } from "../../utils/asyncStorageUtils";
+import { getMealPlan, updateMealPlan } from "../../api/plan";
+import { useNavigation } from "@react-navigation/native";
+import { Loading } from "../Loading";
 export const RecipeContentSheet = ({ data }) => {
   const [serving, setServing] = useState(2);
   const [isAddingMeal, setIsAddingMeal] = useState(false);
   const [mealAdding, setMealAdding] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getIsAddingMeal = async () => {
@@ -44,12 +50,24 @@ export const RecipeContentSheet = ({ data }) => {
   };
 
   const handleAddFood = async () => {
-    const getMealPLan = await getMealPlanFromStorage();
-    const date = await getDateAddingFromStorage();
-    console.log(getMealPLan);
-    console.log(data.recipeId);
-    console.log(date);
-    console.log("====================================");
+    setLoading(true);
+    try {
+      const mealPLan = await getMealPlanFromStorage();
+      const date = await getDateAddingFromStorage();
+      const param = [
+        {
+          [mealAdding]: data.recipeId,
+          date: date,
+          mealCount: 5,
+        },
+      ];
+      await updateMealPlan(param);
+      await getMealPlan();
+      navigation.navigate("PlanStack");
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <View style={style.container}>
@@ -138,6 +156,7 @@ export const RecipeContentSheet = ({ data }) => {
           <IngredientList dataSource={ingredientsList} />
         </View>
       </View>
+      <Loading loading={loading} />
     </View>
   );
 };

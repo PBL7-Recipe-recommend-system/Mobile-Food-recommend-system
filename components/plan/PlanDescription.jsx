@@ -2,7 +2,10 @@ import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
-import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import {
+  getMealPlanFromStorage,
+  getUserFromStorage,
+} from "../../utils/asyncStorageUtils";
 import { RECOMMEND_TAB } from "../../constants/plan";
 import { getGoal } from "../../utils/formatData";
 import { getTodayMeals } from "../../utils/meals";
@@ -39,7 +42,8 @@ export const PlanDescription = ({ planType }) => {
           thirdProp: getGoal(user.dietaryGoal),
         });
       } else {
-        const data = await getMealPlan();
+        const data = await getMealPlanFromStorage();
+        console.log(data);
         setDataTitle({
           title: "My meal plan",
           description: "Description",
@@ -48,10 +52,10 @@ export const PlanDescription = ({ planType }) => {
           thirdProp: "Total calories",
         });
         setDataForm({
-          description: `${data.data[0].description}`,
-          firstProp: `${data.data[0].mealCount} meals`,
-          secondProp: `${data.data[0].dailyCalories} kcal`,
-          thirdProp: `${data.data[0].totalCalories}`,
+          description: `${data[0].description}`,
+          firstProp: `${data[0].mealCount} meals`,
+          secondProp: `${data[0].dailyCalories} kcal`,
+          thirdProp: `${data[0].totalCalories}`,
         });
       }
     };

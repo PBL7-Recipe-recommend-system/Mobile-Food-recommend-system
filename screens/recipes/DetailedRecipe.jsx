@@ -122,7 +122,7 @@ export const DetailedRecipe = () => {
 
               {!isCooking ? (
                 <View
-                  className="items-center"
+                  className="items-center mt-2"
                   style={{
                     justifyContent: "center",
                     height: "28%",

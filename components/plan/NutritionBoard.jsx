@@ -76,6 +76,7 @@ const style = StyleSheet.create({
   item: {
     display: "flex",
     alignItems: "center",
+    marginHorizontal: 2,
   },
   nutritionText: {
     color: PRIMARY_COLOR,

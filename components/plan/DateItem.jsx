@@ -5,10 +5,21 @@ import {
   PRIMARY_COLOR,
   SECONDARY_COLOR,
 } from "../../constants/color";
+import { setDateAddingToStorage } from "../../utils/asyncStorageUtils";
 
 export const DateItem = ({ value, active, view, onPress }) => {
   const formatDate = view.split(" ")[0];
   const formatDay = view.split(" ")[1];
+
+  useState(() => {
+    const fetchData = async () => {
+      if (active === true) {
+        await setDateAddingToStorage(value);
+      }
+      fetchData();
+    };
+  }, []);
+
   const getContainerStyle = () => {
     return active ? [style.container, style.activeContainer] : style.container;
   };
