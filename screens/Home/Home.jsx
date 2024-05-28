@@ -28,6 +28,7 @@ import {
 } from "../../utils/meals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setMealAddingToStorage } from "../../utils/asyncStorageUtils";
+import { toCamelCase } from "../../utils/formatData";
 
 export const Home = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -81,7 +82,8 @@ export const Home = ({ navigation }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const results = await getTodayMeals(categoryValue.toLowerCase());
+      console.log("categoryValue", categoryValue);
+      const results = await getTodayMeals(toCamelCase(categoryValue));
       setYourRecipes(results);
     };
 
@@ -194,8 +196,12 @@ export const Home = ({ navigation }) => {
             }}
           >
             <CategoryBar value={categoryValue} setValue={setCategoryValue} />
-            <RecipeList title="Your recipes" dataSource={yourRecipes} />
-            <RecipeList title="Popular recipes" dataSource={popularRecipes} />
+            {yourRecipes.length > 0 && (
+              <RecipeList title="Your recipes" dataSource={yourRecipes} />
+            )}
+            {popularRecipes.length > 0 && (
+              <RecipeList title="Popular recipes" dataSource={popularRecipes} />
+            )}
           </Animated.View>
         )}
         {isOverlayVisible && (
@@ -219,11 +225,6 @@ const style = StyleSheet.create({
   container: {
     flexGrow: 1,
     textAlign: "center",
-    alignItems: "center",
-    // paddingHorizontal: 30,
-    marginBottom: 10,
-    paddingBottom: 60,
-    alignItems: "flex-start",
   },
   categoryContainer: {
     display: "flex",

@@ -17,25 +17,20 @@ export const RecipeList = ({ title, dataSource }) => {
     setData(dataSource);
   }, [dataSource]);
   return (
-    <View style={{ height: "40%" }}>
+    <View style={{ flex: 1 }}>
       <View style={style.categoryContainer}>
         <Text className="text-xl font-bold">{title}</Text>
-        <TouchableOpacity>
-          <Text style={style.seeAllText}>See all</Text>
-        </TouchableOpacity>
       </View>
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={style.recipeList}
       >
-        {data && data.length > 0 ? (
+        {data &&
+          data.length > 0 &&
           data.map((recipe) => {
             return <RecipeItem key={recipe.recipeId} item={recipe} />;
-          })
-        ) : (
-          <Loading loading={false} />
-        )}
+          })}
       </ScrollView>
     </View>
   );

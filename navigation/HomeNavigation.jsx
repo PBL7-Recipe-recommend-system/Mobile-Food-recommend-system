@@ -6,6 +6,8 @@ import profileIcon from "../assets/icons/profile.png";
 import planIcon from "../assets/icons/plan.png";
 import { Profile } from "../screens/profile/Profile";
 import { PlanStackNavigator } from "./PlanStackNavigator";
+import { SavedRecipe } from "../screens/saved-recipe/SavedRecipe";
+import bookMarkIcon from "../assets/icons/book-mark.png";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +44,25 @@ export const HomeNavigation = () => {
           tabBarIcon: () => (
             <Image
               source={planIcon}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="SavedRecipe"
+        component={SavedRecipe}
+        options={{
+          tabBarHideOnKeyboard: true,
+          headerShown: false,
+          gestureEnabled: false,
+          unmountOnBlur: true,
+          tabBarIcon: () => (
+            <Image
+              source={bookMarkIcon}
               style={{
                 width: 24,
                 height: 24,
