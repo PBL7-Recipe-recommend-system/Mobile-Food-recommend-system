@@ -12,11 +12,16 @@ import starIcon from "../../assets/icons/star.png";
 import clockIcon from "../../assets/icons/clock-white.png";
 import { SavedButton } from "./SavedButton";
 
-export const SavedItem = () => {
+export const SavedItem = ({ data, handleOnPress }) => {
+  const [isSaved, setIsSaved] = useState(true);
+
+  const handleSaved = () => {
+    handleOnPress(data.recipeId);
+  };
   return (
     <View style={style.container}>
       <ImageBackground
-        source={require("../../assets/mock/food1.jpg")}
+        source={{ uri: data?.image }}
         resizeMode="cover"
         style={style.image}
       >
@@ -30,7 +35,7 @@ export const SavedItem = () => {
           </View>
           <View style={style.content}>
             <View style={style.leftContent}>
-              <Text style={style.nameRecipe}>Food name with long content</Text>
+              <Text style={style.nameRecipe}>{data?.name}</Text>
               <Text style={style.nameAuthor}>By Chef John</Text>
             </View>
             <View style={style.rightContent}>
@@ -43,10 +48,10 @@ export const SavedItem = () => {
                     color: "#ffffff",
                   }}
                 >
-                  20 min
+                  {data?.totalTime}
                 </Text>
               </View>
-              <SavedButton />
+              <SavedButton active={isSaved} setIsSaved={handleSaved} />
             </View>
           </View>
         </LinearGradient>
@@ -99,6 +104,7 @@ const style = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-end",
+    justifyContent: "space-between",
   },
 
   nameRecipe: {

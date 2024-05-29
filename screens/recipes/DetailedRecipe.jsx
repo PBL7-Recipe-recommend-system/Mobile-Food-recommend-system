@@ -15,7 +15,7 @@ import CustomButton from "../../components/CustomButton";
 import { RecipeContentSheet } from "../../components/recipe/RecipeContentSheet";
 import { StepContentSheet } from "../../components/recipe/StepContentSheet";
 import { PRIMARY_COLOR } from "../../constants/color";
-import { getMealAddingFromStorage } from "./../../utils/asyncStorageUtils";
+import { saveRecipe } from "../../api/saved-recipe";
 export const DetailedRecipe = () => {
   const refRBSheet = useRef(null);
   const [isCooking, setIsCooking] = useState(false);
@@ -33,10 +33,16 @@ export const DetailedRecipe = () => {
   useEffect(() => {
     const fetchData = async () => {
       const results = await getDetailedRecipes(id);
+      console.log(results.data);
       setData(results.data);
     };
     fetchData();
   }, []);
+
+  const handleSaveRecipe = async () => {
+    await saveRecipe(id, data?.saved === true ? false : true);
+    setData({ ...data, saved: data?.saved === true ? false : true });
+  };
 
   return (
     <MenuProvider>
@@ -61,14 +67,16 @@ export const DetailedRecipe = () => {
                     }
                   />
                   <MenuOptions customStyles={optionsStyles}>
-                    <MenuOption onSelect={() => alert(`Save`)}>
+                    <MenuOption onSelect={handleSaveRecipe}>
                       <View className="flex-row ">
                         <MaterialCommunityIcons
                           name="bookmark"
                           size={24}
                           color="black"
                         />
-                        <Text className="ml-[26%]">Save</Text>
+                        <Text className="ml-[26%]">
+                          {data?.saved === true ? "Unsave" : "Save"}
+                        </Text>
                       </View>
                     </MenuOption>
                     <MenuOption onSelect={() => alert(`Delete`)}>

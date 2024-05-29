@@ -15,4 +15,5 @@ export const endpoints = {
   RECIPES: "/recipes",
   USERS: "/users",
   PLAN: "/meal-plans",
+  SAVED_RECIPES: "/saved-recipe",
 };

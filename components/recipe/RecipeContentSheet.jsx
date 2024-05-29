@@ -72,7 +72,7 @@ export const RecipeContentSheet = ({ data }) => {
   return (
     <View style={style.container}>
       <View style={style.contentHeader}>
-        <View>
+        <View style={{ width: "10%" }}>
           <AntDesign
             name="reload1"
             size={24}
@@ -80,7 +80,10 @@ export const RecipeContentSheet = ({ data }) => {
             style={style.reloadButton}
           />
         </View>
-        <View className="flex flex-col justify-center items-center">
+        <View
+          className="flex flex-col justify-center items-center"
+          style={{ width: "80%" }}
+        >
           <Text className="text-center" style={style.title}>
             {data?.name}
           </Text>
@@ -88,7 +91,7 @@ export const RecipeContentSheet = ({ data }) => {
             Lunch / {formatTime(data?.totalTime)}
           </Text>
         </View>
-        <View>
+        <View style={{ width: "10%" }}>
           {isAddingMeal === "true" && (
             <TouchableOpacity
               onPress={handleAddFood}
@@ -115,7 +118,7 @@ export const RecipeContentSheet = ({ data }) => {
       </View>
       <View style={style.nutritionContainer}>
         <View style={style.nutritionItemContainer}>
-          <Text>{data.calories} g</Text>
+          <Text>{data.calories}</Text>
           <Text style={style.nutritionTitle}>Calories</Text>
         </View>
         <View style={style.nutritionItemContainer}>

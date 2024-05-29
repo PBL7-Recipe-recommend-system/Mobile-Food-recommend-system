@@ -27,7 +27,10 @@ import {
   getTodayMeals,
 } from "../../utils/meals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setMealAddingToStorage } from "../../utils/asyncStorageUtils";
+import {
+  getMealAddingFromStorage,
+  setMealAddingToStorage,
+} from "../../utils/asyncStorageUtils";
 import { toCamelCase } from "../../utils/formatData";
 
 export const Home = ({ navigation }) => {
@@ -66,6 +69,7 @@ export const Home = ({ navigation }) => {
 
   useEffect(() => {
     const fetchDataUser = async () => {
+      await AsyncStorage.setItem("isAddingMeal", "false");
       await setMealAddingToStorage(null);
       const results = await recentSearch();
       setDataSearch(results.data);
@@ -82,7 +86,6 @@ export const Home = ({ navigation }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("categoryValue", categoryValue);
       const results = await getTodayMeals(toCamelCase(categoryValue));
       setYourRecipes(results);
     };
