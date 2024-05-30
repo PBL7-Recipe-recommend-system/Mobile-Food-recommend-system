@@ -74,7 +74,6 @@ const Login = ({ navigation }) => {
         } else {
           await me();
           await getRecommendation();
-          console.log("Login >>> ");
           navigation.navigate("HomeNavigation");
         }
       } catch (error) {

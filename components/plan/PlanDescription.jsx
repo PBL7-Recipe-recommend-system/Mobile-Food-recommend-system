@@ -43,7 +43,6 @@ export const PlanDescription = ({ planType }) => {
         });
       } else {
         const data = await getMealPlanFromStorage();
-        console.log(data);
         setDataTitle({
           title: "My meal plan",
           description: "Description",

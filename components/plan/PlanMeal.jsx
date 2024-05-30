@@ -1,20 +1,18 @@
+import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
-import { DateList } from "./DateList";
-import { MealList } from "./MealList";
-import { PlanDescription } from "./PlanDescription";
-import { NutritionBoard } from "./NutritionBoard";
-import { getMealPlan } from "../../api/plan";
-import { formatDate } from "../../utils/formatData";
-import { getRecommendationFromStorage } from "../../utils/meals";
 import { RECOMMEND_TAB } from "../../constants/plan";
-import CustomButton from "../CustomButton";
 import {
   getDateAddingFromStorage,
   getMealPlanFromStorage,
   setDateAddingToStorage,
 } from "../../utils/asyncStorageUtils";
-import { useFocusEffect } from "@react-navigation/native";
+import { formatDate } from "../../utils/formatData";
+import { getRecommendationFromStorage } from "../../utils/meals";
+import { DateList } from "./DateList";
+import { MealList } from "./MealList";
+import { NutritionBoard } from "./NutritionBoard";
+import { PlanDescription } from "./PlanDescription";
 
 export const PlanMeal = ({ planType }) => {
   const [dataSource, setDataSource] = useState([]);
@@ -32,7 +30,6 @@ export const PlanMeal = ({ planType }) => {
         } else {
           const response = await getMealPlanFromStorage();
           data = response;
-          console.log(data);
         }
         setDataSource(data);
 
@@ -70,7 +67,6 @@ export const PlanMeal = ({ planType }) => {
     const fetchDate = async () => {
       const dateAdding = await getDateAddingFromStorage();
       setSelectedDate(dateAdding);
-      console.log(dateAdding);
     };
     fetchDate();
   }, []);
@@ -87,11 +83,6 @@ export const PlanMeal = ({ planType }) => {
     };
     fetchData();
   }, [selectedDate]);
-
-  const handleSaveChange = async () => {
-    const data = await getMealPlanFromStorage();
-  };
-
   return (
     <Animated.ScrollView
       contentContainerStyle={style.container}
@@ -109,11 +100,6 @@ export const PlanMeal = ({ planType }) => {
       </View>
       <MealList dataSource={selectedData} planType={planType} />
       <NutritionBoard />
-      {/* <CustomButton
-        title={"Save changes"}
-        customStyle={style.button}
-        onPressButton={handleSaveChange}
-      /> */}
     </Animated.ScrollView>
   );
 };

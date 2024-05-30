@@ -54,15 +54,17 @@ export const RecipeContentSheet = ({ data }) => {
     try {
       const mealPLan = await getMealPlanFromStorage();
       const date = await getDateAddingFromStorage();
+      console.log(data.recipeId, date);
       const param = [
         {
           [mealAdding]: data.recipeId,
           date: date,
-          mealCount: 5,
         },
       ];
       await updateMealPlan(param);
       await getMealPlan();
+      console.log("success");
+
       navigation.navigate("PlanStack");
     } catch (e) {
     } finally {
@@ -98,8 +100,8 @@ export const RecipeContentSheet = ({ data }) => {
               style={{
                 backgroundColor: PRIMARY_COLOR,
                 borderRadius: 6,
-                paddingHorizontal: "4%",
-                paddingVertical: "12%",
+                paddingHorizontal: "8%",
+                paddingVertical: "18%",
               }}
             >
               <Text
@@ -107,6 +109,7 @@ export const RecipeContentSheet = ({ data }) => {
                   color: "#fff",
                   textAlign: "center",
                   fontSize: 18,
+                  lineHeight: 18,
                   fontWeight: "bold",
                 }}
               >

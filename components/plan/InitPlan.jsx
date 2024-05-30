@@ -18,7 +18,7 @@ export const InitPlan = () => {
   const handleSubmitForm = async () => {
     const currentDate = new Date();
     formValue.date = formatDate(currentDate);
-    const res = await addMealPlan(formValue);
+    await addMealPlan(formValue);
   };
 
   return (

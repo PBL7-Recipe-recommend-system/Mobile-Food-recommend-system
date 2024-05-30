@@ -4,10 +4,11 @@ import { Image } from "react-native";
 import homeIcon from "../assets/icons/home.png";
 import profileIcon from "../assets/icons/profile.png";
 import planIcon from "../assets/icons/plan.png";
-import { Profile } from "../screens/profile/Profile";
 import { PlanStackNavigator } from "./PlanStackNavigator";
 import { SavedRecipe } from "../screens/saved-recipe/SavedRecipe";
 import bookMarkIcon from "../assets/icons/book-mark.png";
+import Profile from "../screens/profile/Profile";
+import { ProfileStackNavigator } from "./ProfileStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -72,8 +73,8 @@ export const HomeNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileStack"
+        component={ProfileStackNavigator}
         options={{
           tabBarHideOnKeyboard: true,
           headerShown: false,

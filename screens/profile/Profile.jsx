@@ -1,65 +1,148 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import AppWrapper from "../../wrappers/AppWrapper";
-import { Entypo } from "@expo/vector-icons";
-import avatarImg from "../../assets/mock/avatar.jpg";
-export const Profile = () => {
+import { PRIMARY_COLOR } from "../../constants/color";
+const Profile = ({ navigation }) => {
+  const handleClickEditButton = () => {
+    navigation.navigate("EditProfile");
+  };
   return (
     <AppWrapper>
-      <View style={style.container}>
-        <View style={style.header}>
-          <Text style={style.textHeader}>Profile</Text>
-          <Entypo
-            name="dots-three-horizontal"
-            size={24}
-            color={"#000"}
-            style={style.menuIcon}
-          />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}>Profile</Text>
         </View>
-        <View style={style.personalize}>
-          <Image source={avatarImg} style={style.image} />
-          <View className="flex flex-col justify-between" style={{ flex: 1 }}>
-            <Text className="font-bold text-[18px]">Travis</Text>
-            <View
-              className="flex flex-row justify-between"
-              style={{ flex: 1, marginTop: "10%" }}
-            >
-              <Text className="text-[16px]">Gender: Male</Text>
-              <Text className="text-[16px]">Age: Male</Text>
-            </View>
+        <View style={styles.profileSection}>
+          <View>
+            <Image
+              source={require("../../assets/mock/avatar.jpg")}
+              style={styles.profileImage}
+            />
           </View>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={handleClickEditButton}
+          >
+            <Text style={styles.editButtonText}>Edit Profile</Text>
+          </TouchableOpacity>
         </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Content</Text>
+          <TouchableOpacity style={styles.item}>
+            <Text style={styles.itemText}>Favourite</Text>
+            <AntDesign name="right" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item}>
+            <Text style={styles.itemText}>History</Text>
+            <AntDesign name="right" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Preferences</Text>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate("ChangePassword")}
+          >
+            <Text style={styles.itemText}>Change password</Text>
+            <AntDesign name="right" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Log out</Text>
+        </TouchableOpacity>
       </View>
     </AppWrapper>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginHorizontal: 30,
+    flexGrow: 1,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 20,
+  },
+  profileSection: {
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 10,
+  },
+  avatarBorder: {
+    borderWidth: 2,
+    width: 124,
+    height: 124,
+    borderRadius: 62,
+  },
+  editButton: {
+    backgroundColor: "#000000",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  editButtonText: {
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+  section: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 10,
+  },
+  item: {
+    paddingVertical: 11,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eeeeee",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "center",
+  },
+  itemText: {
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  logoutButton: {
+    backgroundColor: PRIMARY_COLOR,
+    paddingVertical: 15,
+    alignItems: "center",
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  logoutButtonText: {
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
   header: {
     marginVertical: 20,
   },
   textHeader: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: "#000000",
     textAlign: "center",
+    marginHorizontal: "auto",
   },
   menuIcon: {
     position: "absolute",
     right: 0,
   },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginRight: "4%",
-  },
-  personalize: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-  },
 });
+
+export default Profile;

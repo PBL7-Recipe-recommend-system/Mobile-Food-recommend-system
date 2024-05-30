@@ -9,7 +9,6 @@ import {
 } from "../../utils/asyncStorageUtils";
 
 export const DateList = ({ value, setValue }) => {
-  console.log("value", value);
   const dayList = generateDays(7);
   const [active, setActive] = useState(value);
 

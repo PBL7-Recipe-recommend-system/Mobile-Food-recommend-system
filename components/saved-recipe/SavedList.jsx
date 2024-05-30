@@ -19,7 +19,6 @@ export const SavedList = () => {
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {console.log(dataSource)}
       {dataSource.length > 0 &&
         dataSource.map((item, index) => (
           <SavedItem key={index} data={item} handleOnPress={handleUnsaveItem} />
