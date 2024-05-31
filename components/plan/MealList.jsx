@@ -6,6 +6,7 @@ import { AddFoodItem } from "./AddFoodItem";
 import { BREAKFAST, generateNumberOfMeals } from "../../utils/meals";
 import { toCamelCase } from "../../utils/formatData";
 import { daysSource } from "./../../constants/mockData";
+import { RECOMMEND_TAB } from "../../constants/plan";
 
 export const MealList = ({ dataSource, planType }) => {
   const [mealsList, setMealsList] = useState([]);
@@ -26,7 +27,10 @@ export const MealList = ({ dataSource, planType }) => {
   useEffect(() => {
     const fetchData = async () => {
       const user = await getUserFromStorage();
-      const meals = generateNumberOfMeals(user.meals);
+      console.log(user);
+      const meals = generateNumberOfMeals(
+        planType === RECOMMEND_TAB ? user.meals : 5
+      );
       setMealsList(meals);
     };
     fetchData();

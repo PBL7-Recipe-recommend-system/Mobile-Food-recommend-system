@@ -54,7 +54,6 @@ export const RecipeContentSheet = ({ data }) => {
     try {
       const mealPLan = await getMealPlanFromStorage();
       const date = await getDateAddingFromStorage();
-      console.log(data.recipeId, date);
       const param = [
         {
           [mealAdding]: data.recipeId,
@@ -63,7 +62,6 @@ export const RecipeContentSheet = ({ data }) => {
       ];
       await updateMealPlan(param);
       await getMealPlan();
-      console.log("success");
 
       navigation.navigate("PlanStack");
     } catch (e) {

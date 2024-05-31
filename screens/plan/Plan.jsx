@@ -25,7 +25,6 @@ export const Plan = () => {
         setUser(currentUser);
       }
       await setDateAddingToStorage(formatDate(new Date()));
-      console.log("fetchData");
       await getMealPlan();
     };
     fetchData();

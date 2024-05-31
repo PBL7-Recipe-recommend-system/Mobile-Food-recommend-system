@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Image,
@@ -6,236 +6,341 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
 import { ScrollView } from "react-native-virtualized-view";
 import { BackButton } from "../../components/BackButton";
-import AppWrapper from "../../wrappers/AppWrapper";
-import CustomButton from "../../components/CustomButton";
+import { CustomDateTimePicker } from "../../components/CustomDateTimePicker";
 import { CustomDropDown } from "../../components/CustomDropDown";
 import {
   ActivityList,
   GenderList,
   GoalList,
+  MealsList,
 } from "../../constants/HealthInputData";
+import { PRIMARY_COLOR } from "../../constants/color";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import AppWrapper from "../../wrappers/AppWrapper";
+import { MealList } from "../../components/plan/MealList";
+import { me, setUpPersonalize } from "../../api/users";
+import { Loading } from "../../components/Loading";
+import { showErrorToast } from "../../helper/errorToast";
 
 export const EditProfile = () => {
-  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isChange, setIsChange] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [userData, setUserData] = useState({});
   const {
     control,
     handleSubmit,
+    setValue,
+    reset,
+    register,
+    watch,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-    },
-  });
+  } = useForm({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = await getUserFromStorage();
+      const userFormat = {
+        name: user.name,
+        gender: user.gender,
+        height: user.height.toString(),
+        weight: user.weight.toString(),
+        meals: user.meals,
+        birthday: user.birthday,
+        goal: user.dietaryGoal,
+        exercises: user.dailyActivities,
+      };
+      setUserData(userFormat);
+      reset(userFormat);
+    };
+    fetchData();
+  }, []);
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const res = await setUpPersonalize(data);
+      await me();
+      setIsChange(false);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AppWrapper>
+      <Loading loading={loading} />
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.backButton}>
             <BackButton />
           </View>
           <Text style={styles.textHeader}>Profile</Text>
+          <TouchableOpacity
+            style={styles.saveButton}
+            disabled={!isChange}
+            onPress={handleSubmit(onSubmit)}
+          >
+            <Text
+              style={[
+                {
+                  color: PRIMARY_COLOR,
+                  fontSize: 18,
+                  fontWeight: "600",
+                },
+                !isChange && { color: "#A9A9A9" },
+              ]}
+            >
+              Save
+            </Text>
+          </TouchableOpacity>
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            height: "130%",
+            height: "120%",
           }}
         >
-          <View style={styles.profileSection}>
-            <Image
-              source={require("../../assets/mock/avatar.jpg")}
-              style={styles.profileImage}
-            />
-            <TouchableOpacity style={styles.editButton}>
-              <Text style={styles.editButtonText}>Upload Avatar</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ marginHorizontal: 10 }}>
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
+          <TouchableWithoutFeedback
+            onPress={
+              showPicker
+                ? () => {
+                    setShowPicker(false);
+                  }
+                : null
+            }
+          >
+            <View>
+              <View style={styles.profileSection}>
+                <Image
+                  source={require("../../assets/mock/avatar.jpg")}
+                  style={styles.profileImage}
+                />
+                <TouchableOpacity style={styles.editButton}>
+                  <Text style={styles.editButtonText}>Upload Avatar</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ marginHorizontal: 10 }}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <View
+                      style={{
+                        marginVertical: 4,
+                      }}
+                    >
+                      <Text style={styles.textLabel}>Name</Text>
+                      <TextInput
+                        onBlur={onBlur}
+                        onChangeText={(value) => {
+                          onChange(value);
+                          setIsChange(true);
+                        }}
+                        value={value}
+                        style={styles.textInput}
+                        {...register("name")}
+                      />
+                    </View>
+                  )}
+                  name="name"
+                />
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <View style={{ zIndex: 10000 }}>
+                      <Text style={styles.textLabel}>Gender</Text>
+                      <CustomDropDown
+                        dataItems={GenderList}
+                        defaultValue={userData.gender}
+                        setDefaultValue={(value) => {
+                          setUserData({ ...userData, gender: value });
+                          setIsChange(true);
+                          onChange(value);
+                        }}
+                      />
+                    </View>
+                  )}
+                  name="gender"
+                />
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <View
+                      style={{
+                        marginVertical: 4,
+                      }}
+                    >
+                      <Text style={styles.textLabel}>Birthday</Text>
+                      <CustomDateTimePicker
+                        showPicker={showPicker}
+                        setShowPicker={setShowPicker}
+                        defaultValue={userData.birthday}
+                        setDefaultValue={(value) => {
+                          setUserData({ ...userData, birthday: value });
+                          setIsChange(true);
+                          onChange(value);
+                        }}
+                      />
+                    </View>
+                  )}
+                  name="birthday"
+                />
+
                 <View
                   style={{
-                    marginVertical: 4,
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
                   }}
                 >
-                  <Text style={styles.textLabel}>Name</Text>
-                  <TextInput
-                    placeholder="Your name ..."
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    style={styles.textInput}
-                  />
+                  <View style={{ width: "50%" }}>
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <View
+                          style={{
+                            marginVertical: 4,
+                          }}
+                        >
+                          <Text style={styles.textLabel}>Height</Text>
+                          <TextInput
+                            onBlur={onBlur}
+                            onChangeText={(value) => {
+                              onChange(value);
+                              setIsChange(true);
+                            }}
+                            inputMode="numeric"
+                            value={value}
+                            style={[styles.textInput, { width: "70%" }]}
+                            {...register("height")}
+                          />
+                        </View>
+                      )}
+                      name="height"
+                    />
+                  </View>
+                  <View style={{ width: "50%" }}>
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <View
+                          style={{
+                            marginVertical: 4,
+                          }}
+                        >
+                          <Text style={styles.textLabel}>Weight</Text>
+                          <TextInput
+                            placeholder="Your Height ..."
+                            keyboardType="numeric"
+                            onBlur={onBlur}
+                            onChangeText={(value) => {
+                              onChange(value);
+                              setIsChange(true);
+                            }}
+                            value={value}
+                            style={[styles.textInput, { width: "70%" }]}
+                            {...register("weight")}
+                          />
+                        </View>
+                      )}
+                      name="weight"
+                    />
+                  </View>
+                  <View style={{ width: "50%" }}>
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <View
+                          style={{
+                            marginVertical: 4,
+                          }}
+                        >
+                          <Text style={styles.textLabel}>Meals per day</Text>
+                          <CustomDropDown
+                            direction={"TOP"}
+                            dataItems={MealsList}
+                            defaultValue={userData.meals}
+                            setDefaultValue={(newValue) => {
+                              setUserData({ ...userData, meals: value });
+                              setIsChange(true);
+                              onChange(newValue);
+                            }}
+                          />
+                        </View>
+                      )}
+                      name="meals"
+                    />
+                  </View>
                 </View>
-              )}
-              name="name"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View>
-                  <Text style={styles.textLabel}>Gender</Text>
-                  <CustomDropDown dataItems={GenderList} />
-                </View>
-              )}
-              name="gender"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View
-                  style={{
-                    marginVertical: 4,
-                  }}
-                >
-                  <Text style={styles.textLabel}>Birthday</Text>
-                  <TextInput
-                    placeholder="Your Birthday ..."
-                    onBlur={onBlur}
-                    onFocus={() => setOpen(true)}
-                    onChangeText={onChange}
-                    value={value}
-                    style={styles.textInput}
-                  />
-                </View>
-              )}
-              name="birthday"
-            />
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              <View style={{ width: "50%" }}>
                 <Controller
                   control={control}
                   rules={{
                     required: true,
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <View
-                      style={{
-                        marginVertical: 4,
-                      }}
-                    >
-                      <Text style={styles.textLabel}>Height</Text>
-                      <TextInput
-                        placeholder="Your Height ..."
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        style={[styles.textInput, { width: "70%" }]}
+                    <View style={{ zIndex: 10001 }}>
+                      <Text style={styles.textLabel}>Diet goal</Text>
+                      <CustomDropDown
+                        dataItems={GoalList}
+                        defaultValue={userData.goal}
+                        setDefaultValue={(value) => {
+                          setUserData({ ...userData, goal: value });
+                          onChange(value);
+                          setIsChange(true);
+                        }}
                       />
                     </View>
                   )}
-                  name="height"
+                  name="goal"
                 />
-              </View>
-              <View style={{ width: "50%" }}>
                 <Controller
                   control={control}
                   rules={{
                     required: true,
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <View
-                      style={{
-                        marginVertical: 4,
-                      }}
-                    >
-                      <Text style={styles.textLabel}>Weight</Text>
-                      <TextInput
-                        placeholder="Your Height ..."
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        style={[styles.textInput, { width: "70%" }]}
+                    <View style={{ zIndex: 10002 }}>
+                      <Text style={styles.textLabel}>Daily exercises</Text>
+                      <CustomDropDown
+                        dataItems={ActivityList}
+                        defaultValue={userData.exercises}
+                        setDefaultValue={(value) => {
+                          setUserData({ ...userData, exercises: value });
+                          setIsChange(true);
+                          onChange(value);
+                        }}
                       />
                     </View>
                   )}
-                  name="weight"
-                />
-              </View>
-              <View style={{ width: "50%" }}>
-                <Controller
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <View
-                      style={{
-                        marginVertical: 4,
-                      }}
-                    >
-                      <Text style={styles.textLabel}>Meals per day</Text>
-                      <TextInput
-                        placeholder="Your Height ..."
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        style={[styles.textInput, { width: "70%" }]}
-                      />
-                    </View>
-                  )}
-                  name="weight"
+                  name="exercises"
                 />
               </View>
             </View>
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View>
-                  <Text style={styles.textLabel}>Diet goal</Text>
-                  <CustomDropDown dataItems={GoalList} />
-                </View>
-              )}
-              name="goal"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View>
-                  <Text style={styles.textLabel}>Daily exercises</Text>
-                  <CustomDropDown dataItems={ActivityList} />
-                </View>
-              )}
-              name="exercises"
-            />
-          </View>
-          <CustomButton
-            title={"Update"}
-            width={"50%"}
-            customStyle={{
-              paddingVertical: 10,
-              marginHorizontal: "auto",
-              marginVertical: 20,
-            }}
-          />
+          </TouchableWithoutFeedback>
         </ScrollView>
       </View>
     </AppWrapper>
@@ -306,6 +411,15 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: 0,
+  },
+  saveButton: {
+    position: "absolute",
+    right: 0,
+  },
+  disabledButton: {
+    position: "absolute",
+    right: 0,
+    color: "#A9A9A9",
   },
   textLabel: {
     fontSize: 18,

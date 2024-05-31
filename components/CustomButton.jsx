@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_COLOR,
     borderRadius: 10,
     marginVertical: 8,
+    zIndex: 0,
   },
   text: {
     fontSize: 16,

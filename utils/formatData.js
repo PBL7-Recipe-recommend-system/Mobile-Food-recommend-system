@@ -49,3 +49,15 @@ export const getGoal = (goal) => {
     return "Maintain weight";
   }
 };
+
+export const toDate = (input) => {
+  if (input) {
+    let parts = input.split("-");
+    let dateObject = new Date(parts[2], parts[1] - 1, parts[0]); // month is zero-based
+    return dateObject;
+  }
+};
+
+export const getValueDropDownItem = (input, dataItems) => {
+  return dataItems.find((item) => item.value === input).value;
+};

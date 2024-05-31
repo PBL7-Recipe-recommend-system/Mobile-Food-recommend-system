@@ -1,6 +1,6 @@
 import { Platform, ToastAndroid, Alert } from "react-native";
 
-export const showErrorToast = (message) => {
+export const showErrorToast = (message, type) => {
   if (Platform.OS === "ios") {
     Alert.alert("Error", message);
   } else {

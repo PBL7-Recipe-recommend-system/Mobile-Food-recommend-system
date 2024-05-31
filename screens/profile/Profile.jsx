@@ -10,9 +10,18 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { PRIMARY_COLOR } from "../../constants/color";
+import { logOut } from "../../api/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Profile = ({ navigation }) => {
   const handleClickEditButton = () => {
     navigation.navigate("EditProfile");
+  };
+
+  const handleLogOut = async () => {
+    await logOut();
+    await AsyncStorage.clear();
+
+    navigation.navigate("Login");
   };
   return (
     <AppWrapper>
@@ -56,7 +65,7 @@ const Profile = ({ navigation }) => {
             <AntDesign name="right" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogOut}>
           <Text style={styles.logoutButtonText}>Log out</Text>
         </TouchableOpacity>
       </View>

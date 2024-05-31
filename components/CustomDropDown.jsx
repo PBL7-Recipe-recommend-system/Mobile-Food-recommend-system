@@ -1,33 +1,52 @@
 import React, { useEffect, useState } from "react";
-
 import DropDownPicker from "react-native-dropdown-picker";
+import { getValueDropDownItem } from "../utils/formatData";
 
-export const CustomDropDown = ({ dataItems }) => {
+export const CustomDropDown = ({
+  dataItems,
+  defaultValue,
+  setDefaultValue,
+  direction,
+}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   useEffect(() => {
     if (dataItems) {
-      console.log(dataItems);
       setItems(dataItems);
     }
   }, [dataItems]);
 
+  useEffect(() => {
+    if (value) {
+      if (defaultValue !== value) {
+        setDefaultValue(value);
+      }
+    }
+  }, [value]);
+
   return (
     <DropDownPicker
       open={open}
-      value={value}
+      value={value ? value : defaultValue}
       items={items}
+      defaultValue={value}
+      dropDownDirection={direction}
       setOpen={setOpen}
       setValue={setValue}
       setItems={setItems}
       zIndex={5000}
       zIndexInverse={5000}
       style={{ borderColor: "#A9A9A9", borderWidth: 2 }}
+      containerStyle={{
+        zIndex: open ? 1000 : 0,
+      }}
       labelStyle={{ fontSize: 16, color: "#000" }}
       dropDownContainerStyle={{
         borderColor: "#A9A9A9",
         borderWidth: 2,
+        zIndex: 50000000000,
+        zIndexInverse: 5000000000000000,
       }}
       itemProps={{
         style: {
