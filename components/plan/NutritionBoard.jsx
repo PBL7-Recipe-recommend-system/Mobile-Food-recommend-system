@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import AnimatedProgressWheel from "react-native-progress-wheel";
 import { PRIMARY_COLOR, SECONDARY_COLOR } from "../../constants/color";
 
-export const NutritionBoard = () => {
+export const NutritionBoard = ({ data }) => {
   return (
     <View style={style.container}>
       <Text style={style.nutritionText}>Nutrition value</Text>
@@ -14,7 +14,11 @@ export const NutritionBoard = () => {
             width={10}
             rotation={"-90deg"}
             color={"#957DC9"}
-            progress={10}
+            progress={
+              data && data.totalCaloriesPercentage !== null
+                ? data.totalCaloriesPercentage
+                : 0
+            }
             duration={100}
             backgroundColor={SECONDARY_COLOR}
             showProgressLabel={true}
@@ -29,7 +33,11 @@ export const NutritionBoard = () => {
             width={10}
             rotation={"-90deg"}
             color={"#86BA32"}
-            progress={10}
+            progress={
+              data && data.totalProteinPercentage !== null
+                ? data.totalProteinPercentage
+                : 0
+            }
             duration={100}
             backgroundColor={SECONDARY_COLOR}
             showProgressLabel={true}
@@ -44,7 +52,11 @@ export const NutritionBoard = () => {
             width={10}
             rotation={"-90deg"}
             color={"#AD5523"}
-            progress={10}
+            progress={
+              data && data.totalFatPercentage !== null
+                ? data.totalFatPercentage
+                : 0
+            }
             duration={100}
             backgroundColor={SECONDARY_COLOR}
             showProgressLabel={true}
@@ -55,7 +67,9 @@ export const NutritionBoard = () => {
       </View>
       <View className="flex flex-row justify-between">
         <Text style={style.nutritionText}>Total:</Text>
-        <Text style={style.nutritionText}>1982 kcal</Text>
+        <Text style={style.nutritionText}>
+          {data && data.totalCalories !== null ? data.totalCalories : 0} kcal
+        </Text>
       </View>
     </View>
   );

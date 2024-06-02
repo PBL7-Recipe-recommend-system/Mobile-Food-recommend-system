@@ -1,21 +1,81 @@
 import React from "react";
-import { Text, TextInput, View, StyleSheet } from "react-native";
+import {
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import CustomButton from "../../components/CustomButton";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { BackButton } from "../../components/BackButton";
+import { useTogglePasswordVisibility } from "../../hook/useTogglePasswordVisibility";
+import { useState } from "react";
+import global from "../../Styles";
+import ErrorText from "../../components/ErrorText";
+import {
+  ErrorConfirmPasswordMessage,
+  ErrorPasswordMessage,
+} from "../../constants/messages";
+import {
+  validateConfirmPassword,
+  validatePassword,
+} from "../../utils/validation";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { changePassword } from "../../api/users";
+import { showErrorToast } from "../../helper/errorToast";
+import { useNavigation } from "@react-navigation/native";
+import Profile from "./Profile";
+
+const PASSWORD = 1;
+const NEW_PASSWORD = 2;
+const CONFIRM_PASSWORD = 3;
+
 export const ChangePassword = () => {
+  const navigation = useNavigation();
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [isValidNewPassword, setIsValidNewPassword] = useState(true);
+  const [isValidConfirmPassword, setIsValidConfirmPassword] = useState(true);
   const {
     control,
+    watch,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
-  const onSubmit = (data) => console.log(data);
+  const { passwordVisibility, rightIcon, handlePasswordVisibility } =
+    useTogglePasswordVisibility();
+
+  const handleChangePassword = (text, type) => {
+    const newPassword = watch("newPassword");
+    if (type === PASSWORD) {
+      setIsValidPassword(validatePassword(text));
+    } else if (type === NEW_PASSWORD) {
+      setIsValidNewPassword(validatePassword(text));
+    } else if (type === CONFIRM_PASSWORD) {
+      setIsValidConfirmPassword(validateConfirmPassword(text, newPassword));
+    }
+  };
+  const onSubmit = async (data) => {
+    try {
+      console.log(data);
+      const res = await changePassword(data);
+      if (res.status !== 200) {
+        showErrorToast(res.message);
+        reset();
+      } else {
+        navigation.push("Profile");
+      }
+      console.log(res);
+    } catch (error) {}
+  };
   return (
     <AppWrapper>
       <View
@@ -35,22 +95,45 @@ export const ChangePassword = () => {
             required: true,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <View
-              style={{
-                marginVertical: 10,
-              }}
-            >
+            <View>
               <Text style={styles.textLabel}>Current Password</Text>
-              <TextInput
-                placeholder="Your name ..."
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                style={styles.textInput}
-              />
+              <View className="flex-row items-center relative">
+                <TextInput
+                  placeholder="Your password ..."
+                  onBlur={onBlur}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    handleChangePassword(text, PASSWORD);
+                  }}
+                  value={value}
+                  clearTextOnFocus={false}
+                  style={isValidPassword ? global.input : global.errorInput}
+                  textContentType="newPassword"
+                  secureTextEntry={passwordVisibility}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  enablesReturnKeyAutomatically
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={handlePasswordVisibility}
+                >
+                  <MaterialCommunityIcons
+                    name={rightIcon}
+                    size={24}
+                    color={isValidPassword ? "#aaa" : "red"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {isValidPassword === false && (
+                <ErrorText
+                  isValid={isValidPassword}
+                  message={ErrorPasswordMessage}
+                />
+              )}
             </View>
           )}
-          name="name"
+          name="currentPassword"
         />
         <Controller
           control={control}
@@ -64,21 +147,48 @@ export const ChangePassword = () => {
               }}
             >
               <Text style={styles.textLabel}>New Password</Text>
-              <TextInput
-                placeholder="Your name ..."
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                style={styles.textInput}
-              />
+              <View className="flex-row items-center relative">
+                <TextInput
+                  placeholder="Your name ..."
+                  onBlur={onBlur}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    handleChangePassword(text, NEW_PASSWORD);
+                  }}
+                  value={value}
+                  clearTextOnFocus={false}
+                  style={isValidNewPassword ? global.input : global.errorInput}
+                  textContentType="newPassword"
+                  secureTextEntry={passwordVisibility}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  enablesReturnKeyAutomatically
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={handlePasswordVisibility}
+                >
+                  <MaterialCommunityIcons
+                    name={rightIcon}
+                    size={24}
+                    color={isValidNewPassword ? "#aaa" : "red"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {isValidNewPassword === false && (
+                <ErrorText
+                  isValid={isValidNewPassword}
+                  message={ErrorPasswordMessage}
+                />
+              )}
             </View>
           )}
-          name="name"
+          name="newPassword"
         />
         <Controller
           control={control}
           rules={{
-            required: true,
+            required: false,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View
@@ -87,16 +197,46 @@ export const ChangePassword = () => {
               }}
             >
               <Text style={styles.textLabel}>Confirm password</Text>
-              <TextInput
-                placeholder="Your name ..."
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                style={styles.textInput}
-              />
+              <View className="flex-row items-center relative">
+                <TextInput
+                  placeholder="Your name ..."
+                  onBlur={onBlur}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    handleChangePassword(text, CONFIRM_PASSWORD);
+                  }}
+                  value={value}
+                  clearTextOnFocus={false}
+                  style={
+                    isValidConfirmPassword ? global.input : global.errorInput
+                  }
+                  textContentType="newPassword"
+                  secureTextEntry={passwordVisibility}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  enablesReturnKeyAutomatically
+                />
+
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={handlePasswordVisibility}
+                >
+                  <MaterialCommunityIcons
+                    name={rightIcon}
+                    size={24}
+                    color={isValidConfirmPassword ? "#aaa" : "red"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {isValidConfirmPassword === false && (
+                <ErrorText
+                  isValid={isValidConfirmPassword}
+                  message={ErrorConfirmPasswordMessage}
+                />
+              )}
             </View>
           )}
-          name="name"
+          name="confirmPassword"
         />
         <CustomButton
           title={"Update"}
@@ -106,6 +246,7 @@ export const ChangePassword = () => {
             marginHorizontal: "auto",
             marginVertical: 20,
           }}
+          onPressButton={handleSubmit(onSubmit)}
         />
       </View>
     </AppWrapper>
@@ -145,5 +286,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
     padding: 10,
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 12,
+    transform: [{ translateY: 3 }],
   },
 });

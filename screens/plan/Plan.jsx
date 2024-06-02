@@ -25,13 +25,16 @@ export const Plan = () => {
         setUser(currentUser);
       }
       await setDateAddingToStorage(formatDate(new Date()));
-      await getMealPlan();
+      if (currentUser.isCustomPlan === true) {
+        const res = await getMealPlan();
+        console.log("call API >>>", res);
+      }
     };
     fetchData();
     // const intervalId = setInterval(fetchData, 1000);
 
     // return () => clearInterval(intervalId);
-  }, [user]);
+  }, []);
   return (
     <AppWrapper>
       <KeyboardWrapper>

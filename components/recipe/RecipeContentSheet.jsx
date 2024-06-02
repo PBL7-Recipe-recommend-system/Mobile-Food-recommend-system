@@ -12,13 +12,17 @@ import {
 import { getMealPlan, updateMealPlan } from "../../api/plan";
 import { useNavigation } from "@react-navigation/native";
 import { Loading } from "../Loading";
-export const RecipeContentSheet = ({ data }) => {
-  const [serving, setServing] = useState(2);
+export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
+  const [serving, setServing] = useState(baseServing);
   const [isAddingMeal, setIsAddingMeal] = useState(false);
   const [mealAdding, setMealAdding] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    setServing(baseServing);
+  }, [baseServing]);
 
   useEffect(() => {
     const getIsAddingMeal = async () => {
@@ -42,9 +46,11 @@ export const RecipeContentSheet = ({ data }) => {
 
   const handleAdjustServing = (type) => {
     if (type === "increment") {
+      handleSetServing(serving + 1);
       setServing(serving + 1);
     } else {
       if (serving === 1) return;
+      handleSetServing(serving - 1);
       setServing(serving - 1);
     }
   };

@@ -29,7 +29,6 @@ import {
 } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { Loading } from "../../components/Loading";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { me } from "../../api/users";
 import { getRecommendation } from "../../api/recommendation";
 

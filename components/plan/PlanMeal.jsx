@@ -29,8 +29,10 @@ export const PlanMeal = ({ planType }) => {
           data = response.recommendations;
         } else {
           const response = await getMealPlanFromStorage();
+          console.log("planMeal >>>> ", response);
           data = response;
         }
+        console.log("data >>>> ", data);
         setDataSource(data);
 
         const dataForSelectedDate = data.find(
@@ -83,6 +85,7 @@ export const PlanMeal = ({ planType }) => {
     };
     fetchData();
   }, [selectedDate]);
+
   return (
     <Animated.ScrollView
       contentContainerStyle={style.container}
@@ -93,13 +96,13 @@ export const PlanMeal = ({ planType }) => {
           paddingHorizontal: 30,
         }}
       >
-        <PlanDescription planType={planType} />
+        <PlanDescription dataSource={selectedData} planType={planType} />
       </View>
       <View>
         <DateList value={selectedDate} setValue={setSelectedDate} />
       </View>
       <MealList dataSource={selectedData} planType={planType} />
-      <NutritionBoard />
+      <NutritionBoard data={selectedData} />
     </Animated.ScrollView>
   );
 };

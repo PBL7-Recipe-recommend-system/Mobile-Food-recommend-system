@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { endpoints } from "../utils/path";
 import axiosClient from "../helper/http";
 import { getTokenFromAsyncStorage } from "../utils/token";
+import { showErrorToast } from "../helper/errorToast";
 
 const USER_ENDPOINT = endpoints.USERS;
 
@@ -29,6 +30,23 @@ export const me = () => {
         AsyncStorage.setItem("user", JSON.stringify(res.data));
         return res;
       } else {
+        return Promise.reject(res);
+      }
+    })
+    .catch((error) => {
+      return error;
+    });
+  return res;
+};
+
+export const changePassword = (value) => {
+  const res = axiosClient
+    .put(`${USER_ENDPOINT}/change-password`, value)
+    .then((res) => {
+      if (res.status === 200) {
+        AsyncStorage.setItem("token", res.data.accessToken);
+        return res;
+      } else if (res.status !== 200) {
         return Promise.reject(res);
       }
     })

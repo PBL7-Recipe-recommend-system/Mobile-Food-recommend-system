@@ -10,9 +10,11 @@ import {
   View,
 } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
+import { me, setUpPersonalize } from "../../api/users";
 import { BackButton } from "../../components/BackButton";
 import { CustomDateTimePicker } from "../../components/CustomDateTimePicker";
 import { CustomDropDown } from "../../components/CustomDropDown";
+import { Loading } from "../../components/Loading";
 import {
   ActivityList,
   GenderList,
@@ -22,11 +24,6 @@ import {
 import { PRIMARY_COLOR } from "../../constants/color";
 import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import AppWrapper from "../../wrappers/AppWrapper";
-import { MealList } from "../../components/plan/MealList";
-import { me, setUpPersonalize } from "../../api/users";
-import { Loading } from "../../components/Loading";
-import { showErrorToast } from "../../helper/errorToast";
-
 export const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [isChange, setIsChange] = useState(false);
@@ -72,6 +69,8 @@ export const EditProfile = () => {
       setLoading(false);
     }
   };
+
+  const handleUploadImage = () => {};
 
   return (
     <AppWrapper>
@@ -122,7 +121,10 @@ export const EditProfile = () => {
                   source={require("../../assets/mock/avatar.jpg")}
                   style={styles.profileImage}
                 />
-                <TouchableOpacity style={styles.editButton}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={handleUploadImage}
+                >
                   <Text style={styles.editButtonText}>Upload Avatar</Text>
                 </TouchableOpacity>
               </View>
@@ -284,10 +286,10 @@ export const EditProfile = () => {
                             direction={"TOP"}
                             dataItems={MealsList}
                             defaultValue={userData.meals}
-                            setDefaultValue={(newValue) => {
+                            setDefaultValue={(value) => {
                               setUserData({ ...userData, meals: value });
                               setIsChange(true);
-                              onChange(newValue);
+                              onChange(value);
                             }}
                           />
                         </View>

@@ -6,20 +6,28 @@ import {
   Dimensions,
   ImageBackground,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import starIcon from "../../assets/icons/star.png";
 import clockIcon from "../../assets/icons/clock-white.png";
 import { SavedButton } from "./SavedButton";
+import { useNavigation } from "@react-navigation/native";
+import { DetailedRecipe } from "../../screens/recipes/DetailedRecipe";
 
 export const SavedItem = ({ data, handleOnPress }) => {
   const [isSaved, setIsSaved] = useState(true);
-
+  const navigation = useNavigation();
   const handleSaved = () => {
     handleOnPress(data.recipeId);
   };
   return (
-    <View style={style.container}>
+    <TouchableOpacity
+      style={style.container}
+      onPress={() => {
+        navigation.navigate("DetailedRecipe", { id: data.recipeId });
+      }}
+    >
       <ImageBackground
         source={{ uri: data?.image }}
         resizeMode="cover"
@@ -56,7 +64,7 @@ export const SavedItem = ({ data, handleOnPress }) => {
           </View>
         </LinearGradient>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 

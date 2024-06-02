@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { PRIMARY_COLOR } from "../../constants/color";
 import { logOut } from "../../api/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Profile = ({ navigation }) => {
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const handleClickEditButton = () => {
     navigation.navigate("EditProfile");
   };
@@ -20,9 +21,14 @@ const Profile = ({ navigation }) => {
   const handleLogOut = async () => {
     await logOut();
     await AsyncStorage.clear();
-
-    navigation.navigate("Login");
+    setIsLoggedOut(true);
   };
+
+  useEffect(() => {
+    if (isLoggedOut) {
+      navigation.navigate("Login");
+    }
+  }, [isLoggedOut]);
   return (
     <AppWrapper>
       <View style={styles.container}>
@@ -47,7 +53,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Content</Text>
           <TouchableOpacity style={styles.item}>
-            <Text style={styles.itemText}>Favourite</Text>
+            <Text style={styles.itemText}>Favorite</Text>
             <AntDesign name="right" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.item}>

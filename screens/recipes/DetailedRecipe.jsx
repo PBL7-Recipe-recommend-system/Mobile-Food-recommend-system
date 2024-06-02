@@ -19,6 +19,7 @@ import { saveRecipe } from "../../api/saved-recipe";
 export const DetailedRecipe = () => {
   const refRBSheet = useRef(null);
   const [isCooking, setIsCooking] = useState(false);
+  const [serving, setServing] = useState(2);
 
   useEffect(() => {
     if (refRBSheet.current) {
@@ -122,9 +123,13 @@ export const DetailedRecipe = () => {
               }}
             >
               {isCooking ? (
-                <StepContentSheet data={data} setIsCooking={setIsCooking} />
+                <StepContentSheet
+                  data={data}
+                  setIsCooking={setIsCooking}
+                  baseServing={serving}
+                />
               ) : (
-                <RecipeContentSheet data={data} />
+                <RecipeContentSheet data={data} handleSetServing={setServing} />
               )}
 
               {!isCooking ? (

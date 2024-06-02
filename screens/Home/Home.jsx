@@ -130,7 +130,6 @@ export const Home = ({ navigation }) => {
     const currentOffset = event.nativeEvent.contentOffset.y;
     setScrollOffset(currentOffset);
   };
-
   return (
     <AppWrapper>
       <Animated.ScrollView
@@ -199,10 +198,10 @@ export const Home = ({ navigation }) => {
             }}
           >
             <CategoryBar value={categoryValue} setValue={setCategoryValue} />
-            {yourRecipes.length > 0 && (
+            {yourRecipes && (
               <RecipeList title="Your recipes" dataSource={yourRecipes} />
             )}
-            {popularRecipes.length > 0 && (
+            {popularRecipes && (
               <RecipeList title="Popular recipes" dataSource={popularRecipes} />
             )}
           </Animated.View>

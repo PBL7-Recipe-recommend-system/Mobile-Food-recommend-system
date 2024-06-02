@@ -27,7 +27,6 @@ export const MealList = ({ dataSource, planType }) => {
   useEffect(() => {
     const fetchData = async () => {
       const user = await getUserFromStorage();
-      console.log(user);
       const meals = generateNumberOfMeals(
         planType === RECOMMEND_TAB ? user.meals : 5
       );

@@ -10,6 +10,7 @@ import { ResetPassword } from "./../screens/auth/ResetPassword";
 import { HomeNavigation } from "./HomeNavigation";
 import OPTInput from "../screens/auth/OPTInput";
 import { DetailedRecipe } from "../screens/recipes/DetailedRecipe";
+import { SavedRecipe } from "../screens/saved-recipe/SavedRecipe";
 export const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
 

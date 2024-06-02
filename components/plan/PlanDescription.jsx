@@ -1,16 +1,24 @@
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { PRIMARY_COLOR } from "../../constants/color";
 import {
-  getMealPlanFromStorage,
-  getUserFromStorage,
-} from "../../utils/asyncStorageUtils";
-import { RECOMMEND_TAB } from "../../constants/plan";
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { PRIMARY_COLOR } from "../../constants/color";
+import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import { getGoal } from "../../utils/formatData";
-import { getTodayMeals } from "../../utils/meals";
-import { getMealPlan } from "../../api/plan";
-export const PlanDescription = ({ planType }) => {
+import { updateMealPlan } from "../../api/plan";
+export const PlanDescription = ({ planType, dataSource }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [customMealForm, setCustomMealForm] = useState({
+    date: "",
+    description: "",
+    dailyCalories: "",
+  });
   const [dataForm, setDataForm] = useState({
     description: "",
     firstProp: "",
@@ -24,6 +32,39 @@ export const PlanDescription = ({ planType }) => {
     secondProp: "",
     thirdProp: "",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (planType === CUSTOM_TAB) {
+        setDataForm({
+          description:
+            dataSource && dataSource.description !== null
+              ? dataSource.description
+              : `Thin and lean. Plan for a "skinny guy" who have a hard time gaining weight.`,
+          firstProp:
+            dataSource && dataSource.mealCount !== null
+              ? `${dataSource.mealCount} meals`
+              : "0 meals",
+          secondProp:
+            dataSource && dataSource.dailyCalories !== null
+              ? `${dataSource.dailyCalories} kcal`
+              : "0 kcal",
+          thirdProp:
+            dataSource && dataSource.totalCalories !== null
+              ? `${dataSource.totalCalories} kcal`
+              : `0 kcal`,
+        });
+      }
+
+      setCustomMealForm({
+        date: dataSource?.date,
+        description: dataSource?.description,
+        dailyCalories: dataSource?.dailyCalories,
+      });
+    };
+    fetchData();
+  }, [dataSource]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (planType === RECOMMEND_TAB) {
@@ -42,7 +83,6 @@ export const PlanDescription = ({ planType }) => {
           thirdProp: getGoal(user.dietaryGoal),
         });
       } else {
-        const data = await getMealPlanFromStorage();
         setDataTitle({
           title: "My meal plan",
           description: "Description",
@@ -50,40 +90,103 @@ export const PlanDescription = ({ planType }) => {
           secondProp: "Daily calories",
           thirdProp: "Total calories",
         });
-        setDataForm({
-          description: `${data[0].description}`,
-          firstProp: `${data[0].mealCount} meals`,
-          secondProp: `${data[0].dailyCalories} kcal`,
-          thirdProp: `${data[0].totalCalories}`,
-        });
       }
     };
     fetchData();
   }, []);
+
+  const handleEditing = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleSubmit = async () => {
+    await updateMealPlan([customMealForm]);
+    setIsEditing(false);
+  };
   return (
     <View style={style.mealDescription}>
       <View style={style.header}>
         <Text style={style.planName}>{dataTitle.title}</Text>
-        <View style={style.editButton}>
-          <Feather name="edit-3" size={24} color={PRIMARY_COLOR} />
-        </View>
+        {planType === CUSTOM_TAB && (
+          <TouchableOpacity
+            style={style.editButton}
+            onPress={isEditing === true ? handleSubmit : handleEditing}
+          >
+            {isEditing === false ? (
+              <Feather name="edit-3" size={24} color={PRIMARY_COLOR} />
+            ) : (
+              <Feather size={24} color={PRIMARY_COLOR} name="check" />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
-      <View>
-        <Text style={style.textDescription}>{dataTitle.description}</Text>
-        <Text style={style.textContent}>{dataForm.description}</Text>
-      </View>
-      <View style={style.textContainer}>
-        <Text style={style.textDescription}>{dataTitle.firstProp}</Text>
-        <Text style={style.textContent}>{dataForm.firstProp}</Text>
-      </View>
-      <View style={style.textContainer}>
-        <Text style={style.textDescription}>{dataTitle.secondProp}</Text>
-        <Text style={style.textContent}>{dataForm.secondProp}</Text>
-      </View>
-      <View style={style.textContainer}>
-        <Text style={style.textDescription}>{dataTitle.thirdProp}</Text>
-        <Text style={style.textContent}>{dataForm.thirdProp}</Text>
-      </View>
+      {dataForm && (
+        <>
+          <View>
+            <Text style={style.textDescription}>{dataTitle.description}</Text>
+            {isEditing ? (
+              <TextInput
+                style={[
+                  {
+                    width: "100%",
+                    borderWidth: 2,
+                    borderColor: "#A9A9A9",
+                    borderRadius: 10,
+                    fontSize: 16,
+                    padding: 10,
+                    textAlignVertical: "top",
+                  },
+                ]}
+                value={customMealForm.description}
+                onChangeText={(text) => {
+                  setCustomMealForm((prevState) => ({
+                    ...prevState,
+                    description: text,
+                  }));
+                }}
+                multiline
+                numberOfLines={4}
+              ></TextInput>
+            ) : (
+              <Text style={style.textContent}>
+                {planType === CUSTOM_TAB
+                  ? customMealForm.description
+                  : dataForm.description}
+              </Text>
+            )}
+          </View>
+          <View style={style.textContainer}>
+            <Text style={style.textDescription}>{dataTitle.firstProp}</Text>
+            <Text style={style.textContent}>{dataForm.firstProp}</Text>
+          </View>
+          <View style={style.textContainer}>
+            <Text style={style.textDescription}>{dataTitle.secondProp}</Text>
+            {isEditing ? (
+              <TextInput
+                style={style.textInput}
+                textContentType="numeric"
+                value={customMealForm.dailyCalories.toString()}
+                onChangeText={(text) => {
+                  setCustomMealForm((prevState) => ({
+                    ...prevState,
+                    dailyCalories: text,
+                  }));
+                }}
+              ></TextInput>
+            ) : (
+              <Text style={style.textContent}>
+                {planType === CUSTOM_TAB
+                  ? customMealForm.dailyCalories
+                  : dataForm.secondProp}
+              </Text>
+            )}
+          </View>
+          <View style={style.textContainer}>
+            <Text style={style.textDescription}>{dataTitle.thirdProp}</Text>
+            <Text style={style.textContent}>{dataForm.thirdProp}</Text>
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -136,5 +239,14 @@ const style = StyleSheet.create({
   textContent: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  textInput: {
+    borderWidth: 2,
+    borderColor: "#A9A9A9",
+    borderRadius: 10,
+    fontSize: 16,
+    padding: 4,
+    paddingHorizontal: 10,
+    width: "40%",
   },
 });

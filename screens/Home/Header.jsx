@@ -4,14 +4,16 @@ import defaultAvt from "../../assets/images/avatar.png";
 import { Feather } from "@expo/vector-icons";
 import { PRIMARY_COLOR } from "../../constants/color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getGreeting } from "../../utils/formatData";
 
 export const Header = () => {
-  const [userName, setUserName] = useState(null);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
       const user = await AsyncStorage.getItem("user");
       const parsedUser = JSON.parse(user);
-      setUserName(parsedUser.name);
+      console.log(parsedUser);
+      setUser(parsedUser);
     };
     fetchUser();
   }, []);
@@ -20,10 +22,10 @@ export const Header = () => {
       <View>
         <View style={style.greeting}>
           <Feather name="sun" size={24} color={PRIMARY_COLOR} />
-          <Text className="text-[14px] ml-1">Good Morning</Text>
+          <Text className="text-[14px] ml-1">{getGreeting()}</Text>
         </View>
         <Text className="font-extrabold text-2xl text-[#0A2533]">
-          {userName ? userName : "User"}
+          {user ? user.name : "User"}
         </Text>
       </View>
       <Image source={defaultAvt} style={style.avt} />

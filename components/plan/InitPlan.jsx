@@ -1,24 +1,36 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { addMealPlan, getMealPlan } from "../../api/plan";
+import { formatDate } from "../../utils/formatData";
 import CustomButton from "../CustomButton";
 import { PlanForm } from "./PlanForm";
-import { addMealPlan } from "../../api/plan";
-import { formatDate } from "../../utils/formatData";
+import { me } from "../../api/users";
 
 export const InitPlan = () => {
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
   const [formValue, setFormValue] = useState({
-    description: "",
-    date: "01-12-2024",
-    mealCount: 3,
-    dailyCalorie: 2000,
-    totalCalorie: 8000,
+    description: "New Plan",
+    date: new Date(),
+    mealCount: 0,
+    dailyCalories: 2000,
+    totalCalories: 8000,
   });
   useEffect(() => {}, [formValue]);
 
   const handleSubmitForm = async () => {
-    const currentDate = new Date();
-    formValue.date = formatDate(currentDate);
-    await addMealPlan(formValue);
+    try {
+      const currentDate = new Date();
+      formValue.date = formatDate(currentDate);
+      await addMealPlan(formValue);
+      await me();
+      await getMealPlan();
+    } catch (error) {
+    } finally {
+      setLoading(false);
+      navigation.push("PlanStack");
+    }
   };
 
   return (

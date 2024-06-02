@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,18 +8,31 @@ import {
 } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
 import CustomButton from "../CustomButton";
+import { setCookedRecipe } from "../../api/recipes";
+import { MORNING_SNACK } from "../../utils/meals";
 
-export const StepContentSheet = ({ data, setIsCooking }) => {
+export const StepContentSheet = ({ data, setIsCooking, serving }) => {
   const [step, setStep] = useState(1);
   const stepList = data?.recipeInstructions || [];
   const numberStep = stepList.length;
+
   const handleChangeStep = (step) => {
     setStep(step);
   };
 
-  const handleNextStep = () => {
-    if (step === numberStep) return;
-    setStep(step + 1);
+  const handleNextStep = async () => {
+    if (step === numberStep) {
+      const param = {
+        recipeId: data.recipeId,
+        servingSize: serving || 2,
+        meal: MORNING_SNACK,
+      };
+      console.log(param);
+
+      // await setCookedRecipe(param);
+    } else {
+      setStep(step + 1);
+    }
   };
 
   const handlePreviousStep = () => {
