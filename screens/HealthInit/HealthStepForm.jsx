@@ -19,11 +19,15 @@ import { Goal } from "./Goal";
 import { CompleteSetUp } from "./CompleteSetUp";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { getUserIdFromToken } from "../../utils/token";
-import { setUpPersonalize } from "../../api/users";
+import { setUpPersonalize, me } from "../../api/users";
 import { HomeNavigation } from "../../navigation/HomeNavigation";
+import { getRecommendation } from "../../api/recommendation";
+import { set } from "react-hook-form";
+import { Loading } from "../../components/Loading";
 
 export const HealthStepForm = ({ navigation }) => {
   const wizard = useRef(null);
+  const [loading, setLoading] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isLastStep, setIsLastStep] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -96,8 +100,12 @@ export const HealthStepForm = ({ navigation }) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onNextStep = () => {
+  const onNextStep = async () => {
     if (isLastStep) {
+      setLoading(true);
+      await me();
+      await getRecommendation();
+      setLoading(false);
       navigation.navigate("HomeNavigation");
     }
     wizard.current.next();
@@ -136,6 +144,7 @@ export const HealthStepForm = ({ navigation }) => {
   };
   return (
     <AppWrapper>
+      <Loading loading={loading} />
       <View className="ml-[30px] text-center mt-3">
         <BackButton onPress={onPrevStep} />
       </View>

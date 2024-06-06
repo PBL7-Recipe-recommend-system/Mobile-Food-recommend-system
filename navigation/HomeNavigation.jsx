@@ -1,35 +1,35 @@
+import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { PRIMARY_COLOR } from "../constants/color";
 import { Home } from "../screens/home/Home";
-import { Image } from "react-native";
-import homeIcon from "../assets/icons/home.png";
-import profileIcon from "../assets/icons/profile.png";
-import planIcon from "../assets/icons/plan.png";
-import { PlanStackNavigator } from "./PlanStackNavigator";
 import { SavedRecipe } from "../screens/saved-recipe/SavedRecipe";
-import bookMarkIcon from "../assets/icons/book-mark.png";
-import Profile from "../screens/profile/Profile";
+import { PlanStackNavigator } from "./PlanStackNavigator";
 import { ProfileStackNavigator } from "./ProfileStackNavigator";
-
+import { TrackingInformation } from "../screens/tracking/TrackingInformation";
 const Tab = createBottomTabNavigator();
 
 export const HomeNavigation = () => {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarStyle: { borderWidth: 1, borderRadius: 20, borderColor: "white" },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
+          tabBarLabel: "",
           tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: true,
           unmountOnBlur: true,
-          tabBarIcon: () => (
-            <Image
-              source={homeIcon}
-              style={{
-                width: 24,
-                height: 24,
-              }}
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="home"
+              size={24}
+              color={focused ? PRIMARY_COLOR : "black"}
             />
           ),
         }}
@@ -38,36 +38,35 @@ export const HomeNavigation = () => {
         name="Plan"
         component={PlanStackNavigator}
         options={{
+          tabBarLabel: "",
           tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: false,
           unmountOnBlur: true,
-          tabBarIcon: () => (
-            <Image
-              source={planIcon}
-              style={{
-                width: 24,
-                height: 24,
-              }}
+
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="profile"
+              size={24}
+              color={focused ? PRIMARY_COLOR : "black"}
             />
           ),
         }}
       />
       <Tab.Screen
-        name="SavedRecipe"
-        component={SavedRecipe}
+        name="TrackingInformation"
+        component={TrackingInformation}
         options={{
+          tabBarLabel: "",
           tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: false,
           unmountOnBlur: true,
-          tabBarIcon: () => (
-            <Image
-              source={bookMarkIcon}
-              style={{
-                width: 24,
-                height: 24,
-              }}
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="dashboard"
+              size={24}
+              color={focused ? PRIMARY_COLOR : "black"}
             />
           ),
         }}
@@ -76,17 +75,16 @@ export const HomeNavigation = () => {
         name="ProfileStack"
         component={ProfileStackNavigator}
         options={{
+          tabBarLabel: "",
           tabBarHideOnKeyboard: true,
           headerShown: false,
           gestureEnabled: false,
           unmountOnBlur: true,
-          tabBarIcon: () => (
-            <Image
-              source={profileIcon}
-              style={{
-                width: 24,
-                height: 24,
-              }}
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="user"
+              size={24}
+              color={focused ? PRIMARY_COLOR : "black"}
             />
           ),
         }}

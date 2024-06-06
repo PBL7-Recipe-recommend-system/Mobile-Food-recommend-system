@@ -61,7 +61,7 @@ export const Plan = () => {
               borderBottomRightRadius: 20,
             }}
           >
-            <CustomHeader title="Plan Meal" />
+            <CustomHeader title="Meal Planning" />
             <TabMenu tabValue={tabValue} handleChangeTab={setTabValue} />
           </View>
           {tabValue === RECOMMEND_TAB ? (

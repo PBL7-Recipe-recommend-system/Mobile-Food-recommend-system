@@ -55,3 +55,23 @@ export const changePassword = (value) => {
     });
   return res;
 };
+
+export const uploadAvatar = (image) => {
+  const res = axiosClient
+    .post(`${USER_ENDPOINT}/avatar`, image, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        return res;
+      } else if (res.status !== 200) {
+        return Promise.reject(res);
+      }
+    })
+    .catch((error) => {
+      return error;
+    });
+  return res;
+};

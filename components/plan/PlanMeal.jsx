@@ -18,6 +18,7 @@ export const PlanMeal = ({ planType }) => {
   const [dataSource, setDataSource] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedMeals, setSelectedMeals] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -29,10 +30,8 @@ export const PlanMeal = ({ planType }) => {
           data = response.recommendations;
         } else {
           const response = await getMealPlanFromStorage();
-          console.log("planMeal >>>> ", response);
           data = response;
         }
-        console.log("data >>>> ", data);
         setDataSource(data);
 
         const dataForSelectedDate = data.find(
@@ -101,7 +100,11 @@ export const PlanMeal = ({ planType }) => {
       <View>
         <DateList value={selectedDate} setValue={setSelectedDate} />
       </View>
-      <MealList dataSource={selectedData} planType={planType} />
+      <MealList
+        dataSource={selectedData}
+        planType={planType}
+        setSelectedMeals={setSelectedMeals}
+      />
       <NutritionBoard data={selectedData} />
     </Animated.ScrollView>
   );

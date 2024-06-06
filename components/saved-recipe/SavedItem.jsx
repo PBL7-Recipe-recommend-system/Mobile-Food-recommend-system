@@ -43,7 +43,13 @@ export const SavedItem = ({ data, handleOnPress }) => {
           </View>
           <View style={style.content}>
             <View style={style.leftContent}>
-              <Text style={style.nameRecipe}>{data?.name}</Text>
+              <Text
+                style={style.nameRecipe}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {data?.name}
+              </Text>
               <Text style={style.nameAuthor}>By Chef John</Text>
             </View>
             <View style={style.rightContent}>

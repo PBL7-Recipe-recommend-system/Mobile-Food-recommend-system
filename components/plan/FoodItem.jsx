@@ -9,6 +9,7 @@ import mockData from "../../assets/mock/food1.jpg";
 import { GRAY_TEXT_COLOR } from "../../constants/color";
 import { useNavigation } from "@react-navigation/native";
 import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
+import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
 
 export const FoodItem = ({ item, meal, planType }) => {
   const [mealIndex, setMealIndex] = useState(0);
@@ -25,8 +26,18 @@ export const FoodItem = ({ item, meal, planType }) => {
     setData(item);
   }, [item]);
 
+  useEffect(() => {
+    const fetch = async () => {
+      const date = await getDateAddingFromStorage();
+    };
+    fetch();
+  }, []);
+
   const handleDetailClick = () => {
-    navigation.navigate("DetailedRecipe", { id: item[mealIndex].recipeId });
+    navigation.navigate("DetailedRecipe", {
+      id: item[mealIndex].recipeId,
+      meal: meal,
+    });
   };
   const handleChangeReload = () => {
     if (mealIndex === data.length - 1) {
@@ -35,7 +46,14 @@ export const FoodItem = ({ item, meal, planType }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handleDetailClick}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={handleDetailClick}
+      onLongPress={() => {
+        // Handle long press event here
+        console.log("Item has been long pressed");
+      }}
+    >
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{meal}</Text>
         <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">

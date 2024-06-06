@@ -7,11 +7,14 @@ import {
   View,
 } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
+import { MORNING_SNACK } from "../../utils/meals";
 import CustomButton from "../CustomButton";
 import { setCookedRecipe } from "../../api/recipes";
-import { MORNING_SNACK } from "../../utils/meals";
+import { useNavigation } from "@react-navigation/native";
+import { toCamelCase } from "../../utils/formatData";
 
-export const StepContentSheet = ({ data, setIsCooking, serving }) => {
+export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
+  const navigation = useNavigation();
   const [step, setStep] = useState(1);
   const stepList = data?.recipeInstructions || [];
   const numberStep = stepList.length;
@@ -24,12 +27,14 @@ export const StepContentSheet = ({ data, setIsCooking, serving }) => {
     if (step === numberStep) {
       const param = {
         recipeId: data.recipeId,
-        servingSize: serving || 2,
-        meal: MORNING_SNACK,
+        servingSize: baseServing || data.recipeServings,
+        meal: toCamelCase(meal),
       };
-      console.log(param);
 
-      // await setCookedRecipe(param);
+      try {
+        await setCookedRecipe(param);
+        navigation.goBack();
+      } catch (error) {}
     } else {
       setStep(step + 1);
     }

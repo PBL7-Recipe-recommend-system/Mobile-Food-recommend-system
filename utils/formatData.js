@@ -72,3 +72,28 @@ export const getGreeting = () => {
     return "Good Evening";
   }
 };
+
+export const formatWaterValue = (water) => {
+  if (water) {
+    const isInteger = Number.isInteger(water);
+    return isInteger ? `${water}.0` : water.toString();
+  }
+};
+
+export const isToday = (date) => {
+  const today = new Date();
+  const givenDate = new Date(date);
+
+  return (
+    givenDate.getDate() === today.getDate() &&
+    givenDate.getMonth() === today.getMonth() &&
+    givenDate.getFullYear() === today.getFullYear()
+  );
+};
+
+export const getProgress = (value, total) => {
+  console.log("value", value);
+  console.log("total", total);
+  const progress = (value / total) * 100;
+  return progress;
+};

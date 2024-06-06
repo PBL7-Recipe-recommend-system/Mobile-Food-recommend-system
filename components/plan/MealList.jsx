@@ -8,7 +8,7 @@ import { toCamelCase } from "../../utils/formatData";
 import { daysSource } from "./../../constants/mockData";
 import { RECOMMEND_TAB } from "../../constants/plan";
 
-export const MealList = ({ dataSource, planType }) => {
+export const MealList = ({ dataSource, planType, setSelectedMeals }) => {
   const [mealsList, setMealsList] = useState([]);
   const [dataMeals, setDataMeals] = useState(dataSource);
 

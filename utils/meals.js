@@ -29,11 +29,11 @@ export const generateMealPlan = (numberOfMeals) => {
   }
   if (numberOfMeals === 5) {
     return {
-      breakfast: 0.3,
+      breakfast: 0.35,
       morningSnack: 0.05,
-      lunch: 0.4,
+      lunch: 0.3,
       afternoonSnack: 0.05,
-      dinner: 0.2,
+      dinner: 0.25,
     };
   }
 };
@@ -50,11 +50,15 @@ export const getRecommendationFromStorageByMeals = async (meals) => {
 
 export const getTodayMeals = async (meals) => {
   const todayMealsString = await AsyncStorage.getItem("todayMeals");
-  const todayMeals = JSON.parse(todayMealsString);
-  if (meals) {
-    return todayMeals[meals];
+  if (todayMealsString) {
+    const todayMeals = JSON.parse(todayMealsString);
+    if (meals) {
+      return todayMeals[meals];
+    } else {
+      return todayMeals;
+    }
   } else {
-    return todayMeals;
+    return null;
   }
 };
 

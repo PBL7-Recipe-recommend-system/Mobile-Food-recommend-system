@@ -1,3 +1,4 @@
+import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -10,7 +11,7 @@ import {
   View,
 } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
-import { me, setUpPersonalize } from "../../api/users";
+import { me, setUpPersonalize, uploadAvatar } from "../../api/users";
 import { BackButton } from "../../components/BackButton";
 import { CustomDateTimePicker } from "../../components/CustomDateTimePicker";
 import { CustomDropDown } from "../../components/CustomDropDown";
@@ -29,6 +30,23 @@ export const EditProfile = () => {
   const [isChange, setIsChange] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [userData, setUserData] = useState({});
+
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [10, 10],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      await uploadAvatar(result.assets[0].uri);
+      setImage(result.assets[0].uri);
+    }
+  };
+
   const {
     control,
     handleSubmit,
@@ -61,7 +79,7 @@ export const EditProfile = () => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const res = await setUpPersonalize(data);
+      await setUpPersonalize(data);
       await me();
       setIsChange(false);
     } catch (error) {
@@ -69,8 +87,6 @@ export const EditProfile = () => {
       setLoading(false);
     }
   };
-
-  const handleUploadImage = () => {};
 
   return (
     <AppWrapper>
@@ -121,10 +137,7 @@ export const EditProfile = () => {
                   source={require("../../assets/mock/avatar.jpg")}
                   style={styles.profileImage}
                 />
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={handleUploadImage}
-                >
+                <TouchableOpacity style={styles.editButton} onPress={pickImage}>
                   <Text style={styles.editButtonText}>Upload Avatar</Text>
                 </TouchableOpacity>
               </View>
@@ -356,7 +369,7 @@ const styles = StyleSheet.create({
   },
   profileSection: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 0,
   },
   profileImage: {
     width: 120,
@@ -433,6 +446,7 @@ const styles = StyleSheet.create({
     borderColor: "#A9A9A9",
     borderRadius: 10,
     fontSize: 16,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 13,
   },
 });

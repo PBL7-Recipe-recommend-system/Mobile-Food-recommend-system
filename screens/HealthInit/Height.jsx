@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { dataHeight } from "../../constants/mockData";
 
 export const Height = ({ updateValue }) => {
-  const defaultHeight = 70;
+  const defaultHeight = 100;
   const [selectedHeight, setSelectedHeight] = useState(defaultHeight);
   useEffect(() => {
     updateValue(selectedHeight);

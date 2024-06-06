@@ -12,7 +12,6 @@ export const Header = () => {
     const fetchUser = async () => {
       const user = await AsyncStorage.getItem("user");
       const parsedUser = JSON.parse(user);
-      console.log(parsedUser);
       setUser(parsedUser);
     };
     fetchUser();

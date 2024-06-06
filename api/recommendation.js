@@ -24,9 +24,7 @@ export const getRecommendation = async (day) => {
       includeIngredients: [],
       excludeIngredients: [],
     };
-
-    const res = await axios.post(`${LOCAL_RECOMMENDATION_API_PATH}`, data);
-
+    const res = await axios.post(`${COMPANY_RECOMMENDATION_API_PATH}`, data);
     if (res.status === 200) {
       await AsyncStorage.setItem(
         "todayMeals",
@@ -40,7 +38,6 @@ export const getRecommendation = async (day) => {
     } else if (res.status === 401) {
       throw new Error("Unauthorized");
     } else {
-      console.log(res);
     }
   } catch (error) {
     console.error(error);

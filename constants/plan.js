@@ -1,2 +1,2 @@
-export const CUSTOM_TAB = "Custom Plan";
-export const RECOMMEND_TAB = "Recommend Plan";
+export const CUSTOM_TAB = "Customization";
+export const RECOMMEND_TAB = "Recommendation";

@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from "react";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import {
-  Button,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { formatDate, toDate, toStringDate } from "../utils/formatData";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { formatDate, toDate } from "../utils/formatData";
 export const CustomDateTimePicker = ({
   showPicker,
   setShowPicker,
   defaultValue,
   setDefaultValue,
+  display,
 }) => {
   const [date, setDate] = useState(toDate(defaultValue));
   const [selectedDate, setSelectedDate] = useState(null);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(showPicker);
-
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDefaultValue(formatDate(currentDate));
@@ -61,7 +52,7 @@ export const CustomDateTimePicker = ({
           testID="dateTimePicker"
           value={date}
           mode={mode}
-          display={"spinner"}
+          display={display ? display : "spinner"}
           is24Hour={true}
           onChange={onChange}
         />

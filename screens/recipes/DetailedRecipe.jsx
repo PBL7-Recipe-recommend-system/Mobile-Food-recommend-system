@@ -29,11 +29,13 @@ export const DetailedRecipe = () => {
 
   const route = useRoute();
   const id = route.params.id;
+  const meal = route.params.meal || "breakfast";
   const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const results = await getDetailedRecipes(id);
+      console.log(meal);
       setData(results.data);
     };
     fetchData();
@@ -127,9 +129,14 @@ export const DetailedRecipe = () => {
                   data={data}
                   setIsCooking={setIsCooking}
                   baseServing={serving}
+                  meal={meal}
                 />
               ) : (
-                <RecipeContentSheet data={data} handleSetServing={setServing} />
+                <RecipeContentSheet
+                  data={data}
+                  handleSetServing={setServing}
+                  baseServing={serving}
+                />
               )}
 
               {!isCooking ? (

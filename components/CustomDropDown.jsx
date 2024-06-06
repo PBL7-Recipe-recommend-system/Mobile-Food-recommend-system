@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
-import { getValueDropDownItem } from "../utils/formatData";
 
 export const CustomDropDown = ({
   dataItems,

@@ -11,7 +11,7 @@ export const TabMenu = ({ tabValue, handleChangeTab }) => {
         onPress={() => handleChangeTab(CUSTOM_TAB)}
       >
         <Text style={[style.text, tabValue === CUSTOM_TAB && style.textActive]}>
-          Custom Plan
+          {CUSTOM_TAB}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -21,7 +21,7 @@ export const TabMenu = ({ tabValue, handleChangeTab }) => {
         <Text
           style={[style.text, tabValue === RECOMMEND_TAB && style.textActive]}
         >
-          Recommend Plan
+          {RECOMMEND_TAB}
         </Text>
       </TouchableOpacity>
     </View>

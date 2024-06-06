@@ -72,8 +72,8 @@ const Login = ({ navigation }) => {
           showErrorToast(res.message);
         } else {
           await me();
-          await getRecommendation();
           navigation.navigate("HomeNavigation");
+          await getRecommendation();
         }
       } catch (error) {
       } finally {

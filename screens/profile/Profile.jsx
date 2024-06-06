@@ -52,7 +52,10 @@ const Profile = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Content</Text>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate("Favorite")}
+          >
             <Text style={styles.itemText}>Favorite</Text>
             <AntDesign name="right" size={24} color="black" />
           </TouchableOpacity>

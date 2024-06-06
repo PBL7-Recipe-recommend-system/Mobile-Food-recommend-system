@@ -29,6 +29,7 @@ import {
 } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { Loading } from "../../components/Loading";
+import { me } from "../../api/users";
 const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -39,10 +40,10 @@ const Register = () => {
     confirmPassword: true,
   });
   const [dataForm, setDataForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: "Travis",
+    email: "user7@gmail.com",
+    password: "Tonytai2211@",
+    confirmPassword: "Tonytai2211@",
   });
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
@@ -89,7 +90,6 @@ const Register = () => {
 
     if (allFieldsValid) {
       const res = await registerAPI(dataForm);
-      showErrorToast(res.message);
       if (res.status === 401) {
       } else {
         navigation.navigate("HealthStepForm");

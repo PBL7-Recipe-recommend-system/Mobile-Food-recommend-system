@@ -65,7 +65,6 @@ export const ChangePassword = () => {
   };
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       const res = await changePassword(data);
       if (res.status !== 200) {
         showErrorToast(res.message);
@@ -73,7 +72,6 @@ export const ChangePassword = () => {
       } else {
         navigation.push("Profile");
       }
-      console.log(res);
     } catch (error) {}
   };
   return (

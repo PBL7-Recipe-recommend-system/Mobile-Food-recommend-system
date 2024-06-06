@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import {
   Image,
   Platform,
@@ -7,10 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import mockFoodImage from "../../assets/mock/food1.jpg";
 import caloriesIcon from "../../assets/icons/calories.png";
 import clockIcon from "../../assets/icons/clock.png";
-import { useNavigation } from "@react-navigation/native";
 
 export const RecipeItem = ({ item }) => {
   const navigation = useNavigation();

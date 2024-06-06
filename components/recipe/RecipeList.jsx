@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
-import { RecipeItem } from "./RecipeItem";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
-import { Loading } from "../Loading";
+import { RecipeItem } from "./RecipeItem";
 
 export const RecipeList = ({ title, dataSource }) => {
   const [data, setData] = useState(dataSource);

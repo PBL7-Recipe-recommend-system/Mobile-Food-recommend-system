@@ -16,6 +16,6 @@ export const getDetailedRecipes = (id) => {
   );
 };
 
-export const setCookedRecipe = (id) => {
-  return axiosClient.put(`${RECIPE_ENDPOINT}/cooked-recipe`);
+export const setCookedRecipe = (param) => {
+  return axiosClient.put(`${RECIPE_ENDPOINT}/cooked-recipe`, param);
 };

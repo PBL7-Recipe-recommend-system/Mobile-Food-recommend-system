@@ -16,4 +16,5 @@ export const endpoints = {
   USERS: "/users",
   PLAN: "/meal-plans",
   SAVED_RECIPES: "/saved-recipe",
+  TRACKING: "/tracking",
 };

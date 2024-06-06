@@ -17,7 +17,7 @@ export const PlanDescription = ({ planType, dataSource }) => {
   const [customMealForm, setCustomMealForm] = useState({
     date: "",
     description: "",
-    dailyCalories: "",
+    dailyCalories: `Thin and lean. Plan for a "skinny guy" who have a hard time gaining weight.`,
   });
   const [dataForm, setDataForm] = useState({
     description: "",
@@ -137,7 +137,12 @@ export const PlanDescription = ({ planType, dataSource }) => {
                     textAlignVertical: "top",
                   },
                 ]}
-                value={customMealForm.description}
+                value={
+                  customMealForm.description &&
+                  customMealForm.description !== null
+                    ? customMealForm.description
+                    : ""
+                }
                 onChangeText={(text) => {
                   setCustomMealForm((prevState) => ({
                     ...prevState,
@@ -176,7 +181,12 @@ export const PlanDescription = ({ planType, dataSource }) => {
             ) : (
               <Text style={style.textContent}>
                 {planType === CUSTOM_TAB
-                  ? customMealForm.dailyCalories
+                  ? `${
+                      customMealForm.dailyCalories &&
+                      customMealForm.dailyCalories !== null
+                        ? customMealForm.dailyCalories
+                        : "0"
+                    } kcal`
                   : dataForm.secondProp}
               </Text>
             )}
