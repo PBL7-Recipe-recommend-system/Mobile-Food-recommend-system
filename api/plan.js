@@ -36,3 +36,16 @@ export const getMealPlan = async () => {
     }
   });
 };
+
+export const removeRecipeFromPlan = async (data) => {
+  return axiosClient
+    .put(`${PLAN_ENDPOINT}/delete-recipes`, data)
+    .then(async (res) => {
+      if (res.status === 200) {
+        await me();
+        return res;
+      } else {
+        return Promise.reject(res);
+      }
+    });
+};

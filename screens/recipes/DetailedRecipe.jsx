@@ -35,7 +35,6 @@ export const DetailedRecipe = () => {
   useEffect(() => {
     const fetchData = async () => {
       const results = await getDetailedRecipes(id);
-      console.log(meal);
       setData(results.data);
     };
     fetchData();

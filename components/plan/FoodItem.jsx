@@ -9,9 +9,15 @@ import mockData from "../../assets/mock/food1.jpg";
 import { GRAY_TEXT_COLOR } from "../../constants/color";
 import { useNavigation } from "@react-navigation/native";
 import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
-import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
+import {
+  getDateAddingFromStorage,
+  getMealAddingFromStorage,
+} from "../../utils/asyncStorageUtils";
+import { Popup } from "react-native-popup-confirm-toast";
+import { toCamelCase } from "../../utils/formatData";
+import { getMealPlan, removeRecipeFromPlan } from "../../api/plan";
 
-export const FoodItem = ({ item, meal, planType }) => {
+export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
   const [mealIndex, setMealIndex] = useState(0);
   const [data, setData] = useState(item);
   const navigation = useNavigation();
@@ -28,7 +34,7 @@ export const FoodItem = ({ item, meal, planType }) => {
 
   useEffect(() => {
     const fetch = async () => {
-      const date = await getDateAddingFromStorage();
+      console.log("Fetching data >>> ", meal, " ???  ", item);
     };
     fetch();
   }, []);
@@ -45,14 +51,38 @@ export const FoodItem = ({ item, meal, planType }) => {
     } else setMealIndex(mealIndex + 1);
   };
 
+  const handleLongPress = async () => {
+    const date = await getDateAddingFromStorage();
+    const param = {
+      date: date,
+      [toCamelCase(meal)]: item[mealIndex].recipeId,
+    };
+
+    console.log("Item has been long pressed", param);
+    Popup.show({
+      type: "confirm",
+      title: "Confirm!",
+      textBody: "Do you want to delete this meals?",
+      buttonText: "Delete",
+      confirmText: "Cancel",
+      callback: async () => {
+        await removeRecipeFromPlan(param);
+        await getMealPlan();
+        handleRemoveMeals(meal);
+        Popup.hide();
+      },
+      cancelCallback: () => {
+        Popup.hide();
+      },
+      okButtonStyle: { backgroundColor: "red" },
+    });
+  };
+
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={handleDetailClick}
-      onLongPress={() => {
-        // Handle long press event here
-        console.log("Item has been long pressed");
-      }}
+      onLongPress={planType === CUSTOM_TAB ? handleLongPress : null}
     >
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{meal}</Text>

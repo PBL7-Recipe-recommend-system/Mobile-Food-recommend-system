@@ -39,6 +39,20 @@ export const MealList = ({ dataSource, planType, setSelectedMeals }) => {
     setDataMeals(getDataMeals(dataSource, mealsList));
   }, [dataSource]);
 
+  const handleRemoveMeals = (meal) => {
+    const updatedDataMeals = dataMeals.map((mealData) => {
+      if (mealData[meal]) {
+        return {
+          ...mealData,
+          [meal]: [],
+        };
+      }
+      return mealData;
+    });
+    setDataMeals(updatedDataMeals);
+    console.log("Remove meals", updatedDataMeals);
+  };
+
   return (
     <View style={style.container}>
       {dataMeals &&
@@ -52,6 +66,7 @@ export const MealList = ({ dataSource, planType, setSelectedMeals }) => {
                 item={meal[mealsList[index]]}
                 meal={mealsList[index]}
                 planType={planType}
+                handleRemoveMeals={handleRemoveMeals}
               />
             )}
           </View>
