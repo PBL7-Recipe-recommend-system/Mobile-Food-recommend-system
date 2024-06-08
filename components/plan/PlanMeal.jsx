@@ -13,6 +13,7 @@ import { DateList } from "./DateList";
 import { MealList } from "./MealList";
 import { NutritionBoard } from "./NutritionBoard";
 import { PlanDescription } from "./PlanDescription";
+import { getMealPlan } from "./../../api/plan";
 
 export const PlanMeal = ({ planType }) => {
   const [dataSource, setDataSource] = useState([]);
@@ -85,6 +86,15 @@ export const PlanMeal = ({ planType }) => {
     fetchData();
   }, [selectedDate]);
 
+  const handleRemoveMeals = async (date) => {
+    await getMealPlan();
+    const response = await getMealPlanFromStorage();
+    setDataSource(response);
+    const dataForSelectedDate = response.find((item) => item.date === date);
+    console.log("Data for selected date", dataForSelectedDate);
+    setSelectedData(dataForSelectedDate);
+  };
+
   return (
     <Animated.ScrollView
       contentContainerStyle={style.container}
@@ -104,6 +114,7 @@ export const PlanMeal = ({ planType }) => {
         dataSource={selectedData}
         planType={planType}
         setSelectedMeals={setSelectedMeals}
+        handleRemoveMeal={handleRemoveMeals}
       />
       <NutritionBoard data={selectedData} />
     </Animated.ScrollView>

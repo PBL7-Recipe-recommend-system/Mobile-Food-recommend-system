@@ -8,7 +8,12 @@ import { toCamelCase } from "../../utils/formatData";
 import { daysSource } from "./../../constants/mockData";
 import { RECOMMEND_TAB } from "../../constants/plan";
 
-export const MealList = ({ dataSource, planType, setSelectedMeals }) => {
+export const MealList = ({
+  dataSource,
+  planType,
+  setSelectedMeals,
+  handleRemoveMeal,
+}) => {
   const [mealsList, setMealsList] = useState([]);
   const [dataMeals, setDataMeals] = useState(dataSource);
 
@@ -39,7 +44,7 @@ export const MealList = ({ dataSource, planType, setSelectedMeals }) => {
     setDataMeals(getDataMeals(dataSource, mealsList));
   }, [dataSource]);
 
-  const handleRemoveMeals = (meal) => {
+  const handleRemoveMeals = (meal, date) => {
     const updatedDataMeals = dataMeals.map((mealData) => {
       if (mealData[meal]) {
         return {
@@ -50,6 +55,7 @@ export const MealList = ({ dataSource, planType, setSelectedMeals }) => {
       return mealData;
     });
     setDataMeals(updatedDataMeals);
+    handleRemoveMeal(date);
     console.log("Remove meals", updatedDataMeals);
   };
 

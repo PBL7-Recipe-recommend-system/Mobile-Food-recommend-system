@@ -22,6 +22,7 @@ import {
   GoalList,
   MealsList,
 } from "../../constants/HealthInputData";
+import ImageResizer from "@bam.tech/react-native-image-resizer";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import AppWrapper from "../../wrappers/AppWrapper";
@@ -34,16 +35,35 @@ export const EditProfile = () => {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
+    console.log("pick image");
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [10, 10],
+      aspect: [3, 4],
       quality: 1,
     });
-
+    console.log(result.assets[0].uri);
     if (!result.canceled) {
-      await uploadAvatar(result.assets[0].uri);
-      setImage(result.assets[0].uri);
+      setLoading(true);
+      const formData = new FormData();
+      let localUri = result.assets[0].uri;
+      let filename = localUri.split("/").pop();
+
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      // Resize the image
+      const response = createResizedImage(localUri, 500, 500, "JPEG", 100);
+      localUri = response.uri;
+
+      // Add the image to the form data
+      formData.append("image", { uri: localUri, name: filename, type });
+      console.log(formData);
+      await uploadAvatar(formData);
+      await me();
+      setImage(localUri);
+      setLoading(false);
     }
   };
 

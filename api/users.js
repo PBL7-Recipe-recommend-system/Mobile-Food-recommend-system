@@ -3,7 +3,6 @@ import { endpoints } from "../utils/path";
 import axiosClient from "../helper/http";
 import { getTokenFromAsyncStorage } from "../utils/token";
 import { showErrorToast } from "../helper/errorToast";
-
 const USER_ENDPOINT = endpoints.USERS;
 
 export const setUpPersonalize = (data) => {
@@ -65,13 +64,17 @@ export const uploadAvatar = (image) => {
     })
     .then((res) => {
       if (res.status === 200) {
+        console.log("Upload avatar successfully", res);
         return res;
-      } else if (res.status !== 200) {
+      } else {
+        console.log("Upload avatar failed", res);
         return Promise.reject(res);
       }
     })
     .catch((error) => {
+      console.log("Upload avatar error", error);
       return error;
     });
+
   return res;
 };
