@@ -36,7 +36,6 @@ export const TrackingInformation = () => {
     const get = async () => {
       const res = await getTrackingNutrition(formatDate(date).toString());
       setTrackingList(res.data);
-      setProgress(res.data.totalCalories, res.data.recommendCalories);
     };
     get();
   }, [date]);
@@ -88,13 +87,14 @@ export const TrackingInformation = () => {
           </View>
           <View style={{ marginHorizontal: "auto", marginVertical: 28 }}>
             <AnimatedProgressWheel
+              max={trackingList.recommendCalories || 100}
               size={180}
               width={16}
               rotation={"-90deg"}
               color={PRIMARY_COLOR}
               labelStyle={style.progressLabel}
               subtitle={"Kcal"}
-              progress={progress}
+              progress={trackingList.totalCalories || 0}
               duration={1000}
               backgroundColor={SECONDARY_COLOR}
               showProgressLabel={true}
