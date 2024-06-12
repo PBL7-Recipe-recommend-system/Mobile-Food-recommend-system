@@ -90,9 +90,10 @@ const Register = () => {
 
     if (allFieldsValid) {
       const res = await registerAPI(dataForm);
-      if (res.status === 401) {
-      } else {
+      if (res.status === 200) {
         navigation.navigate("HealthStepForm");
+      } else {
+        showErrorToast(res.message);
       }
     }
     setLoading(false);

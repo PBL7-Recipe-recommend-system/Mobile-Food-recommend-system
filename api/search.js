@@ -8,7 +8,7 @@ export const searchRecipes = (keyword, time, rate, category, page) => {
       time !== null ? `&timeRate=${time}` : ""
     }${rate !== null ? `&rating=${rate}` : ""}${
       category !== null ? `&category=${category}` : ""
-    }${page !== undefined ? `&page=${page}` : `&page=0`}&size=20`
+    }${page !== undefined ? `&page=${page}` : `&page=1`}&size=20`
   );
 };
 

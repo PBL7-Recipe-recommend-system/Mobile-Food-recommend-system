@@ -31,6 +31,7 @@ import AppWrapper from "../../wrappers/AppWrapper";
 import { Loading } from "../../components/Loading";
 import { me } from "../../api/users";
 import { getRecommendation } from "../../api/recommendation";
+import { HealthStepForm } from "../healthInit/HealthStepForm";
 
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -71,9 +72,14 @@ const Login = ({ navigation }) => {
         if (res.status !== 200) {
           showErrorToast(res.message);
         } else {
-          await me();
-          navigation.navigate("HomeNavigation");
-          await getRecommendation();
+          const res = await me();
+          const user = res.data;
+          if (user.bmi === 0) {
+            navigation.navigate("HealthStepForm");
+          } else {
+            navigation.navigate("HomeNavigation");
+            await getRecommendation();
+          }
         }
       } catch (error) {
       } finally {

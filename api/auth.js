@@ -98,6 +98,7 @@ export const updateNewPassword = (email, value) => {
         AsyncStorage.setItem("token", res.data.accessToken);
         return res;
       } else if (res.status !== 200) {
+        console.log(res);
         return Promise.reject(res);
       }
     })

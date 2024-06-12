@@ -170,7 +170,11 @@ export const PlanDescription = ({ planType, dataSource }) => {
               <TextInput
                 style={style.textInput}
                 textContentType="numeric"
-                value={customMealForm.dailyCalories.toString()}
+                value={
+                  customMealForm.dailyCalories
+                    ? customMealForm.dailyCalories.toString()
+                    : ""
+                }
                 onChangeText={(text) => {
                   setCustomMealForm((prevState) => ({
                     ...prevState,

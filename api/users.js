@@ -1,8 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { endpoints } from "../utils/path";
 import axiosClient from "../helper/http";
-import { getTokenFromAsyncStorage } from "../utils/token";
-import { showErrorToast } from "../helper/errorToast";
+import { endpoints } from "../utils/path";
 const USER_ENDPOINT = endpoints.USERS;
 
 export const setUpPersonalize = (data) => {

@@ -83,7 +83,19 @@ export const formatWaterValue = (water) => {
 export const isToday = (date) => {
   const today = new Date();
   const givenDate = new Date(date);
+  console.log("today", today, "givenDate", givenDate);
+  return (
+    givenDate.getDate() === today.getDate() &&
+    givenDate.getMonth() === today.getMonth() &&
+    givenDate.getFullYear() === today.getFullYear()
+  );
+};
 
+export const isTodayString = (date) => {
+  const today = new Date();
+  const dateParts = date.split("-");
+  const givenDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+  console.log("today", today, "givenDate", givenDate);
   return (
     givenDate.getDate() === today.getDate() &&
     givenDate.getMonth() === today.getMonth() &&

@@ -27,7 +27,6 @@ export const Plan = () => {
       await setDateAddingToStorage(formatDate(new Date()));
       if (currentUser.isCustomPlan === true) {
         const res = await getMealPlan();
-        console.log("call API >>>", res);
       }
     };
     fetchData();

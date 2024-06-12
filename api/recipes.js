@@ -5,7 +5,7 @@ const RECIPE_ENDPOINT = endpoints.RECIPES;
 export const getPopularRecipes = (page, size) => {
   return axiosClient.get(
     `${RECIPE_ENDPOINT}/popular?${
-      page !== undefined ? `page=${page}` : `page=0`
+      page !== undefined ? `page=${page}` : `page=1`
     }${size !== undefined ? `&size=${size}` : `&size=10`}`
   );
 };

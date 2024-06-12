@@ -11,10 +11,14 @@ import { MORNING_SNACK } from "../../utils/meals";
 import CustomButton from "../CustomButton";
 import { setCookedRecipe } from "../../api/recipes";
 import { useNavigation } from "@react-navigation/native";
-import { toCamelCase } from "../../utils/formatData";
+import { isToday, toCamelCase, isTodayString } from "../../utils/formatData";
+import { Loading } from "../Loading";
+import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
+import { showErrorToast } from "../../helper/errorToast";
 
 export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const stepList = data?.recipeInstructions || [];
   const numberStep = stepList.length;
@@ -25,16 +29,24 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
 
   const handleNextStep = async () => {
     if (step === numberStep) {
-      const param = {
-        recipeId: data.recipeId,
-        servingSize: baseServing || data.recipeServings,
-        meal: toCamelCase(meal),
-      };
-
-      try {
-        await setCookedRecipe(param);
-        navigation.goBack();
-      } catch (error) {}
+      const date = await getDateAddingFromStorage();
+      if (!isTodayString(date)) {
+        showErrorToast("You can only cook for today!");
+      } else {
+        const param = {
+          recipeId: data.recipeId,
+          servingSize: baseServing || data.recipeServings,
+          meal: toCamelCase(meal),
+        };
+        try {
+          setLoading(true);
+          await setCookedRecipe(param);
+        } catch (error) {
+        } finally {
+          setLoading(false);
+        }
+      }
+      navigation.goBack();
     } else {
       setStep(step + 1);
     }
@@ -46,6 +58,7 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
   };
   return (
     <View style={style.container}>
+      <Loading loading={loading} />
       <View>
         <Text style={style.title}>Step {step}</Text>
         <View style={style.stepButtonContainer}>
