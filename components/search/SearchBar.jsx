@@ -66,8 +66,12 @@ export const SearchBar = ({
             category: filterValue.category,
           })
         );
-        setDataSearch(results.data.content);
-        setIsLoading(false);
+        console.log("result >>> ", results.data);
+
+        if (results && results.data) {
+          setDataSearch(results.data.content);
+          setIsLoading(false);
+        }
       } else if (value.length === 0 || value === undefined) {
         setDataSearch([]);
       }

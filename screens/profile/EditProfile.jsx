@@ -26,6 +26,7 @@ import ImageResizer from "@bam.tech/react-native-image-resizer";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import AppWrapper from "../../wrappers/AppWrapper";
+import { getRecommendation } from "../../api/recommendation";
 export const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [isChange, setIsChange] = useState(false);
@@ -101,6 +102,7 @@ export const EditProfile = () => {
       setLoading(true);
       await setUpPersonalize(data);
       await me();
+      await getRecommendation();
       setIsChange(false);
     } catch (error) {
     } finally {

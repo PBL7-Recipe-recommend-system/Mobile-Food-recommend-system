@@ -24,6 +24,7 @@ import { HomeNavigation } from "../../navigation/HomeNavigation";
 import { getRecommendation } from "../../api/recommendation";
 import { set } from "react-hook-form";
 import { Loading } from "../../components/Loading";
+import { Condition } from "./Condition";
 
 export const HealthStepForm = ({ navigation }) => {
   const wizard = useRef(null);
@@ -39,6 +40,7 @@ export const HealthStepForm = ({ navigation }) => {
     dailyActivities: null,
     meals: null,
     dietaryGoal: null,
+    condition: null,
     ingredients: [],
   });
 
@@ -90,7 +92,14 @@ export const HealthStepForm = ({ navigation }) => {
         />
       ),
     },
-
+    {
+      content: (
+        <Condition
+          updateValue={(value) => updateFormValue("condition", value)}
+          defaultValue={formValues.condition}
+        />
+      ),
+    },
     {
       content: <CompleteSetUp />,
     },
@@ -134,6 +143,8 @@ export const HealthStepForm = ({ navigation }) => {
         return formValues.meals === null;
       case 6:
         return formValues.dietaryGoal === null;
+      case 7:
+        return formValues.condition === null;
       default:
         return false;
     }
