@@ -35,6 +35,7 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
   }, []);
 
   const ingredientsList = data?.recipeIngredientsParts || [];
+  const quantitiesList = data?.recipeIngredientsQuantities || [];
 
   const formatTime = (timeStr) => {
     const hours = timeStr.match(/\d+H/)?.[0]?.slice(0, -1);
@@ -78,14 +79,17 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
   return (
     <View style={style.container}>
       <View style={style.contentHeader}>
-        <View style={{ width: "10%" }}>
+        <TouchableOpacity
+          style={{ width: "10%" }}
+          onPress={() => setServing(data.recipeServings)}
+        >
           <AntDesign
             name="reload1"
             size={24}
             color="black"
             style={style.reloadButton}
           />
-        </View>
+        </TouchableOpacity>
         <View
           className="flex flex-col justify-center items-center"
           style={{ width: "80%" }}
@@ -125,19 +129,32 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
       </View>
       <View style={style.nutritionContainer}>
         <View style={style.nutritionItemContainer}>
-          <Text>{data.calories}</Text>
+          <Text>
+            {((data.calories / data.recipeServings) * serving).toFixed(1)} kcal
+          </Text>
           <Text style={style.nutritionTitle}>Calories</Text>
         </View>
         <View style={style.nutritionItemContainer}>
-          <Text>{data.proteinContent} g</Text>
+          <Text>
+            {((data.proteinContent / data.recipeServings) * serving).toFixed(1)}{" "}
+            g
+          </Text>
           <Text style={style.nutritionTitle}>Protein</Text>
         </View>
         <View style={style.nutritionItemContainer}>
-          <Text>{data.carbonhydrateContent} g</Text>
+          <Text>
+            {(
+              (data.carbonhydrateContent / data.recipeServings) *
+              serving
+            ).toFixed(1)}{" "}
+            g
+          </Text>
           <Text style={style.nutritionTitle}>Carbs</Text>
         </View>
         <View style={style.nutritionItemContainer}>
-          <Text>{data.fatContent} g</Text>
+          <Text>
+            {((data.fatContent / data.recipeServings) * serving).toFixed(1)} g
+          </Text>
           <Text style={style.nutritionTitle}>Fat</Text>
         </View>
       </View>
@@ -163,7 +180,12 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
           </View>
         </View>
         <View style={{ height: "86%" }}>
-          <IngredientList dataSource={ingredientsList} />
+          <IngredientList
+            dataSource={ingredientsList}
+            quantities={quantitiesList}
+            baseServing={data.recipeServings}
+            serving={serving}
+          />
         </View>
       </View>
       <Loading loading={loading} />

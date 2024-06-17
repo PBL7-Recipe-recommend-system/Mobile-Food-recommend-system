@@ -2,9 +2,9 @@ const IP_PATH_HOME = "192.168.1.36";
 const IP_PATH_COMPANY = "10.0.11.81";
 
 export const LOCAL_COMPANY_API_PATH = `http://10.0.11.81:8082/api/v1`;
-export const LOCAL_HOME_API_PATH = "http://192.168.1.36:8082/api/v1";
+export const LOCAL_HOME_API_PATH = "http://192.168.1.22:8082/api/v1";
 export const LOCAL_RECOMMENDATION_API_PATH =
-  "http://192.168.1.36:8085/recommend";
+  "http://192.168.1.22:8085/recommend";
 export const COMPANY_RECOMMENDATION_API_PATH =
   "http://10.0.11.81:8085/recommend";
 

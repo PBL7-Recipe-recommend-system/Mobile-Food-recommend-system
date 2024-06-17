@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { logOut } from "../../api/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import { me } from "../../api/users";
 const Profile = ({ navigation }) => {
   const [isLoggedOut, setIsLoggedOut] = useState(false);
+  const [avatar, setAvatar] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      await me();
+      const user = await getUserFromStorage();
+      setAvatar(user.avatar);
+    };
+    fetchData();
+  }, []);
+
   const handleClickEditButton = () => {
     navigation.navigate("EditProfile");
   };
@@ -38,7 +43,9 @@ const Profile = ({ navigation }) => {
         <View style={styles.profileSection}>
           <View>
             <Image
-              source={require("../../assets/mock/avatar.jpg")}
+              source={{
+                uri: avatar,
+              }}
               style={styles.profileImage}
             />
           </View>

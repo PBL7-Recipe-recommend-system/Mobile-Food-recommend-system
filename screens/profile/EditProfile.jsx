@@ -18,11 +18,11 @@ import { CustomDropDown } from "../../components/CustomDropDown";
 import { Loading } from "../../components/Loading";
 import {
   ActivityList,
+  ConditionList,
   GenderList,
   GoalList,
   MealsList,
 } from "../../constants/HealthInputData";
-import ImageResizer from "@bam.tech/react-native-image-resizer";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import AppWrapper from "../../wrappers/AppWrapper";
@@ -36,35 +36,24 @@ export const EditProfile = () => {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
-    console.log("pick image");
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [3, 4],
+      aspect: [4, 3],
       quality: 1,
     });
-    console.log(result.assets[0].uri);
     if (!result.canceled) {
-      setLoading(true);
       const formData = new FormData();
       let localUri = result.assets[0].uri;
-      let filename = localUri.split("/").pop();
-
-      // Infer the type of the image
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-
-      // Resize the image
-      const response = createResizedImage(localUri, 500, 500, "JPEG", 100);
-      localUri = response.uri;
-
-      // Add the image to the form data
-      formData.append("image", { uri: localUri, name: filename, type });
-      console.log(formData);
-      await uploadAvatar(formData);
+      formData.append("image", {
+        uri: localUri,
+        name: "photo",
+        type: "image/jpeg",
+      });
+      setImage(result.assets[0].uri);
+      const res = await uploadAvatar(formData);
       await me();
-      setImage(localUri);
-      setLoading(false);
+      setImage(res.data);
     }
   };
 
@@ -90,8 +79,11 @@ export const EditProfile = () => {
         birthday: user.birthday,
         goal: user.dietaryGoal,
         exercises: user.dailyActivities,
+        condition: user.condition,
+        avatar: user.avatar,
       };
       setUserData(userFormat);
+      setImage(user.avatar);
       reset(userFormat);
     };
     fetchData();
@@ -141,7 +133,7 @@ export const EditProfile = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            height: "120%",
+            height: "140%",
           }}
         >
           <TouchableWithoutFeedback
@@ -156,7 +148,9 @@ export const EditProfile = () => {
             <View>
               <View style={styles.profileSection}>
                 <Image
-                  source={require("../../assets/mock/avatar.jpg")}
+                  source={{
+                    uri: image,
+                  }}
                   style={styles.profileImage}
                 />
                 <TouchableOpacity style={styles.editButton} onPress={pickImage}>
@@ -343,6 +337,7 @@ export const EditProfile = () => {
                       <Text style={styles.textLabel}>Diet goal</Text>
                       <CustomDropDown
                         dataItems={GoalList}
+                        direction={"TOP"}
                         defaultValue={userData.goal}
                         setDefaultValue={(value) => {
                           setUserData({ ...userData, goal: value });
@@ -374,6 +369,27 @@ export const EditProfile = () => {
                     </View>
                   )}
                   name="exercises"
+                />
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <View style={{ zIndex: 10003 }}>
+                      <Text style={styles.textLabel}>Condition</Text>
+                      <CustomDropDown
+                        dataItems={ConditionList}
+                        defaultValue={userData.condition}
+                        setDefaultValue={(value) => {
+                          setUserData({ ...userData, condition: value });
+                          setIsChange(true);
+                          onChange(value);
+                        }}
+                      />
+                    </View>
+                  )}
+                  name="condition"
                 />
               </View>
             </View>

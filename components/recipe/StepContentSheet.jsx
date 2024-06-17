@@ -22,6 +22,7 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
   const [step, setStep] = useState(1);
   const stepList = data?.recipeInstructions || [];
   const numberStep = stepList.length;
+  const [selectedDate, setSelectedDate] = useState("");
 
   const handleChangeStep = (step) => {
     setStep(step);
@@ -30,6 +31,7 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
   const handleNextStep = async () => {
     if (step === numberStep) {
       const date = await getDateAddingFromStorage();
+      setSelectedDate(date);
       if (!isTodayString(date)) {
         showErrorToast("You can only cook for today!");
       } else {
@@ -105,6 +107,7 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
           title={step === numberStep ? "Finish" : "Next"}
           width={"40%"}
           height={"40%"}
+          disabled={!isTodayString(selectedDate)}
           onPressButton={handleNextStep}
         />
       </View>

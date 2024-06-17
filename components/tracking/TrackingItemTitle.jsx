@@ -1,21 +1,41 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const TrackingItemTitle = ({ data }) => {
   const navigation = useNavigation();
+
   return (
-    <View style={style.container}>
+    <View>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("DetailedRecipe", { id: data.recipeId })
         }
+        style={style.container}
       >
-        <Text style={style.nameMeals} numberOfLines={1} ellipsizeMode="tail">
-          {data?.name}
-        </Text>
+        <View
+          style={{
+            borderRadius: 10,
+          }}
+        >
+          <Image
+            source={{
+              uri: data.image,
+            }}
+            style={style.image}
+            resizeMode="cover"
+          />
+        </View>
+        <View style={{ width: "77%", justifyContent: "center" }}>
+          <Text style={style.nameMeals} numberOfLines={3} ellipsizeMode="tail">
+            {data.name}
+          </Text>
+        </View>
       </TouchableOpacity>
-      <Text className="my-2">{data?.servings} servings</Text>
+      <View className="flex flex-row justify-between">
+        <Text className="my-2">{data?.servings} servings</Text>
+        <Text className="my-2">{Number(data?.calories).toFixed(1)} kcal</Text>
+      </View>
     </View>
   );
 };
@@ -23,13 +43,19 @@ export const TrackingItemTitle = ({ data }) => {
 const style = StyleSheet.create({
   container: {
     display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    textAlign: "center",
-    justifyContent: "space-between",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    borderRadius: 10,
   },
   nameMeals: {
     fontSize: 16,
     fontWeight: "bold",
+    marginLeft: 10,
+    borderRadius: 10,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
   },
 });

@@ -62,15 +62,12 @@ export const uploadAvatar = (image) => {
     })
     .then((res) => {
       if (res.status === 200) {
-        console.log("Upload avatar successfully", res);
         return res;
       } else {
-        console.log("Upload avatar failed", res);
         return Promise.reject(res);
       }
     })
     .catch((error) => {
-      console.log("Upload avatar error", error);
       return error;
     });
 

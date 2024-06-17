@@ -22,7 +22,6 @@ export const TrackingWaterItem = ({
       setWater(result);
       await setWaterIntake(formatDate(new Date()), result);
     } else {
-      console.error("water is not a number:", water);
     }
   };
   return (

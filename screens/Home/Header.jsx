@@ -8,11 +8,13 @@ import { getGreeting } from "../../utils/formatData";
 
 export const Header = () => {
   const [user, setUser] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
       const user = await AsyncStorage.getItem("user");
       const parsedUser = JSON.parse(user);
       setUser(parsedUser);
+      setAvatar(parsedUser.avatar);
     };
     fetchUser();
   }, []);
@@ -27,7 +29,7 @@ export const Header = () => {
           {user ? user.name : "User"}
         </Text>
       </View>
-      <Image source={defaultAvt} style={style.avt} />
+      <Image source={{ uri: avatar }} style={style.avt} />
     </View>
   );
 };

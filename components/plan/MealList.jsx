@@ -56,7 +56,6 @@ export const MealList = ({
     });
     setDataMeals(updatedDataMeals);
     handleRemoveMeal(date);
-    console.log("Remove meals", updatedDataMeals);
   };
 
   return (

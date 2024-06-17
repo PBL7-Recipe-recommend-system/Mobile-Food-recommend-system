@@ -83,7 +83,6 @@ export const formatWaterValue = (water) => {
 export const isToday = (date) => {
   const today = new Date();
   const givenDate = new Date(date);
-  console.log("today", today, "givenDate", givenDate);
   return (
     givenDate.getDate() === today.getDate() &&
     givenDate.getMonth() === today.getMonth() &&
@@ -95,7 +94,6 @@ export const isTodayString = (date) => {
   const today = new Date();
   const dateParts = date.split("-");
   const givenDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-  console.log("today", today, "givenDate", givenDate);
   return (
     givenDate.getDate() === today.getDate() &&
     givenDate.getMonth() === today.getMonth() &&
@@ -104,8 +102,15 @@ export const isTodayString = (date) => {
 };
 
 export const getProgress = (value, total) => {
-  console.log("value", value);
-  console.log("total", total);
   const progress = (value / total) * 100;
   return progress;
 };
+
+export function parseFraction(fraction) {
+  if (fraction.includes("/")) {
+    const [numerator, denominator] = fraction.split("/");
+    return parseInt(numerator) / parseInt(denominator);
+  } else {
+    return parseInt(fraction);
+  }
+}

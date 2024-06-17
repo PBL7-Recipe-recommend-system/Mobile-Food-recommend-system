@@ -91,7 +91,6 @@ export const PlanMeal = ({ planType }) => {
     const response = await getMealPlanFromStorage();
     setDataSource(response);
     const dataForSelectedDate = response.find((item) => item.date === date);
-    console.log("Data for selected date", dataForSelectedDate);
     setSelectedData(dataForSelectedDate);
   };
 

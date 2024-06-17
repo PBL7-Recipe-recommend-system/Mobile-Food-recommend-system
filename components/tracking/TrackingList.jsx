@@ -6,7 +6,6 @@ import { toCamelCase } from "../../utils/formatData";
 
 export const TrackingList = ({ dataSource }) => {
   const [tracking, setTracking] = useState([]);
-  const [mealIndex, setMealIndex] = useState(0);
   const mealList = generateNumberOfMeals(5);
   useEffect(() => {
     const fetchData = async () => {

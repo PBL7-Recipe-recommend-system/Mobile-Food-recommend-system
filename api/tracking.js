@@ -22,7 +22,6 @@ export const setWaterIntake = async (date, amount) => {
       if (res.status === 200) {
         return res;
       } else {
-        console.log("error", res);
         return Promise.reject(res);
       }
     });

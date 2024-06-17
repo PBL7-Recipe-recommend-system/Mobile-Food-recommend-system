@@ -20,3 +20,10 @@ export const MealsList = [
   { label: "4 meals", value: 4 },
   { label: "5 meals", value: 5 },
 ];
+
+export const ConditionList = [
+  { label: "Heart Disease", value: "heart disease" },
+  { label: "Hypertension", value: "hypertension" },
+  { label: "Obesity", value: "obesity" },
+  { label: "Diabetes", value: "diabetes" },
+];

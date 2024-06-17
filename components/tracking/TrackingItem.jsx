@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { List } from "react-native-paper";
 import { PRIMARY_COLOR } from "../../constants/color";
@@ -6,6 +6,16 @@ import { TrackingItemContent } from "./TrackingItemContent";
 import { TrackingItemTitle } from "./TrackingItemTitle";
 import { AntDesign } from "@expo/vector-icons";
 export const TrackingItem = ({ data, title }) => {
+  const [totalCalories, setTotalCalories] = useState(0);
+
+  useEffect(() => {
+    if (data) {
+      const calories = data.reduce((total, item) => total + item.calories, 0);
+      setTotalCalories(calories);
+      console.log(data);
+    }
+  }, [data]);
+
   return (
     <View style={style.container}>
       <List.Accordion
@@ -17,7 +27,7 @@ export const TrackingItem = ({ data, title }) => {
           flex: 1,
         }}
         left={(props) => (
-          <View>
+          <View style={{ width: "88%" }}>
             <View
               style={{
                 flexDirection: "column",
@@ -53,18 +63,23 @@ export const TrackingItem = ({ data, title }) => {
                   fontSize: 16,
                 }}
               >
-                {data && data !== null ? data?.calories : "0"} Kcal
+                {data && data !== null ? Number(totalCalories).toFixed(1) : "0"}{" "}
+                Kcal
               </Text>
             </View>
           </View>
         )}
       >
         {data && data !== null ? (
-          <List.Item
-            title={<TrackingItemTitle data={data} />}
-            description={<TrackingItemContent data={data} />}
-            style={style.item}
-          />
+          data.map((item, index) => (
+            <React.Fragment key={index}>
+              <List.Item
+                title={<TrackingItemTitle data={item} />}
+                description={<TrackingItemContent data={item} />}
+                style={style.item}
+              />
+            </React.Fragment>
+          ))
         ) : (
           <List.Item
             title={"You haven't eaten anything yet"}
@@ -89,8 +104,5 @@ const style = StyleSheet.create({
   },
   item: {
     borderBottomRightRadius: 12,
-    padding: 0,
-    margin: 0,
-    alignSelf: "flex-start",
   },
 });

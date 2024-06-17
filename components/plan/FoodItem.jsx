@@ -32,13 +32,6 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
     setData(item);
   }, [item]);
 
-  useEffect(() => {
-    const fetch = async () => {
-      console.log("Fetching data >>> ", meal, " ???  ", item);
-    };
-    fetch();
-  }, []);
-
   const handleDetailClick = () => {
     navigation.navigate("DetailedRecipe", {
       id: item[mealIndex].recipeId,
@@ -58,7 +51,6 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
       [toCamelCase(meal)]: item[mealIndex].recipeId,
     };
 
-    console.log("Item has been long pressed", param);
     Popup.show({
       type: "confirm",
       title: "Confirm!",

@@ -1,14 +1,30 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-
-export const IngredientList = ({ dataSource }) => {
+import Fraction from "fraction.js";
+import { parseFraction } from "../../utils/formatData";
+export const IngredientList = ({
+  dataSource,
+  quantities,
+  baseServing,
+  serving,
+}) => {
   return (
     <ScrollView className="my-2" contentContainerStyle={style.ingredientsList}>
       {dataSource.map((item, index) => (
-        <View style={style.ingredientItem} key={index}>
-          <Text className="text-[16px]">{item}</Text>
-          <Text className="text-[14px] text-[#B5B5B5]">250g</Text>
-        </View>
+        <React.Fragment key={index}>
+          <View
+            style={style.ingredientItem}
+            className="flex flex-row justify-start "
+          >
+            <Text className="text-[16px] text-left">
+              {quantities[index] !== "None" &&
+                `${new Fraction(
+                  (parseFraction(quantities[index]) / baseServing) * serving
+                ).toFraction(true)} `}
+              {item}
+            </Text>
+          </View>
+        </React.Fragment>
       ))}
     </ScrollView>
   );
@@ -24,5 +40,7 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E5E5",
   },
 });
