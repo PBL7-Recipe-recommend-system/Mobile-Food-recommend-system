@@ -137,9 +137,6 @@ export const Home = ({ navigation }) => {
         nestedScrollEnabled={true}
         contentContainerStyle={[style.container]}
         onScroll={handleScroll}
-        // refreshControl={
-        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        // }
       >
         {searchActive ? (
           <Animated.View

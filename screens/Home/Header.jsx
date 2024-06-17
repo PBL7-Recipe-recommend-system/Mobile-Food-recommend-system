@@ -5,16 +5,17 @@ import { Feather } from "@expo/vector-icons";
 import { PRIMARY_COLOR } from "../../constants/color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getGreeting } from "../../utils/formatData";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 
 export const Header = () => {
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await AsyncStorage.getItem("user");
-      const parsedUser = JSON.parse(user);
-      setUser(parsedUser);
-      setAvatar(parsedUser.avatar);
+      const user = await getUserFromStorage();
+      setUser(user);
+      console.log(user);
+      setAvatar(user.avatar);
     };
     fetchUser();
   }, []);
@@ -29,7 +30,10 @@ export const Header = () => {
           {user ? user.name : "User"}
         </Text>
       </View>
-      <Image source={{ uri: avatar }} style={style.avt} />
+      <Image
+        source={avatar === "" ? defaultAvt : { uri: avatar }}
+        style={style.avt}
+      />
     </View>
   );
 };
@@ -53,6 +57,5 @@ const style = StyleSheet.create({
     height: 50,
     borderRadius: 12,
     resizeMode: "contain",
-    backgroundColor: "#FFCE80",
   },
 });

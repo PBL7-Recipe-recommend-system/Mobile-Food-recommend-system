@@ -169,7 +169,7 @@ const Login = ({ navigation }) => {
                     password === ""
                   }
                 />
-                <SocialConnect />
+                {/* <SocialConnect /> */}
               </View>
 
               <View className="flex flex-row text-center items-center justify-center">

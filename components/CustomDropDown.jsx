@@ -27,6 +27,7 @@ export const CustomDropDown = ({
   return (
     <DropDownPicker
       open={open}
+      maxHeight={1500}
       value={value ? value : defaultValue}
       items={items}
       defaultValue={value}

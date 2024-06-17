@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import defaultAvt from "../../assets/images/avatar.png";
 import { ScrollView } from "react-native-virtualized-view";
 import { me, setUpPersonalize, uploadAvatar } from "../../api/users";
 import { BackButton } from "../../components/BackButton";
@@ -133,7 +134,7 @@ export const EditProfile = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            height: "140%",
+            height: "130%",
           }}
         >
           <TouchableWithoutFeedback
@@ -148,9 +149,7 @@ export const EditProfile = () => {
             <View>
               <View style={styles.profileSection}>
                 <Image
-                  source={{
-                    uri: image,
-                  }}
+                  source={image === "" ? defaultAvt : { uri: image }}
                   style={styles.profileImage}
                 />
                 <TouchableOpacity style={styles.editButton} onPress={pickImage}>
@@ -354,6 +353,7 @@ export const EditProfile = () => {
                   rules={{
                     required: true,
                   }}
+                  direction={"TOP"}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <View style={{ zIndex: 10002 }}>
                       <Text style={styles.textLabel}>Daily exercises</Text>

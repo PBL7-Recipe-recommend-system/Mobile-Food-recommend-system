@@ -26,4 +26,5 @@ export const ConditionList = [
   { label: "Hypertension", value: "hypertension" },
   { label: "Obesity", value: "obesity" },
   { label: "Diabetes", value: "diabetes" },
+  { label: "None", value: "" },
 ];

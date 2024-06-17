@@ -4,6 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { logOut } from "../../api/auth";
+import defaultAvt from "../../assets/images/avatar.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import { me } from "../../api/users";
@@ -43,9 +44,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.profileSection}>
           <View>
             <Image
-              source={{
-                uri: avatar,
-              }}
+              source={avatar === "" ? defaultAvt : { uri: avatar }}
               style={styles.profileImage}
             />
           </View>

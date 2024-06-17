@@ -7,11 +7,10 @@ import {
   View,
 } from "react-native";
 import { PRIMARY_COLOR } from "../../constants/color";
-import { MORNING_SNACK } from "../../utils/meals";
 import CustomButton from "../CustomButton";
 import { setCookedRecipe } from "../../api/recipes";
 import { useNavigation } from "@react-navigation/native";
-import { isToday, toCamelCase, isTodayString } from "../../utils/formatData";
+import { toCamelCase, isTodayString } from "../../utils/formatData";
 import { Loading } from "../Loading";
 import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
 import { showErrorToast } from "../../helper/errorToast";
@@ -22,18 +21,22 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
   const [step, setStep] = useState(1);
   const stepList = data?.recipeInstructions || [];
   const numberStep = stepList.length;
-  const [selectedDate, setSelectedDate] = useState("");
+  const [disable, setDisable] = useState(false);
 
   const handleChangeStep = (step) => {
     setStep(step);
   };
 
   const handleNextStep = async () => {
-    if (step === numberStep) {
-      const date = await getDateAddingFromStorage();
-      setSelectedDate(date);
+    const date = await getDateAddingFromStorage();
+    if (step === numberStep - 1) {
       if (!isTodayString(date)) {
-        showErrorToast("You can only cook for today!");
+        setDisable(true);
+      }
+    }
+    if (step === numberStep) {
+      if (!isTodayString(date)) {
+        setDisable(true);
       } else {
         const param = {
           recipeId: data.recipeId,
@@ -56,6 +59,7 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
 
   const handlePreviousStep = () => {
     if (step === 1) setIsCooking(false);
+    setDisable(false);
     setStep(step - 1);
   };
   return (
@@ -102,12 +106,11 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
           }}
           textColor={"#000000"}
         />
-
         <CustomButton
           title={step === numberStep ? "Finish" : "Next"}
           width={"40%"}
           height={"40%"}
-          disabled={!isTodayString(selectedDate)}
+          disabled={disable}
           onPressButton={handleNextStep}
         />
       </View>
