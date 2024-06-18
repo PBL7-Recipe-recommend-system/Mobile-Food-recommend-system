@@ -97,7 +97,7 @@ export const ChangePassword = () => {
               <Text style={styles.textLabel}>Current Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
-                  placeholder="Your password ..."
+                  placeholder="Your current password"
                   onBlur={onBlur}
                   onChangeText={(text) => {
                     onChange(text);
@@ -147,7 +147,7 @@ export const ChangePassword = () => {
               <Text style={styles.textLabel}>New Password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
-                  placeholder="Your name ..."
+                  placeholder="Your new password"
                   onBlur={onBlur}
                   onChangeText={(text) => {
                     onChange(text);
@@ -197,7 +197,7 @@ export const ChangePassword = () => {
               <Text style={styles.textLabel}>Confirm password</Text>
               <View className="flex-row items-center relative">
                 <TextInput
-                  placeholder="Your name ..."
+                  placeholder="Confirm password"
                   onBlur={onBlur}
                   onChangeText={(text) => {
                     onChange(text);

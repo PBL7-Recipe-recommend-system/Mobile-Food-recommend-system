@@ -17,7 +17,10 @@ export const RecipeItem = ({ item }) => {
   const image = Array.isArray(item.images) ? item.images[0] : item.images;
 
   const handleClickItem = () => {
-    navigation.navigate("DetailedRecipe", { id: item.recipeId });
+    navigation.navigate("DetailedRecipe", {
+      id: item.recipeId,
+      searching: true,
+    });
   };
   return (
     <TouchableOpacity

@@ -13,10 +13,11 @@ import { Popup } from "react-native-popup-confirm-toast";
 import { toCamelCase } from "../../utils/formatData";
 import { getMealPlan, removeRecipeFromPlan } from "../../api/plan";
 
-export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
+export const CustomFoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
   const [mealIndex, setMealIndex] = useState(0);
   const [data, setData] = useState(item);
   const navigation = useNavigation();
+  console.log("data >>> ", item);
   const getImage = (obj) => {
     if (planType === RECOMMEND_TAB) {
       return obj.images[0];
@@ -25,25 +26,20 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
 
   useEffect(() => {
     setData(item);
-  }, [item, planType]);
+  }, [item]);
 
   const handleDetailClick = () => {
     navigation.navigate("DetailedRecipe", {
-      id: item[mealIndex].recipeId,
+      id: item?.recipeId,
       meal: meal,
     });
-  };
-  const handleChangeReload = () => {
-    if (mealIndex === data.length - 1) {
-      setMealIndex(0);
-    } else setMealIndex(mealIndex + 1);
   };
 
   const handleLongPress = async () => {
     const date = await getDateAddingFromStorage();
     const param = {
       date: date,
-      [toCamelCase(meal)]: item[mealIndex].recipeId,
+      [toCamelCase(meal)]: item?.recipeId,
     };
 
     Popup.show({
@@ -72,9 +68,8 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
       onLongPress={planType === CUSTOM_TAB ? handleLongPress : null}
     >
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{meal}</Text>
         <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">
-          {item[mealIndex].name}
+          {item?.name}
         </Text>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsText}>
@@ -90,7 +85,7 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
                 fontWeight: "bold",
               }}
             >
-              {item[mealIndex].totalTime}
+              {item?.totalTime}
             </Text>
           </View>
 
@@ -103,34 +98,20 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
                 fontWeight: "bold",
               }}
             >
-              {item[mealIndex].calories} kcal
+              {item.calories} kcal
             </Text>
           </View>
         </View>
       </View>
       <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: getImage(item[mealIndex]) }}
-          style={styles.image}
-        />
+        <Image source={{ uri: getImage(item) }} style={styles.image} />
       </View>
-
-      <TouchableOpacity
-        style={[
-          styles.reloadButton,
-          planType === CUSTOM_TAB && { display: "none" },
-        ]}
-        onPress={handleChangeReload}
-      >
-        <Feather name="refresh-cw" size={24} color="black" />
-      </TouchableOpacity>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: "auto",
     height: 100,
     backgroundColor: "#fff",
     shadowColor: "#000",
@@ -141,8 +122,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginVertical: 10,
-    marginHorizontal: 30,
     borderRadius: 10,
     justifyContent: "center",
     display: "flex",

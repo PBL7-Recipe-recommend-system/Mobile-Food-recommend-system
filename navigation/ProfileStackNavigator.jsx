@@ -4,6 +4,7 @@ import Profile from "../screens/profile/Profile";
 import { EditProfile } from "../screens/profile/EditProfile";
 import { ChangePassword } from "../screens/profile/ChangePassword";
 import { SavedRecipe } from "../screens/saved-recipe/SavedRecipe";
+import { Ingredients } from "../screens/profile/Ingredients";
 
 const ProfileStack = createNativeStackNavigator();
 export const ProfileStackNavigator = () => {
@@ -27,6 +28,11 @@ export const ProfileStackNavigator = () => {
       <ProfileStack.Screen
         name="Favorite"
         component={SavedRecipe}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="Ingredients"
+        component={Ingredients}
         options={{ headerShown: false }}
       />
     </ProfileStack.Navigator>

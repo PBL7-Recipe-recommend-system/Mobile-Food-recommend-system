@@ -16,11 +16,12 @@ import { RecipeContentSheet } from "../../components/recipe/RecipeContentSheet";
 import { StepContentSheet } from "../../components/recipe/StepContentSheet";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { saveRecipe } from "../../api/saved-recipe";
+import RatingModal from "../../components/recipe/RatingModal";
 export const DetailedRecipe = () => {
   const refRBSheet = useRef(null);
   const [isCooking, setIsCooking] = useState(false);
   const [serving, setServing] = useState(2);
-
+  const [openRating, setOpenRating] = useState(false);
   useEffect(() => {
     if (refRBSheet.current) {
       refRBSheet.current.open();
@@ -30,6 +31,7 @@ export const DetailedRecipe = () => {
   const route = useRoute();
   const id = route.params.id;
   const meal = route.params.meal || "breakfast";
+  const searching = route.params.searching || false;
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -91,7 +93,7 @@ export const DetailedRecipe = () => {
                         <Text className="ml-[26%]">Share</Text>
                       </View>
                     </MenuOption>
-                    <MenuOption onSelect={() => alert(`Not called`)}>
+                    <MenuOption onSelect={() => setOpenRating(true)}>
                       <View className="flex-row ">
                         <MaterialCommunityIcons
                           name="star"
@@ -130,6 +132,7 @@ export const DetailedRecipe = () => {
                   setIsCooking={setIsCooking}
                   baseServing={serving}
                   meal={meal}
+                  searching={searching}
                 />
               ) : (
                 <RecipeContentSheet
@@ -159,6 +162,7 @@ export const DetailedRecipe = () => {
           </View>
         </View>
       )}
+      {/* <RatingModal visible={openRating} /> */}
     </MenuProvider>
   );
 };

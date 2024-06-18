@@ -14,8 +14,15 @@ import { toCamelCase, isTodayString } from "../../utils/formatData";
 import { Loading } from "../Loading";
 import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
 import { showErrorToast } from "../../helper/errorToast";
+import { BackButton } from "../BackButton";
 
-export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
+export const StepContentSheet = ({
+  data,
+  setIsCooking,
+  baseServing,
+  meal,
+  searching,
+}) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -23,19 +30,22 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
   const numberStep = stepList.length;
   const [disable, setDisable] = useState(false);
 
-  const handleChangeStep = (step) => {
+  const handleChangeStep = async (step) => {
+    const date = await getDateAddingFromStorage();
     setStep(step);
+    if (step === numberStep) {
+      if (!isTodayString(date) || searching) {
+        setDisable(true);
+      }
+    } else {
+      setDisable(false);
+    }
   };
 
   const handleNextStep = async () => {
     const date = await getDateAddingFromStorage();
-    if (step === numberStep - 1) {
-      if (!isTodayString(date)) {
-        setDisable(true);
-      }
-    }
     if (step === numberStep) {
-      if (!isTodayString(date)) {
+      if (!isTodayString(date) || searching) {
         setDisable(true);
       } else {
         const param = {
@@ -66,7 +76,24 @@ export const StepContentSheet = ({ data, setIsCooking, baseServing, meal }) => {
     <View style={style.container}>
       <Loading loading={loading} />
       <View>
-        <Text style={style.title}>Step {step}</Text>
+        <View
+          className="flex flex-row mx-7 items-center my-2"
+          style={{ position: "relative" }}
+        >
+          <View style={{ position: "absolute" }}>
+            <BackButton
+              color={PRIMARY_COLOR}
+              onPress={() => setIsCooking(false)}
+            />
+          </View>
+          <View
+            style={{
+              marginHorizontal: "auto",
+            }}
+          >
+            <Text style={style.title}>Step {step}</Text>
+          </View>
+        </View>
         <View style={style.stepButtonContainer}>
           {Array.from({ length: numberStep }, (_, index) => (
             <TouchableOpacity
@@ -130,7 +157,6 @@ const style = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    marginVertical: 16,
   },
   stepButtonContainer: {
     display: "flex",

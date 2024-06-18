@@ -12,7 +12,6 @@ export const TrackingItem = ({ data, title }) => {
     if (data) {
       const calories = data.reduce((total, item) => total + item.calories, 0);
       setTotalCalories(calories);
-      console.log(data);
     }
   }, [data]);
 

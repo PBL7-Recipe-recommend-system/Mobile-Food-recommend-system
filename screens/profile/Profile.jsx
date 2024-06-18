@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import AppWrapper from "../../wrappers/AppWrapper";
-import { PRIMARY_COLOR } from "../../constants/color";
-import { logOut } from "../../api/auth";
-import defaultAvt from "../../assets/images/avatar.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { logOut } from "../../api/auth";
 import { me } from "../../api/users";
+import defaultAvt from "../../assets/images/avatar.png";
+import { PRIMARY_COLOR } from "../../constants/color";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import AppWrapper from "../../wrappers/AppWrapper";
 const Profile = ({ navigation }) => {
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [avatar, setAvatar] = useState(null);
@@ -67,6 +67,13 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.item}>
             <Text style={styles.itemText}>History</Text>
+            <AntDesign name="right" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate("Ingredients")}
+          >
+            <Text style={styles.itemText}>Ingredients</Text>
             <AntDesign name="right" size={24} color="black" />
           </TouchableOpacity>
         </View>

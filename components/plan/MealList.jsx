@@ -6,7 +6,8 @@ import { AddFoodItem } from "./AddFoodItem";
 import { BREAKFAST, generateNumberOfMeals } from "../../utils/meals";
 import { toCamelCase } from "../../utils/formatData";
 import { daysSource } from "./../../constants/mockData";
-import { RECOMMEND_TAB } from "../../constants/plan";
+import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
+import { AddDropDown } from "./AddDropDown";
 
 export const MealList = ({
   dataSource,
@@ -64,8 +65,13 @@ export const MealList = ({
         dataMeals.length !== 0 &&
         dataMeals.map((meal, index) => (
           <View key={index}>
-            {meal[mealsList[index]].length === 0 ? (
-              <AddFoodItem title={mealsList[index]} />
+            {planType === CUSTOM_TAB ? (
+              <View className="mx-[30px]">
+                <AddDropDown
+                  title={mealsList[index]}
+                  data={meal[mealsList[index]]}
+                />
+              </View>
             ) : (
               <FoodItem
                 item={meal[mealsList[index]]}

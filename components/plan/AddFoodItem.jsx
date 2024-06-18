@@ -18,9 +18,6 @@ export const AddFoodItem = ({ title }) => {
         <View style={style.addIcon}>
           <FontAwesome6 name="add" size={24} color={PRIMARY_COLOR} />
         </View>
-        <Text className="text-center justify-center font-semibold">
-          Add {title}
-        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -28,8 +25,6 @@ export const AddFoodItem = ({ title }) => {
 
 const style = StyleSheet.create({
   container: {
-    marginHorizontal: "auto",
-    height: 80,
     backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: {
@@ -39,21 +34,12 @@ const style = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginVertical: 10,
-    marginHorizontal: 30,
-    borderRadius: 10,
+    borderRadius: 20,
     justifyContent: "center",
-  },
-  content: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "center",
   },
   addIcon: {
     width: 40,
     height: 40,
-    marginRight: 5,
     backgroundColor: SECONDARY_COLOR,
     justifyContent: "center",
     alignItems: "center",
