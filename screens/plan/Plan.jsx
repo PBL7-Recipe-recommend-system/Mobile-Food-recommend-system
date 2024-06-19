@@ -16,7 +16,7 @@ import { getMealPlan } from "../../api/plan";
 export const Plan = () => {
   const [tabValue, setTabValue] = useState(RECOMMEND_TAB);
   const [user, setUser] = useState({});
-
+  const [selectedDate, setSelectedDate] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       const userString = await AsyncStorage.getItem("user");
@@ -26,14 +26,12 @@ export const Plan = () => {
       }
       await setDateAddingToStorage(formatDate(new Date()));
       if (currentUser.isCustomPlan === true) {
-        const res = await getMealPlan();
+        const res = await getMealPlan(selectedDate);
       }
     };
     fetchData();
-    // const intervalId = setInterval(fetchData, 1000);
-
-    // return () => clearInterval(intervalId);
   }, []);
+
   return (
     <AppWrapper>
       <KeyboardWrapper>
@@ -64,7 +62,10 @@ export const Plan = () => {
             <TabMenu tabValue={tabValue} handleChangeTab={setTabValue} />
           </View>
           {tabValue === RECOMMEND_TAB ? (
-            <PlanMeal planType={RECOMMEND_TAB} />
+            <PlanMeal
+              planType={RECOMMEND_TAB}
+              setDate={(value) => setSelectedDate(value)}
+            />
           ) : (
             <View style={{ width: "100%" }}>
               {user.isCustomPlan ? (

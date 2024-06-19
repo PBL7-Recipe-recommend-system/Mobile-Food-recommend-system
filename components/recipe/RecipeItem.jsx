@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import caloriesIcon from "../../assets/icons/calories.png";
 import clockIcon from "../../assets/icons/clock.png";
+import defaultImage from "../../assets/images/default-meal.png";
 
 export const RecipeItem = ({ item }) => {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ export const RecipeItem = ({ item }) => {
       id: item.recipeId,
       searching: true,
     });
+    console.log("click");
   };
   return (
     <TouchableOpacity
@@ -32,7 +34,7 @@ export const RecipeItem = ({ item }) => {
     >
       <View className="m-4 ">
         <Image
-          source={{ uri: image }}
+          source={image && image.trim() !== "" ? { uri: image } : defaultImage}
           style={Platform.OS === "android" ? style.androidImage : style.image}
         />
         <Text

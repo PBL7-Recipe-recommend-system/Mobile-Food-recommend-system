@@ -13,7 +13,7 @@ export const IngredientsTab = ({ tabValue, handleChangeTab }) => {
         <Text
           style={[style.text, tabValue === INCLUDE_TAB && style.textActive]}
         >
-          {INCLUDE_TAB}
+          Include
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -23,7 +23,7 @@ export const IngredientsTab = ({ tabValue, handleChangeTab }) => {
         <Text
           style={[style.text, tabValue === EXCLUDE_TAB && style.textActive]}
         >
-          {EXCLUDE_TAB}
+          Exclude
         </Text>
       </TouchableOpacity>
     </View>

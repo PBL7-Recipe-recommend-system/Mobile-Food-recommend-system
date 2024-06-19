@@ -1,11 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Keyboard,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Animated, Keyboard, StyleSheet, View } from "react-native";
 import { getPopularRecipes } from "../../api/recipes";
 import { recentSearch } from "../../api/search";
 import { RecipeList } from "../../components/recipe/RecipeList";
@@ -13,25 +8,12 @@ import { CustomHeader } from "../../components/search/CustomHeader";
 import { SearchBar } from "../../components/search/SearchBar";
 import { SearchList } from "../../components/search/SearchList";
 import { PRIMARY_COLOR } from "../../constants/color";
+import { setMealAddingToStorage } from "../../utils/asyncStorageUtils";
+import { toCamelCase } from "../../utils/formatData";
+import { BREAKFAST, getTodayMeals } from "../../utils/meals";
 import AppWrapper from "../../wrappers/AppWrapper";
 import { CategoryBar } from "./CategoryBar";
 import { Header } from "./Header";
-import {
-  getFormattedRecommendation,
-  getRecommendation,
-} from "../../api/recommendation";
-import {
-  BREAKFAST,
-  getRecommendationFromStorage,
-  getRecommendationFromStorageByMeals,
-  getTodayMeals,
-} from "../../utils/meals";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  getMealAddingFromStorage,
-  setMealAddingToStorage,
-} from "../../utils/asyncStorageUtils";
-import { toCamelCase } from "../../utils/formatData";
 
 export const Home = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(0)).current;
@@ -78,7 +60,9 @@ export const Home = ({ navigation }) => {
       setPopularRecipes(popularResponse.data.content);
 
       const recommendation = await getTodayMeals();
-      setYourRecipes(recommendation.breakfast);
+      if (recommendation) {
+        setYourRecipes(recommendation);
+      }
     };
 
     fetchDataUser();

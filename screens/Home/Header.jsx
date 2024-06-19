@@ -14,7 +14,6 @@ export const Header = () => {
     const fetchUser = async () => {
       const user = await getUserFromStorage();
       setUser(user);
-      console.log(user);
       setAvatar(user.avatar);
     };
     fetchUser();

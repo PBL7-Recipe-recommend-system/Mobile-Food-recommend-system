@@ -32,6 +32,7 @@ export const PlanMeal = ({ planType }) => {
         } else {
           const response = await getMealPlanFromStorage();
           data = response;
+          console.log(data);
         }
         setDataSource(data);
 
@@ -89,9 +90,16 @@ export const PlanMeal = ({ planType }) => {
   const handleRemoveMeals = async (date) => {
     await getMealPlan();
     const response = await getMealPlanFromStorage();
+    // console.log(" >>> ", response);
     setDataSource(response);
-    const dataForSelectedDate = response.find((item) => item.date === date);
+    const dataForSelectedDate = response.find(
+      (item) => item.date === selectedDate
+    );
     setSelectedData(dataForSelectedDate);
+  };
+
+  const handleChangeDate = (value) => {
+    setSelectedDate(value);
   };
 
   return (
@@ -107,7 +115,7 @@ export const PlanMeal = ({ planType }) => {
         <PlanDescription dataSource={selectedData} planType={planType} />
       </View>
       <View>
-        <DateList value={selectedDate} setValue={setSelectedDate} />
+        <DateList value={selectedDate} setValue={handleChangeDate} />
       </View>
       <MealList
         dataSource={selectedData}

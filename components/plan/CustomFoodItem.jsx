@@ -17,7 +17,6 @@ export const CustomFoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
   const [mealIndex, setMealIndex] = useState(0);
   const [data, setData] = useState(item);
   const navigation = useNavigation();
-  console.log("data >>> ", item);
   const getImage = (obj) => {
     if (planType === RECOMMEND_TAB) {
       return obj.images[0];
@@ -39,9 +38,9 @@ export const CustomFoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
     const date = await getDateAddingFromStorage();
     const param = {
       date: date,
-      [toCamelCase(meal)]: item?.recipeId,
+      recipeId: item.recipeId,
+      meal: toCamelCase(meal),
     };
-
     Popup.show({
       type: "confirm",
       title: "Confirm!",
@@ -51,7 +50,7 @@ export const CustomFoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
       callback: async () => {
         await removeRecipeFromPlan(param);
         await getMealPlan();
-        handleRemoveMeals(meal, date);
+        handleRemoveMeals(date);
         Popup.hide();
       },
       cancelCallback: () => {

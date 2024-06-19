@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -21,11 +21,47 @@ import { Card, Button } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Searchbar } from "react-native-paper";
 import { SearchIngredientModal } from "./SearchIngredientModal";
+import {
+  addIngredients,
+  getIngredientList,
+  removeIngredients,
+} from "../../api/ingredients";
 export const Ingredients = () => {
   const [tabValue, setTabValue] = useState(INCLUDE_TAB);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [showModal, setShowModal] = useState(false);
+  const [dataList, setDataList] = useState([]);
+  const [searchData, setSearchData] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getIngredientList(tabValue);
+      setDataList(res.data);
+      console.log(res.data);
+    };
+    fetchData();
+  }, [tabValue]);
+
+  const handleRemoveItem = async (item) => {
+    await removeIngredients(tabValue, item);
+    setDataList(dataList.filter((data) => data !== item));
+    setSearchData(searchData.filter((data) => data !== item));
+  };
+
+  const handleSearchIngredient = (name) => {
+    setSearchQuery(name);
+    setSearchData(
+      dataList.filter((data) => data.toLowerCase().includes(name.toLowerCase()))
+    );
+  };
+
+  const handleAddIngredient = async (data) => {
+    const value = {
+      ingredients: data,
+    };
+    await addIngredients(tabValue, value);
+    setDataList([...dataList, ...data]);
+  };
   return (
     <AppWrapper>
       <View style={style.container}>
@@ -43,7 +79,7 @@ export const Ingredients = () => {
         >
           <Searchbar
             placeholder="Search Ingredients"
-            onChangeText={setSearchQuery}
+            onChangeText={handleSearchIngredient}
             value={searchQuery}
             style={{
               width: "80%",
@@ -75,22 +111,32 @@ export const Ingredients = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={style.listView}>
-        <Card
-          style={{
-            marginVertical: 8,
-          }}
-        >
-          <Card.Actions>
-            <Text className="left-3 absolute text-lg ">Egg</Text>
-            <Button style={{ backgroundColor: "red", borderWidth: 0 }}>
-              <FontAwesome5 name="trash-alt" size={20} color="white" />
-            </Button>
-          </Card.Actions>
-        </Card>
+        {(searchQuery === "" ? dataList : searchData) &&
+          (searchQuery === "" ? dataList : searchData).map((item, index) => (
+            <Card
+              style={{
+                marginVertical: 8,
+              }}
+              key={index}
+            >
+              <Card.Actions>
+                <Text className="left-3 absolute text-lg" ellipsizeMode="tail">
+                  {item.length > 27 ? item.substring(0, 27) + "..." : item}
+                </Text>
+                <Button
+                  style={{ backgroundColor: "red", borderWidth: 0 }}
+                  onPress={() => handleRemoveItem(item)}
+                >
+                  <FontAwesome5 name="trash-alt" size={20} color="white" />
+                </Button>
+              </Card.Actions>
+            </Card>
+          ))}
       </ScrollView>
       <SearchIngredientModal
         visible={showModal}
         hideModal={() => setShowModal(false)}
+        handleAddIngredient={handleAddIngredient}
       />
     </AppWrapper>
   );

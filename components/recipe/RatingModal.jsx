@@ -13,7 +13,6 @@ const RatingModal = ({ visible }) => {
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
-  console.log("visible >>> ", visible);
   return (
     <Modal
       visible={visible}

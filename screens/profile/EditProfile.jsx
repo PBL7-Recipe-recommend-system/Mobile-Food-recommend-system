@@ -149,7 +149,8 @@ export const EditProfile = () => {
             <View>
               <View style={styles.profileSection}>
                 <Image
-                  source={image === "" ? defaultAvt : { uri: image }}
+                  // source={image === "" ? defaultAvt : { uri: image }}
+                  source={defaultAvt}
                   style={styles.profileImage}
                 />
                 <TouchableOpacity style={styles.editButton} onPress={pickImage}>

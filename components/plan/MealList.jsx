@@ -70,6 +70,7 @@ export const MealList = ({
                 <AddDropDown
                   title={mealsList[index]}
                   data={meal[mealsList[index]]}
+                  handleRemoveMeals={handleRemoveMeals}
                 />
               </View>
             ) : (
@@ -77,7 +78,6 @@ export const MealList = ({
                 item={meal[mealsList[index]]}
                 meal={mealsList[index]}
                 planType={planType}
-                handleRemoveMeals={handleRemoveMeals}
               />
             )}
           </View>

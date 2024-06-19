@@ -3,6 +3,7 @@ import axiosClient from "../helper/http";
 import { endpoints } from "../utils/path";
 
 const AUTH_ENDPOINT = endpoints.AUTH;
+const LOGOUT_ENDPOINT = endpoints.LOGOUT;
 
 export const authenticate = (email, password) => {
   const res = axiosClient
@@ -98,7 +99,6 @@ export const updateNewPassword = (email, value) => {
         AsyncStorage.setItem("token", res.data.accessToken);
         return res;
       } else if (res.status !== 200) {
-        console.log(res);
         return Promise.reject(res);
       }
     })

@@ -3,17 +3,13 @@ import {
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GRAY_TEXT_COLOR } from "../../constants/color";
-import { useNavigation } from "@react-navigation/native";
-import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
-import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
-import { Popup } from "react-native-popup-confirm-toast";
-import { toCamelCase } from "../../utils/formatData";
-import { getMealPlan, removeRecipeFromPlan } from "../../api/plan";
+import { RECOMMEND_TAB } from "../../constants/plan";
 
-export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
+export const FoodItem = ({ item, meal, planType }) => {
   const [mealIndex, setMealIndex] = useState(0);
   const [data, setData] = useState(item);
   const navigation = useNavigation();
@@ -28,10 +24,12 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
   }, [item, planType]);
 
   const handleDetailClick = () => {
-    navigation.navigate("DetailedRecipe", {
-      id: item[mealIndex].recipeId,
-      meal: meal,
-    });
+    if (item && item[mealIndex]) {
+      navigation.navigate("DetailedRecipe", {
+        id: item[mealIndex].recipeId,
+        meal: meal,
+      });
+    }
   };
   const handleChangeReload = () => {
     if (mealIndex === data.length - 1) {
@@ -39,92 +37,69 @@ export const FoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
     } else setMealIndex(mealIndex + 1);
   };
 
-  const handleLongPress = async () => {
-    const date = await getDateAddingFromStorage();
-    const param = {
-      date: date,
-      [toCamelCase(meal)]: item[mealIndex].recipeId,
-    };
-
-    Popup.show({
-      type: "confirm",
-      title: "Confirm!",
-      textBody: "Do you want to delete this meals?",
-      buttonText: "Delete",
-      confirmText: "Cancel",
-      callback: async () => {
-        await removeRecipeFromPlan(param);
-        await getMealPlan();
-        handleRemoveMeals(meal, date);
-        Popup.hide();
-      },
-      cancelCallback: () => {
-        Popup.hide();
-      },
-      okButtonStyle: { backgroundColor: "red" },
-    });
-  };
-
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={handleDetailClick}
-      onLongPress={planType === CUSTOM_TAB ? handleLongPress : null}
-    >
-      <View style={styles.infoContainer}>
-        <Text style={styles.title}>{meal}</Text>
-        <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">
-          {item[mealIndex].name}
-        </Text>
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailsText}>
-            <MaterialCommunityIcons
-              name="clock-outline"
-              size={24}
-              color="#999"
+    <>
+      {item && item.length > 0 ? (
+        <TouchableOpacity style={styles.container} onPress={handleDetailClick}>
+          <View style={styles.infoContainer}>
+            <Text style={styles.title}>{meal}</Text>
+            <Text
+              style={styles.subtitle}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {item[mealIndex].name}
+            </Text>
+            <View style={styles.detailsContainer}>
+              <View style={styles.detailsText}>
+                <MaterialCommunityIcons
+                  name="clock-outline"
+                  size={24}
+                  color="#999"
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "#999",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {item[mealIndex].totalTime}
+                </Text>
+              </View>
+
+              <View style={styles.detailsText}>
+                <SimpleLineIcons name="fire" size={24} color="#999" />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "#999",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {item[mealIndex].calories} kcal
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: getImage(item[mealIndex]) }}
+              style={styles.image}
             />
-            <Text
-              style={{
-                fontSize: 12,
-                color: "#999",
-                fontWeight: "bold",
-              }}
-            >
-              {item[mealIndex].totalTime}
-            </Text>
           </View>
 
-          <View style={styles.detailsText}>
-            <SimpleLineIcons name="fire" size={24} color="#999" />
-            <Text
-              style={{
-                fontSize: 12,
-                color: "#999",
-                fontWeight: "bold",
-              }}
-            >
-              {item[mealIndex].calories} kcal
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: getImage(item[mealIndex]) }}
-          style={styles.image}
-        />
-      </View>
-
-      <TouchableOpacity
-        style={[
-          styles.reloadButton,
-          planType === CUSTOM_TAB && { display: "none" },
-        ]}
-        onPress={handleChangeReload}
-      >
-        <Feather name="refresh-cw" size={24} color="black" />
-      </TouchableOpacity>
-    </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.reloadButton]}
+            onPress={handleChangeReload}
+          >
+            <Feather name="refresh-cw" size={24} color="black" />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      ) : (
+        <Text>No meals available</Text>
+      )}
+    </>
   );
 };
 

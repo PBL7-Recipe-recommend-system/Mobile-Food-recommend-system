@@ -38,6 +38,7 @@ export const getMealPlan = async () => {
 };
 
 export const removeRecipeFromPlan = async (data) => {
+  console.log(data);
   return axiosClient
     .put(`${PLAN_ENDPOINT}/delete-recipes`, data)
     .then(async (res) => {

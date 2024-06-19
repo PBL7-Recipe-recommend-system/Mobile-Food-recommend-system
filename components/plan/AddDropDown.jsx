@@ -7,7 +7,7 @@ import { AddFoodItem } from "./AddFoodItem";
 import { CUSTOM_TAB } from "../../constants/plan";
 import { CustomFoodItem } from "./CustomFoodItem";
 
-export const AddDropDown = ({ data, title }) => {
+export const AddDropDown = ({ data, title, handleRemoveMeals }) => {
   return (
     <View style={style.container}>
       <List.Accordion
@@ -60,6 +60,7 @@ export const AddDropDown = ({ data, title }) => {
                     item={item}
                     planType={CUSTOM_TAB}
                     meal={title}
+                    handleRemoveMeals={handleRemoveMeals}
                   />
                 }
               />

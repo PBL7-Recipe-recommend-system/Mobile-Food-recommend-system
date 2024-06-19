@@ -61,12 +61,11 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
     try {
       const mealPLan = await getMealPlanFromStorage();
       const date = await getDateAddingFromStorage();
-      const param = [
-        {
-          [mealAdding]: data.recipeId,
-          date: date,
-        },
-      ];
+      const param = {
+        meal: mealAdding,
+        date: date,
+        recipeId: data.recipeId,
+      };
       await updateMealPlan(param);
       await getMealPlan();
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,34 +8,45 @@ import {
   View,
 } from "react-native";
 import AutocompleteInput from "react-native-autocomplete-input";
+import { Button, Chip, Dialog } from "react-native-paper";
 import { PRIMARY_COLOR, THIRD_COLOR } from "../../constants/color";
-import { Button, Chip, Dialog, Modal } from "react-native-paper";
+import { searchIngredient } from "../../api/ingredients";
 
-export const SearchIngredientModal = ({ visible, hideModal }) => {
+export const SearchIngredientModal = ({
+  visible,
+  hideModal,
+  handleAddIngredient,
+}) => {
   const [query, setQuery] = useState("");
-  const data = ["Apple", "Banana", "Cherry", "Date", "Elderberry"];
   const [selectedData, setSelectedData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isResults, setIsResults] = useState(false);
 
-  const filterData = (text) => {
-    if (text) {
-      const newData = data.filter((item) => {
-        const itemData = item.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredData(newData);
-      if (newData.length > 0) {
-        setIsResults(true);
-      } else {
-        setIsResults(false);
-      }
-    } else {
-      setFilteredData([]);
-    }
+  let debounceTimeout = null;
+
+  const handleSearch = (text) => {
+    setQuery(text);
+    if (debounceTimeout) clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(async () => {
+      const res = await searchIngredient(text.toLowerCase());
+      setFilteredData(res.data);
+    }, 500);
   };
 
+  const handleAdd = () => {
+    handleAddIngredient(selectedData);
+    setFilteredData([]);
+    setSelectedData([]);
+    setQuery("");
+    hideModal();
+  };
+
+  const closeModal = () => {
+    setFilteredData([]);
+    setSelectedData([]);
+    setQuery("");
+    hideModal();
+  };
   return (
     <Dialog
       visible={visible}
@@ -77,19 +88,17 @@ export const SearchIngredientModal = ({ visible, hideModal }) => {
               borderBottomRightRadius: 0,
             },
           ]}
-          listStyle={(keyboardShouldPersistTaps = "always")}
-          onChangeText={(text) => {
-            if (text === "") {
-              setIsResults(false);
-            }
-            setQuery(text);
-            filterData(text);
-          }}
+          onChangeText={(text) => handleSearch(text)}
           flatListProps={{
             keyExtractor: (_, idx) => idx,
             renderItem: ({ item }) => (
               <TouchableOpacity
                 className="py-1 px-4"
+                style={{
+                  borderWidth: 1,
+                  borderTopWidth: 0,
+                  borderColor: "#E5E5E5",
+                }}
                 onPress={() => {
                   if (!selectedData.includes(item)) {
                     setSelectedData([...selectedData, item]);
@@ -98,7 +107,7 @@ export const SearchIngredientModal = ({ visible, hideModal }) => {
                   }
                 }}
               >
-                <Text className="text-[18px]">{item}</Text>
+                <Text className="text-[18px] my-2 ">{item}</Text>
               </TouchableOpacity>
             ),
             style: {
@@ -107,6 +116,7 @@ export const SearchIngredientModal = ({ visible, hideModal }) => {
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
               paddingVertical: 4,
+              maxHeight: 240,
             },
           }}
         />
@@ -130,13 +140,13 @@ export const SearchIngredientModal = ({ visible, hideModal }) => {
         >
           <Button
             labelStyle={{ fontSize: 18, color: PRIMARY_COLOR }}
-            onPress={hideModal}
+            onPress={closeModal}
           >
             Cancel
           </Button>
           <Button
             labelStyle={{ fontSize: 18, color: PRIMARY_COLOR }}
-            onPress={hideModal}
+            onPress={handleAdd}
           >
             Add
           </Button>

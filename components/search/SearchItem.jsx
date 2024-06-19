@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import starIcon from "../../assets/icons/star.png";
+import defaultImage from "../../assets/images/default-meal.png";
 import { useNavigation } from "@react-navigation/native";
 export const SearchItem = ({ data }) => {
   const navigation = useNavigation();
@@ -19,7 +20,11 @@ export const SearchItem = ({ data }) => {
   return (
     <TouchableOpacity style={style.container} onPress={handleClickItem}>
       <ImageBackground
-        source={{ uri: data.images }}
+        source={
+          data.images && data.images.trim() !== ""
+            ? { uri: data.images }
+            : defaultImage
+        }
         resizeMode="cover"
         style={style.image}
         imageStyle={{ borderRadius: 16 }}
