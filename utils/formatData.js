@@ -1,3 +1,6 @@
+import { getTrackingNutrition } from "../api/tracking";
+import { getTrackingFromStorage } from "./asyncStorageUtils";
+
 export const formatRecommend = (data) => {
   const formattedData = { ...data };
   formattedData.recommendations = data.recommendations.map((recommendation) => {
@@ -114,3 +117,50 @@ export function parseFraction(fraction) {
     return parseInt(fraction);
   }
 }
+
+export const getRatioOfMeals = async (meal, calories) => {
+  const result = [];
+  if (meal === 3) {
+    result.push({ meal: "breakfast", ratio: Math.round(0.25 * calories) });
+    result.push({ meal: "lunch", ratio: Math.round(0.35 * calories) });
+    result.push({ meal: "dinner", ratio: Math.round(0.4 * calories) });
+  }
+  if (meal === 4) {
+    result.push({ meal: "breakfast", ratio: Math.round(0.25 * calories) });
+    result.push({ meal: "lunch", ratio: Math.round(0.3 * calories) });
+    result.push({ meal: "afternoonSnack", ratio: Math.round(0.15 * calories) });
+    result.push({ meal: "dinner", ratio: Math.round(0.3 * calories) });
+  }
+  if (meal === 5) {
+    result.push({ meal: "breakfast", ratio: Math.round(0.25 * calories) });
+    result.push({ meal: "morningSnack", ratio: Math.round(0.15 * calories) });
+    result.push({ meal: "lunch", ratio: Math.round(0.2 * calories) });
+    result.push({ meal: "afternoonSnack", ratio: Math.round(0.15 * calories) });
+    result.push({ meal: "dinner", ratio: Math.round(0.25 * calories) });
+  }
+  return result;
+};
+
+export const getCurrentCaloriesPerMeal = async () => {
+  const res = await getTrackingFromStorage();
+  const data = res || {};
+  const mealTypes = [
+    "breakfast",
+    "lunch",
+    "dinner",
+    "morningSnack",
+    "afternoonSnack",
+  ];
+  const result = [];
+
+  mealTypes.forEach((mealType) => {
+    let calories = 0;
+    if (Array.isArray(data[mealType])) {
+      data[mealType].forEach((item) => {
+        calories += item.calories;
+      });
+    }
+    result.push({ meal: mealType, calories });
+  });
+  return result;
+};

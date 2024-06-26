@@ -115,7 +115,7 @@ export const Condition = ({ updateValue, defaultValue }) => {
               selectedCondition === NONE && styles.activeText,
             ]}
           >
-            No, I don't.
+            None.
           </Text>
           <Image source={healthyIcon} style={styles.goalImage} />
         </TouchableOpacity>

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosClient from "../helper/http";
 import { endpoints } from "../utils/path";
 import { me } from "./users";
+import { getMealPlanFromStorage } from "../utils/asyncStorageUtils";
 const PLAN_ENDPOINT = endpoints.PLAN;
 
 export const addMealPlan = async (data) => {
@@ -26,6 +27,19 @@ export const updateMealPlan = async (data) => {
   });
 };
 
+export const updateDescriptionMealPlan = async (data) => {
+  return axiosClient
+    .put(`${PLAN_ENDPOINT}/description`, data)
+    .then(async (res) => {
+      if (res.status === 200) {
+        await me();
+        return res;
+      } else {
+        return Promise.reject(res);
+      }
+    });
+};
+
 export const getMealPlan = async () => {
   return axiosClient.get(`${PLAN_ENDPOINT}`).then(async (res) => {
     if (res.status === 200) {
@@ -38,7 +52,6 @@ export const getMealPlan = async () => {
 };
 
 export const removeRecipeFromPlan = async (data) => {
-  console.log(data);
   return axiosClient
     .put(`${PLAN_ENDPOINT}/delete-recipes`, data)
     .then(async (res) => {

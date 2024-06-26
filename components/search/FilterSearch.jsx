@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { View, Text, StyleSheet, Platform, TextInput } from "react-native";
 import CustomButton from "../CustomButton";
 import { FilterButton } from "./FilterButton";
 import {
@@ -7,11 +7,16 @@ import {
   rateFilters,
   timeFilters,
 } from "../../constants/filterSelection";
-
+import Slider from "react-native-a11y-slider";
+import { PRIMARY_COLOR } from "../../constants/color";
 export const FilterSearch = ({ value, setValue, onPress }) => {
   const [selectedTime, setSelectedTime] = useState(value.time);
   const [selectedRate, setSelectedRate] = useState(value.rate);
   const [selectedCategory, setSelectedCategory] = useState(value.category);
+  const [rangeValue, setRangeValue] = useState([
+    value.minCalories,
+    value.maxCalories,
+  ]);
 
   const handleSelectTime = (filter) => {
     setSelectedTime(filter);
@@ -24,6 +29,16 @@ export const FilterSearch = ({ value, setValue, onPress }) => {
     setSelectedRate(filter);
     setValue({
       rate: filter,
+      ...value,
+    });
+  };
+
+  const handleSelectCalories = (filter) => {
+    setRangeValue(filter);
+    const [min, max] = filter;
+    setValue({
+      minCalories: min,
+      maxCalories: max,
       ...value,
     });
   };
@@ -84,6 +99,30 @@ export const FilterSearch = ({ value, setValue, onPress }) => {
             ))}
           </View>
         </View>
+
+        <View style={style.filterItemContainer}>
+          <Text style={style.filterItemTitle}>Calories</Text>
+          <Slider
+            min={1}
+            max={1500}
+            values={rangeValue}
+            onChange={(values) => handleSelectCalories(values)}
+            markerColor={PRIMARY_COLOR}
+            trackStyle={{
+              color: PRIMARY_COLOR,
+              backgroundColor: "#E5E5E5",
+              borderWidth: 1,
+            }}
+            labelStyle={{
+              borderRadius: 10,
+            }}
+            labelTextStyle={{
+              color: "#000",
+              fontSize: 12,
+              fontWeight: "bold",
+            }}
+          />
+        </View>
       </View>
       <CustomButton
         title={"Filter"}
@@ -94,6 +133,8 @@ export const FilterSearch = ({ value, setValue, onPress }) => {
             time: selectedTime,
             rate: selectedRate,
             category: selectedCategory,
+            minCalories: rangeValue[0],
+            maxCalories: rangeValue[1],
           })
         }
       />

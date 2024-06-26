@@ -8,14 +8,17 @@ import defaultAvt from "../../assets/images/avatar.png";
 import { PRIMARY_COLOR } from "../../constants/color";
 import { getUserFromStorage } from "../../utils/asyncStorageUtils";
 import AppWrapper from "../../wrappers/AppWrapper";
+import { set } from "react-hook-form";
 const Profile = ({ navigation }) => {
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [avatar, setAvatar] = useState(null);
+  const [name, setName] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       await me();
       const user = await getUserFromStorage();
       setAvatar(user.avatar);
+      setName(user.name);
     };
     fetchData();
   }, []);
@@ -47,6 +50,16 @@ const Profile = ({ navigation }) => {
               source={avatar === "" ? defaultAvt : { uri: avatar }}
               style={styles.profileImage}
             />
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 20,
+                fontWeight: "bold",
+                marginBottom: 10,
+              }}
+            >
+              {name}
+            </Text>
           </View>
           <TouchableOpacity
             style={styles.editButton}
@@ -65,10 +78,10 @@ const Profile = ({ navigation }) => {
             <Text style={styles.itemText}>Favorite</Text>
             <AntDesign name="right" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          {/* <TouchableOpacity style={styles.item}>
             <Text style={styles.itemText}>History</Text>
             <AntDesign name="right" size={24} color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.item}
             onPress={() => navigation.navigate("Ingredients")}

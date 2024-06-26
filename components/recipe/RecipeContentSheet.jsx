@@ -1,17 +1,16 @@
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { IngredientList } from "./IngredientList";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getMealPlan, updateMealPlan } from "../../api/plan";
 import { PRIMARY_COLOR } from "../../constants/color";
 import {
   getDateAddingFromStorage,
   getMealAddingFromStorage,
-  getMealPlanFromStorage,
 } from "../../utils/asyncStorageUtils";
-import { getMealPlan, updateMealPlan } from "../../api/plan";
-import { useNavigation } from "@react-navigation/native";
 import { Loading } from "../Loading";
+import { IngredientList } from "./IngredientList";
 export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
   const [serving, setServing] = useState(baseServing);
   const [isAddingMeal, setIsAddingMeal] = useState(false);
@@ -59,7 +58,6 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
   const handleAddFood = async () => {
     setLoading(true);
     try {
-      const mealPLan = await getMealPlanFromStorage();
       const date = await getDateAddingFromStorage();
       const param = {
         meal: mealAdding,
@@ -68,8 +66,19 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
       };
       await updateMealPlan(param);
       await getMealPlan();
-
-      navigation.navigate("PlanStack");
+      const updateData = {
+        authorName: data.authorName,
+        calories: data.calories,
+        image: data.images[0] || data.images[1],
+        name: data.name,
+        rating: data.aggregatedRatings,
+        recipeId: data.recipeId,
+        totalTime: data.totalTime,
+      };
+      navigation.navigate("PlanStack", {
+        update: updateData,
+        meal: mealAdding,
+      });
     } catch (e) {
     } finally {
       setLoading(false);
@@ -80,7 +89,10 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
       <View style={style.contentHeader}>
         <TouchableOpacity
           style={{ width: "10%" }}
-          onPress={() => setServing(data.recipeServings)}
+          onPress={() => {
+            handleSetServing(data.recipeServings);
+            setServing(data.recipeServings);
+          }}
         >
           <AntDesign
             name="reload1"
@@ -97,7 +109,8 @@ export const RecipeContentSheet = ({ data, handleSetServing, baseServing }) => {
             {data?.name}
           </Text>
           <Text className="text-center" style={style.category}>
-            Lunch / {formatTime(data?.totalTime)}
+            <Text>{data?.recipeCategory}</Text> |{" "}
+            <Text>{formatTime(data?.totalTime)}</Text>
           </Text>
         </View>
         <View style={{ width: "10%" }}>

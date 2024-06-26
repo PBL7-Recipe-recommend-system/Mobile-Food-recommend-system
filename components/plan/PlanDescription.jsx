@@ -7,17 +7,24 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { PRIMARY_COLOR } from "../../constants/color";
+import { getMealPlan, updateDescriptionMealPlan } from "../../api/plan";
+import { PRIMARY_COLOR, THIRD_COLOR } from "../../constants/color";
 import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
-import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import {
+  getDateAddingFromStorage,
+  getUserFromStorage,
+} from "../../utils/asyncStorageUtils";
 import { getGoal } from "../../utils/formatData";
-import { updateMealPlan } from "../../api/plan";
+import { Loading } from "../Loading";
+import { Icon } from "react-native-paper";
+import { Toast } from "react-native-popup-confirm-toast";
 export const PlanDescription = ({ planType, dataSource }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [customMealForm, setCustomMealForm] = useState({
     date: "",
-    description: "",
-    dailyCalories: `Thin and lean. Plan for a "skinny guy" who have a hard time gaining weight.`,
+    description: `Thin and lean. Plan for a "skinny guy" who have a hard time gaining weight.`,
+    dailyCalories: ``,
   });
   const [dataForm, setDataForm] = useState({
     description: "",
@@ -100,11 +107,34 @@ export const PlanDescription = ({ planType, dataSource }) => {
   };
 
   const handleSubmit = async () => {
-    await updateMealPlan([customMealForm]);
-    setIsEditing(false);
+    setIsLoading(true);
+    try {
+      const date = await getDateAddingFromStorage();
+      const data = {
+        ...customMealForm,
+        date: date,
+      };
+      await updateDescriptionMealPlan(data);
+      await getMealPlan();
+      setIsEditing(false);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+      Toast.show({
+        title: "Success",
+        text: "You have successfully updated your meal plan's description!",
+        backgroundColor: THIRD_COLOR,
+        timeColor: PRIMARY_COLOR,
+        timing: 1500,
+        icon: <Icon name={"check"} color={"#fff"} size={31} />,
+        position: "top",
+      });
+    }
   };
+
   return (
     <View style={style.mealDescription}>
+      <Loading loading={isLoading} />
       <View style={style.header}>
         <Text style={style.planName}>{dataTitle.title}</Text>
         {planType === CUSTOM_TAB && (

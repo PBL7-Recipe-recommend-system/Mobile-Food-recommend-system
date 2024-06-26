@@ -6,17 +6,14 @@ import { SearchBar } from "../../components/search/SearchBar";
 import { SearchList } from "../../components/search/SearchList";
 import { KeyboardWrapper } from "../../wrappers/KeyboardWrapper";
 import { useRoute } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  setMealAddingFromStorage,
-  setMealAddingToStorage,
-} from "../../utils/asyncStorageUtils";
+import { setMealAddingToStorage } from "../../utils/asyncStorageUtils";
 
 export const Search = () => {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [dataSearch, setDataSearch] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const route = useRoute();
   const mealAdding = route.params.meal;

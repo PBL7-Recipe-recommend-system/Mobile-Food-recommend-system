@@ -50,7 +50,7 @@ export const CustomFoodItem = ({ item, meal, planType, handleRemoveMeals }) => {
       callback: async () => {
         await removeRecipeFromPlan(param);
         await getMealPlan();
-        handleRemoveMeals(date);
+        handleRemoveMeals(item, date);
         Popup.hide();
       },
       cancelCallback: () => {

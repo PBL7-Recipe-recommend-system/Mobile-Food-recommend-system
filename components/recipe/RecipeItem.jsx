@@ -22,7 +22,6 @@ export const RecipeItem = ({ item }) => {
       id: item.recipeId,
       searching: true,
     });
-    console.log("click");
   };
   return (
     <TouchableOpacity

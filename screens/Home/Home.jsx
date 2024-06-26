@@ -1,13 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Keyboard, StyleSheet, View } from "react-native";
+import { FAB } from "react-native-paper";
 import { getPopularRecipes } from "../../api/recipes";
 import { recentSearch } from "../../api/search";
 import { RecipeList } from "../../components/recipe/RecipeList";
 import { CustomHeader } from "../../components/search/CustomHeader";
 import { SearchBar } from "../../components/search/SearchBar";
 import { SearchList } from "../../components/search/SearchList";
-import { PRIMARY_COLOR } from "../../constants/color";
+import {
+  PRIMARY_COLOR,
+  SECONDARY_COLOR,
+  THIRD_COLOR,
+} from "../../constants/color";
 import { setMealAddingToStorage } from "../../utils/asyncStorageUtils";
 import { toCamelCase } from "../../utils/formatData";
 import { BREAKFAST, getTodayMeals } from "../../utils/meals";
@@ -15,7 +20,7 @@ import AppWrapper from "../../wrappers/AppWrapper";
 import { CategoryBar } from "./CategoryBar";
 import { Header } from "./Header";
 
-export const Home = ({ navigation }) => {
+export const Home = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   const otherComponentsOpacity = useRef(new Animated.Value(1)).current;
   const searchHeaderOpacity = useRef(new Animated.Value(0)).current;
@@ -33,24 +38,13 @@ export const Home = ({ navigation }) => {
 
   const scrollViewRef = useRef(null);
 
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      const refreshData = async () => {
-        const results = await recentSearch();
-        setDataSearch(results.data);
-
-        const popularResponse = await getPopularRecipes();
-        setPopularRecipes(popularResponse.data.content);
-      };
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+  const handleScrollToTop = () => {
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
+  };
 
   useEffect(() => {
     const fetchDataUser = async () => {
+      setIsLoading(true);
       await AsyncStorage.setItem("isAddingMeal", "false");
       await setMealAddingToStorage(null);
       const results = await recentSearch();
@@ -59,10 +53,11 @@ export const Home = ({ navigation }) => {
       const popularResponse = await getPopularRecipes();
       setPopularRecipes(popularResponse.data.content);
 
-      const recommendation = await getTodayMeals();
+      const recommendation = await getTodayMeals(toCamelCase(categoryValue));
       if (recommendation) {
         setYourRecipes(recommendation);
       }
+      setIsLoading(false);
     };
 
     fetchDataUser();
@@ -115,92 +110,106 @@ export const Home = ({ navigation }) => {
     setScrollOffset(currentOffset);
   };
   return (
-    <AppWrapper>
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        nestedScrollEnabled={true}
-        contentContainerStyle={[style.container]}
-        onScroll={handleScroll}
-      >
-        {searchActive ? (
-          <Animated.View
-            style={[
-              {
-                opacity: searchHeaderOpacity,
-                paddingHorizontal: 30,
-                width: "100%",
-              },
-            ]}
-          >
-            <CustomHeader
-              goBack={toggleSearchBarPosition}
-              title="Search Recipes"
-            />
-          </Animated.View>
-        ) : (
-          <Animated.View style={{ opacity: otherComponentsOpacity }}>
-            <Header />
-          </Animated.View>
-        )}
+    <>
+      <AppWrapper>
+        <Animated.ScrollView
+          ref={scrollViewRef}
+          nestedScrollEnabled={true}
+          contentContainerStyle={[style.container]}
+          onScroll={handleScroll}
+        >
+          {searchActive ? (
+            <Animated.View
+              style={[
+                {
+                  opacity: searchHeaderOpacity,
+                  paddingHorizontal: 30,
+                  width: "100%",
+                },
+              ]}
+            >
+              <CustomHeader
+                goBack={toggleSearchBarPosition}
+                title="Search Recipes"
+              />
+            </Animated.View>
+          ) : (
+            <Animated.View style={{ opacity: otherComponentsOpacity }}>
+              <Header />
+            </Animated.View>
+          )}
 
-        <Animated.View style={{ transform: [{ translateY }] }}>
-          <SearchBar
-            toggleSearchBar={toggleSearchBarPosition}
-            activeSearch={searchActive}
-            onOpen={() => setIsOverlayVisible(true)}
-            onClose={() => setIsOverlayVisible(false)}
-            isSearching={isSearching}
-            setIsSearching={(value) => setIsSearching(value)}
-            setDataSearch={(value) => setDataSearch(value)}
-            setIsLoading={(value) => setIsLoading(value)}
-          />
-        </Animated.View>
-        {searchActive ? (
-          <Animated.View
-            style={[
-              {
-                flex: 1,
-                opacity: searchHeaderOpacity,
-                width: "100%",
-                paddingHorizontal: 30,
-              },
-            ]}
-          >
-            <SearchList
+          <Animated.View style={{ transform: [{ translateY }] }}>
+            <SearchBar
+              toggleSearchBar={toggleSearchBarPosition}
+              activeSearch={searchActive}
+              onOpen={() => setIsOverlayVisible(true)}
+              onClose={() => setIsOverlayVisible(false)}
               isSearching={isSearching}
-              dataSource={dataSearch}
-              isLoading={isLoading}
+              setIsSearching={(value) => setIsSearching(value)}
+              setDataSearch={(value) => setDataSearch(value)}
+              setIsLoading={(value) => setIsLoading(value)}
             />
           </Animated.View>
-        ) : (
-          <Animated.View
-            style={{
-              opacity: otherComponentsOpacity,
-            }}
-          >
-            <CategoryBar value={categoryValue} setValue={setCategoryValue} />
-            {yourRecipes && (
-              <RecipeList title="Your recipes" dataSource={yourRecipes} />
-            )}
-            {popularRecipes && (
-              <RecipeList title="Popular recipes" dataSource={popularRecipes} />
-            )}
-          </Animated.View>
-        )}
-        {isOverlayVisible && (
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-            }}
-          />
-        )}
-      </Animated.ScrollView>
-    </AppWrapper>
+          {searchActive ? (
+            <Animated.View
+              style={[
+                {
+                  flex: 1,
+                  opacity: searchHeaderOpacity,
+                  width: "100%",
+                  paddingHorizontal: 30,
+                },
+              ]}
+            >
+              <SearchList
+                isSearching={isSearching}
+                dataSource={dataSearch}
+                isLoading={isLoading}
+                position={scrollOffset}
+              />
+            </Animated.View>
+          ) : (
+            <Animated.View
+              style={{
+                opacity: otherComponentsOpacity,
+              }}
+            >
+              <CategoryBar value={categoryValue} setValue={setCategoryValue} />
+              {yourRecipes && (
+                <RecipeList title="Your recipes" dataSource={yourRecipes} />
+              )}
+              {popularRecipes && (
+                <RecipeList
+                  title="Popular recipes"
+                  dataSource={popularRecipes}
+                />
+              )}
+            </Animated.View>
+          )}
+          {isOverlayVisible && (
+            <View
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+              }}
+            />
+          )}
+        </Animated.ScrollView>
+      </AppWrapper>
+      {searchActive ? (
+        <FAB
+          icon="format-vertical-align-top"
+          style={style.fab}
+          onPress={handleScrollToTop}
+          size="medium"
+        />
+      ) : null}
+    </>
   );
 };
 
@@ -240,5 +249,13 @@ const style = StyleSheet.create({
   otherComponentsContainer: {
     width: "100%",
     alignItems: "center",
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    borderRadius: "50%",
+    backgroundColor: THIRD_COLOR,
   },
 });

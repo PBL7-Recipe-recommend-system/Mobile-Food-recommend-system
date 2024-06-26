@@ -2,14 +2,16 @@ import axios from "axios";
 import {
   LOCAL_RECOMMENDATION_API_PATH,
   COMPANY_RECOMMENDATION_API_PATH,
+  DEPLOY_RECOMMEND_API_PATH,
 } from "../utils/path";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { generateMealPlan } from "../utils/meals";
+import { getUserFromStorage } from "../utils/asyncStorageUtils";
 
-export const getRecommendation = async (day) => {
+export const getRecommendation = async () => {
   try {
-    const userString = await AsyncStorage.getItem("user");
-    const user = JSON.parse(userString);
+    const user = await getUserFromStorage();
+    console.log("getRecommendation");
     const mealsPercents = generateMealPlan(user.meals);
 
     const data = {
@@ -21,10 +23,10 @@ export const getRecommendation = async (day) => {
       activity: user.dailyActivities,
       weightLoss: user.dietaryGoal,
       mealsCaloriesPerc: mealsPercents,
-      includeIngredients: [],
-      excludeIngredients: [],
+      includeIngredients: user.includeIngredients,
+      excludeIngredients: user.excludeIngredients,
     };
-    const res = await axios.post(`${LOCAL_RECOMMENDATION_API_PATH}`, data);
+    const res = await axios.post(`${DEPLOY_RECOMMEND_API_PATH}`, data);
     if (res.status === 200) {
       await AsyncStorage.setItem(
         "todayMeals",
@@ -34,13 +36,13 @@ export const getRecommendation = async (day) => {
         "recommendation",
         JSON.stringify(res.data.data)
       );
+      console.log("getRecommendation finished");
       return res.data.data;
     } else if (res.status === 401) {
       throw new Error("Unauthorized");
     } else {
     }
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

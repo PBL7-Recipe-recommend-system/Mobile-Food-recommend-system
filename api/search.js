@@ -2,13 +2,23 @@ import axiosClient from "../helper/http";
 import { endpoints } from "../utils/path";
 const RECIPE_ENDPOINT = endpoints.RECIPES;
 
-export const searchRecipes = (keyword, time, rate, category, page) => {
+export const searchRecipes = (
+  keyword,
+  time,
+  rate,
+  category,
+  minCalories,
+  maxCalories,
+  page
+) => {
   return axiosClient.get(
     `${RECIPE_ENDPOINT}/search?name=${keyword}${
       time !== null ? `&timeRate=${time}` : ""
     }${rate !== null ? `&rating=${rate}` : ""}${
       category !== null ? `&category=${category}` : ""
-    }${page !== undefined ? `&page=${page}` : `&page=1`}&size=20`
+    }${page !== undefined ? `&page=${page}` : `&page=1`}${
+      minCalories !== null ? `&minCalories=${minCalories}` : ""
+    }${maxCalories !== null ? `&maxCalories=${maxCalories}` : ""}&size=20`
   );
 };
 

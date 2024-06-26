@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { List } from "react-native-paper";
 import { PRIMARY_COLOR } from "../../constants/color";
@@ -8,6 +8,7 @@ import { CUSTOM_TAB } from "../../constants/plan";
 import { CustomFoodItem } from "./CustomFoodItem";
 
 export const AddDropDown = ({ data, title, handleRemoveMeals }) => {
+  useEffect(() => {}, [data]);
   return (
     <View style={style.container}>
       <List.Accordion

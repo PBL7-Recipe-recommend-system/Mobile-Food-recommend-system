@@ -1,6 +1,5 @@
-const IP_PATH_HOME = "192.168.1.36";
-const IP_PATH_COMPANY = "10.0.11.81";
-
+export const DEPLOY_API_PATH = `https://fra-app.site/api/v1`;
+export const DEPLOY_RECOMMEND_API_PATH = `http://fra-app.site:8085/recommend`;
 export const LOCAL_COMPANY_API_PATH = `http://10.0.11.81:8082/api/v1`;
 export const LOCAL_HOME_API_PATH = "http://192.168.1.36:8082/api/v1";
 export const LOCAL_RECOMMENDATION_API_PATH =

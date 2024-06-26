@@ -17,7 +17,7 @@ export const IngredientsTab = ({ tabValue, handleChangeTab }) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[style.tab, tabValue === EXCLUDE_TAB && style.tabActive]}
+        style={[style.tab, tabValue === EXCLUDE_TAB && style.excludeTabActive]}
         onPress={() => handleChangeTab(EXCLUDE_TAB)}
       >
         <Text
@@ -48,8 +48,15 @@ const style = StyleSheet.create({
     color: PRIMARY_COLOR,
     fontWeight: "bold",
   },
+  excludeText: {
+    color: "red",
+    fontWeight: "bold",
+  },
   tabActive: {
     backgroundColor: PRIMARY_COLOR,
+  },
+  excludeTabActive: {
+    backgroundColor: "red",
   },
   textActive: {
     color: "#fff",

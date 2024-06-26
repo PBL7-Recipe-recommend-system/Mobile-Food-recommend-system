@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
-  View,
+  Image,
   StyleSheet,
   Text,
-  Image,
-  ActivityIndicator,
+  View,
 } from "react-native";
-import { SearchItem } from "./SearchItem";
 import { Chase } from "react-native-animated-spinkit";
-import RESULT_IMAGE from "../../assets/images/no-results.jpg";
 import { searchRecipes } from "../../api/search";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import RESULT_IMAGE from "../../assets/images/no-results.jpg";
+import { getSearchOption } from "../../utils/asyncStorageUtils";
+import { SearchItem } from "./SearchItem";
+import { FAB } from "react-native-paper";
 const groupItems = (items) => {
   if (!items) {
     return [];
@@ -24,45 +25,63 @@ const groupItems = (items) => {
   return grouped;
 };
 
-export const SearchList = ({ isSearching, dataSource, isLoading }) => {
+export const SearchList = ({
+  isSearching,
+  dataSource,
+  isLoading,
+  position,
+}) => {
   const [groupedData, setGroupedData] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [isLoadingLoadMore, setIsLoadingLoadMore] = useState(false);
-
-  useEffect(() => {
-    setGroupedData(groupItems(dataSource));
-    setPage(0);
-  }, [dataSource]);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const hasChecked = useRef(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const searchOptionString =
-        (await AsyncStorage.getItem("searchOption")) || {};
-      const searchOption = searchOptionString
-        ? JSON.parse(searchOptionString)
-        : {};
-      const { name, time, rate, category } = searchOption;
-      if (name.length !== 0) {
+      const searchPosition = 180 * 10 * page - 800 * page;
+      if (!hasChecked.current && position > searchPosition) {
+        hasChecked.current = true;
         setIsLoadingLoadMore(true);
-        setTimeout(async () => {
-          const results = await searchRecipes(name, time, rate, category, page);
-          const newGroupedData = groupItems(results.data.content);
-          setGroupedData((prevGroupedData) => [
-            ...prevGroupedData,
-            ...newGroupedData,
-          ]);
-        }, 500);
-        setIsLoadingLoadMore(false);
+        setPage((prevPage) => prevPage + 1);
+        const searchOption = await getSearchOption();
+        const { name, time, rate, category, minCalories, maxCalories } =
+          searchOption;
+        if (name.length !== 0) {
+          setIsLoadingLoadMore(true);
+          setTimeout(async () => {
+            const results = await searchRecipes(
+              name,
+              time,
+              rate,
+              category,
+              minCalories,
+              maxCalories,
+              page + 1
+            );
+            hasChecked.current = false;
+            const newGroupedData = groupItems(results.data.content);
+            setGroupedData((prevGroupedData) => [
+              ...prevGroupedData,
+              ...newGroupedData,
+            ]);
+          }, 500);
+          setIsLoadingLoadMore(false);
+        }
       }
     };
     fetchData();
-  }, [page]);
+  }, [position]);
+
+  useEffect(() => {
+    setGroupedData(groupItems(dataSource));
+    hasChecked.current = false;
+    setPage(1);
+  }, [dataSource]);
 
   const renderLoader = () => {
     return isLoadingLoadMore ? (
-      <View style={styles.loaderStyle}>
-        <ActivityIndicator size="large" color="#aaa" />
-      </View>
+      <ActivityIndicator size="large" color="#aaa" />
     ) : null;
   };
 
@@ -81,11 +100,12 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
     );
   };
 
-  const ListEndLoader = async () => {
-    console.log("end of list >> ", page + 1);
-  };
   return (
-    <View>
+    <View
+      style={{
+        position: "relative",
+      }}
+    >
       <Text className="text-xl font-bold">
         {isSearching === false ? "Recent search" : "Result Search"}
       </Text>
@@ -108,9 +128,8 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
           scrollEnabled={false}
           keyExtractor={(item, index) => `row-${index}`}
           contentContainerStyle={styles.container}
-          onEndReached={ListEndLoader}
           onEndReachedThreshold={0}
-          ListFooterComponent={renderLoader}
+          ListFooterComponent={isLoadingLoadMore ? renderLoader : null}
         />
       ) : (
         <View
@@ -124,11 +143,6 @@ export const SearchList = ({ isSearching, dataSource, isLoading }) => {
           <Text className="text-lg font-bold">No results...</Text>
         </View>
       )}
-      {isLoadingLoadMore ? (
-        <View style={styles.loaderStyle}>
-          <ActivityIndicator size="large" color="#000" />
-        </View>
-      ) : null}
     </View>
   );
 };

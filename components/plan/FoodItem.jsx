@@ -9,7 +9,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GRAY_TEXT_COLOR } from "../../constants/color";
 import { RECOMMEND_TAB } from "../../constants/plan";
 
-export const FoodItem = ({ item, meal, planType }) => {
+export const FoodItem = ({ item, meal, planType, handleCheckMeal }) => {
   const [mealIndex, setMealIndex] = useState(0);
   const [data, setData] = useState(item);
   const navigation = useNavigation();
@@ -23,13 +23,8 @@ export const FoodItem = ({ item, meal, planType }) => {
     setData(item);
   }, [item, planType]);
 
-  const handleDetailClick = () => {
-    if (item && item[mealIndex]) {
-      navigation.navigate("DetailedRecipe", {
-        id: item[mealIndex].recipeId,
-        meal: meal,
-      });
-    }
+  const handleDetailClick = async () => {
+    handleCheckMeal(item[mealIndex], meal);
   };
   const handleChangeReload = () => {
     if (mealIndex === data.length - 1) {

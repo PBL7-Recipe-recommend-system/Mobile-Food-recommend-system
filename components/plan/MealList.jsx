@@ -1,13 +1,19 @@
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { getUserFromStorage } from "../../utils/asyncStorageUtils";
-import { useState, useEffect } from "react";
-import { FoodItem } from "./FoodItem";
-import { AddFoodItem } from "./AddFoodItem";
-import { BREAKFAST, generateNumberOfMeals } from "../../utils/meals";
-import { toCamelCase } from "../../utils/formatData";
-import { daysSource } from "./../../constants/mockData";
 import { CUSTOM_TAB, RECOMMEND_TAB } from "../../constants/plan";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import {
+  getCurrentCaloriesPerMeal,
+  getRatioOfMeals,
+  isTodayString,
+  toCamelCase,
+} from "../../utils/formatData";
+import { generateNumberOfMeals } from "../../utils/meals";
 import { AddDropDown } from "./AddDropDown";
+import { FoodItem } from "./FoodItem";
+import { Popup, Toast } from "react-native-popup-confirm-toast";
+import { useNavigation } from "@react-navigation/native";
+import { PRIMARY_COLOR } from "../../constants/color";
 
 export const MealList = ({
   dataSource,
@@ -17,6 +23,9 @@ export const MealList = ({
 }) => {
   const [mealsList, setMealsList] = useState([]);
   const [dataMeals, setDataMeals] = useState(dataSource);
+  const [mealRatio, setMealRatio] = useState([]);
+  const [caloriesPerMeal, setCaloriesPerMeal] = useState([]);
+  const navigation = useNavigation();
 
   const getDataMeals = (data, mealsList) => {
     if (!data) {
@@ -36,6 +45,10 @@ export const MealList = ({
       const meals = generateNumberOfMeals(
         planType === RECOMMEND_TAB ? user.meals : 5
       );
+      const ratio = await getRatioOfMeals(user.meals, user.recommendCalories);
+      setMealRatio(ratio);
+      const calories = await getCurrentCaloriesPerMeal();
+      setCaloriesPerMeal(calories);
       setMealsList(meals);
     };
     fetchData();
@@ -46,6 +59,7 @@ export const MealList = ({
   }, [dataSource]);
 
   const handleRemoveMeals = (meal, date) => {
+    console.log(meal, date);
     const updatedDataMeals = dataMeals.map((mealData) => {
       if (mealData[meal]) {
         return {
@@ -55,8 +69,45 @@ export const MealList = ({
       }
       return mealData;
     });
+    console.log(updatedDataMeals);
     setDataMeals(updatedDataMeals);
     handleRemoveMeal(date);
+  };
+
+  const handleCheckMeal = (recipe, meal) => {
+    const ratio = mealRatio.find((item) => item.meal === toCamelCase(meal));
+    const calories = caloriesPerMeal.find(
+      (item) => item.meal === toCamelCase(meal)
+    );
+    const warningCalories = recipe.calories + calories.calories;
+    if (ratio.ratio < warningCalories && isTodayString(dataSource.date)) {
+      Popup.show({
+        type: "confirm",
+        title: "Warning!",
+        textBody: "This meal will exceed the recommended calories!",
+        buttonText: "Continue",
+        confirmText: "Cancel",
+        callback: () => {
+          navigation.navigate("DetailedRecipe", {
+            id: recipe.recipeId,
+            meal: meal,
+          });
+          Popup.hide();
+        },
+        cancelCallback: () => {
+          Popup.hide();
+        },
+
+        okButtonStyle: {
+          backgroundColor: PRIMARY_COLOR,
+        },
+      });
+    } else {
+      navigation.navigate("DetailedRecipe", {
+        id: recipe.recipeId,
+        meal: meal,
+      });
+    }
   };
 
   return (
@@ -78,6 +129,7 @@ export const MealList = ({
                 item={meal[mealsList[index]]}
                 meal={mealsList[index]}
                 planType={planType}
+                handleCheckMeal={handleCheckMeal}
               />
             )}
           </View>

@@ -9,7 +9,10 @@ export const TrackingItemTitle = ({ data }) => {
     <View>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("DetailedRecipe", { id: data.recipeId })
+          navigation.navigate("DetailedRecipe", {
+            id: data.recipeId,
+            searching: true,
+          })
         }
         style={style.container}
       >

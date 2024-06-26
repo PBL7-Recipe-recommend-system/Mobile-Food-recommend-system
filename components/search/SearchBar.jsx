@@ -22,6 +22,8 @@ export const SearchBar = ({
     time: 1,
     rate: null,
     category: null,
+    minCalories: 1,
+    maxCalories: 1500,
   });
   const inputRef = useRef();
   const refRBSheet = useRef();
@@ -37,9 +39,17 @@ export const SearchBar = ({
             time: null,
             rate: null,
             category: null,
+            minCalories: 1,
+            maxCalories: 1500,
           })
         );
-        setFilterValue({ time: 1, rate: null, category: null });
+        setFilterValue({
+          time: 1,
+          rate: null,
+          category: null,
+          minCalories: 1,
+          maxCalories: 1500,
+        });
         const results = await recentSearch();
         setDataSearch(results.data);
       }
@@ -55,7 +65,9 @@ export const SearchBar = ({
           value,
           filterValue.time,
           filterValue.rate,
-          filterValue.category
+          filterValue.category,
+          filterValue.minCalories,
+          filterValue.maxCalories
         );
         await AsyncStorage.setItem(
           "searchOption",
@@ -64,6 +76,8 @@ export const SearchBar = ({
             time: filterValue.time,
             rate: filterValue.rate,
             category: filterValue.category,
+            minCalories: filterValue.minCalories,
+            maxCalories: filterValue.maxCalories,
           })
         );
 
@@ -107,15 +121,15 @@ export const SearchBar = ({
       value,
       filter.time,
       filter.rate,
-      filter.category
+      filter.category,
+      filter.minCalories,
+      filter.maxCalories
     );
     await AsyncStorage.setItem(
       "searchOption",
       JSON.stringify({
         name: value,
-        time: filterValue.time,
-        rate: filterValue.rate,
-        category: filterValue.category,
+        ...filter,
       })
     );
     setIsSearching(true, async () => {
@@ -190,7 +204,7 @@ export const SearchBar = ({
             backgroundColor: "transparent",
           },
           container: {
-            height: "66%",
+            height: "76%",
             borderTopLeftRadius: 32,
             borderTopRightRadius: 32,
           },

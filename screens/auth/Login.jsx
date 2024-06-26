@@ -35,7 +35,7 @@ import { HealthStepForm } from "../healthInit/HealthStepForm";
 
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("user6@gmail.com");
+  const [email, setEmail] = useState("user@gmail.com");
   const [password, setPassword] = useState("Tai2211@");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);

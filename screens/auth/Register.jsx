@@ -41,9 +41,9 @@ const Register = () => {
   });
   const [dataForm, setDataForm] = useState({
     name: "Travis",
-    email: "user11d1d431@gmail.com",
-    password: "Tonytai2211@",
-    confirmPassword: "Tonytai2211@",
+    email: "user@gmail.com",
+    password: "Tai2211@",
+    confirmPassword: "Tai2211@",
   });
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();

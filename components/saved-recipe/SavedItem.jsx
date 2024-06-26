@@ -25,7 +25,10 @@ export const SavedItem = ({ data, handleOnPress }) => {
     <TouchableOpacity
       style={style.container}
       onPress={() => {
-        navigation.navigate("DetailedRecipe", { id: data.recipeId });
+        navigation.navigate("DetailedRecipe", {
+          id: data.recipeId,
+          searching: true,
+        });
       }}
     >
       <ImageBackground

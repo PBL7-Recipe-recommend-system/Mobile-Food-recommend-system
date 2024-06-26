@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,15 +7,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { PRIMARY_COLOR } from "../../constants/color";
-import CustomButton from "../CustomButton";
 import { setCookedRecipe } from "../../api/recipes";
-import { useNavigation } from "@react-navigation/native";
-import { toCamelCase, isTodayString } from "../../utils/formatData";
-import { Loading } from "../Loading";
+import { PRIMARY_COLOR, THIRD_COLOR } from "../../constants/color";
 import { getDateAddingFromStorage } from "../../utils/asyncStorageUtils";
-import { showErrorToast } from "../../helper/errorToast";
+import { isTodayString, toCamelCase } from "../../utils/formatData";
 import { BackButton } from "../BackButton";
+import CustomButton from "../CustomButton";
+import { Loading } from "../Loading";
+import { Icon } from "react-native-paper";
+import { Toast } from "react-native-popup-confirm-toast";
 
 export const StepContentSheet = ({
   data,
@@ -33,6 +34,7 @@ export const StepContentSheet = ({
   const handleChangeStep = async (step) => {
     const date = await getDateAddingFromStorage();
     setStep(step);
+
     if (step === numberStep) {
       if (!isTodayString(date) || searching) {
         setDisable(true);
@@ -44,6 +46,11 @@ export const StepContentSheet = ({
 
   const handleNextStep = async () => {
     const date = await getDateAddingFromStorage();
+    if (step === numberStep - 1) {
+      if (!isTodayString(date) || searching) {
+        setDisable(true);
+      }
+    }
     if (step === numberStep) {
       if (!isTodayString(date) || searching) {
         setDisable(true);
@@ -56,12 +63,21 @@ export const StepContentSheet = ({
         try {
           setLoading(true);
           await setCookedRecipe(param);
+          Toast.show({
+            title: "Success",
+            text: "You have successfully cooked this recipe!",
+            backgroundColor: THIRD_COLOR,
+            timeColor: PRIMARY_COLOR,
+            timing: 1500,
+            icon: <Icon name={"check"} color={"#fff"} size={31} />,
+            position: "top",
+          });
         } catch (error) {
         } finally {
           setLoading(false);
+          navigation.goBack();
         }
       }
-      navigation.goBack();
     } else {
       setStep(step + 1);
     }

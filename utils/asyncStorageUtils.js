@@ -27,3 +27,13 @@ export const getDateAddingFromStorage = async () => {
 export const setDateAddingToStorage = async (data) => {
   await AsyncStorage.setItem("dateAdding", JSON.stringify(data));
 };
+
+export const getTrackingFromStorage = async () => {
+  const data = await AsyncStorage.getItem("tracking");
+  return JSON.parse(data);
+};
+
+export const getSearchOption = async () => {
+  const data = await AsyncStorage.getItem("searchOption");
+  return JSON.parse(data);
+};

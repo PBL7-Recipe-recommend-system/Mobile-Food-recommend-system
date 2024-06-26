@@ -1,27 +1,26 @@
-import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuProvider,
-  MenuTrigger,
-} from "react-native-popup-menu";
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MenuProvider } from "react-native-popup-menu";
 import { getDetailedRecipes } from "../../api/recipes";
+import { saveRecipe } from "../../api/saved-recipe";
 import { BackButton } from "../../components/BackButton";
 import CustomButton from "../../components/CustomButton";
+import { Loading } from "../../components/Loading";
 import { RecipeContentSheet } from "../../components/recipe/RecipeContentSheet";
 import { StepContentSheet } from "../../components/recipe/StepContentSheet";
 import { PRIMARY_COLOR } from "../../constants/color";
-import { saveRecipe } from "../../api/saved-recipe";
-import RatingModal from "../../components/recipe/RatingModal";
 export const DetailedRecipe = () => {
   const refRBSheet = useRef(null);
   const [isCooking, setIsCooking] = useState(false);
   const [serving, setServing] = useState(2);
-  const [openRating, setOpenRating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (refRBSheet.current) {
       refRBSheet.current.open();
@@ -32,6 +31,7 @@ export const DetailedRecipe = () => {
   const id = route.params.id;
   const meal = route.params.meal || "breakfast";
   const searching = route.params.searching || false;
+  const [isSaved, setIsSaved] = useState(false);
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -39,17 +39,22 @@ export const DetailedRecipe = () => {
       const results = await getDetailedRecipes(id);
       setServing(results.data.recipeServings);
       setData(results.data);
+      setIsSaved(results.data.saved);
     };
     fetchData();
   }, []);
 
   const handleSaveRecipe = async () => {
+    setIsLoading(true);
     await saveRecipe(id, data?.saved === true ? false : true);
+    setIsSaved(!isSaved);
     setData({ ...data, saved: data?.saved === true ? false : true });
+    setIsLoading(false);
   };
 
   return (
     <MenuProvider>
+      <Loading loading={isLoading} />
       {data && (
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
@@ -60,61 +65,16 @@ export const DetailedRecipe = () => {
             >
               <View style={styles.headerContainer}>
                 <BackButton color={PRIMARY_COLOR} />
-                <Menu>
-                  <MenuTrigger
-                    children={
-                      <Entypo
-                        name="dots-three-horizontal"
-                        size={24}
-                        color={PRIMARY_COLOR}
-                      />
-                    }
+                <TouchableOpacity
+                  className="flex-row "
+                  onPress={handleSaveRecipe}
+                >
+                  <Ionicons
+                    name={isSaved ? "bookmark" : "bookmark-outline"}
+                    size={30}
+                    color={isSaved ? PRIMARY_COLOR : "white"}
                   />
-                  <MenuOptions customStyles={optionsStyles}>
-                    <MenuOption onSelect={handleSaveRecipe}>
-                      <View className="flex-row ">
-                        <MaterialCommunityIcons
-                          name="bookmark"
-                          size={24}
-                          color="black"
-                        />
-                        <Text className="ml-[26%]">
-                          {data?.saved === true ? "Unsave" : "Save"}
-                        </Text>
-                      </View>
-                    </MenuOption>
-                    <MenuOption onSelect={() => alert(`Delete`)}>
-                      <View className="flex-row ">
-                        <MaterialCommunityIcons
-                          name="share"
-                          size={24}
-                          color="black"
-                        />
-                        <Text className="ml-[26%]">Share</Text>
-                      </View>
-                    </MenuOption>
-                    <MenuOption onSelect={() => setOpenRating(true)}>
-                      <View className="flex-row ">
-                        <MaterialCommunityIcons
-                          name="star"
-                          size={24}
-                          color="black"
-                        />
-                        <Text className="ml-[26%]">Rate</Text>
-                      </View>
-                    </MenuOption>
-                    <MenuOption onSelect={() => alert(`Not called`)}>
-                      <View className="flex-row ">
-                        <MaterialCommunityIcons
-                          name="comment"
-                          size={24}
-                          color="black"
-                        />
-                        <Text className="ml-[26%]">Review</Text>
-                      </View>
-                    </MenuOption>
-                  </MenuOptions>
-                </Menu>
+                </TouchableOpacity>
               </View>
             </ImageBackground>
           </View>
