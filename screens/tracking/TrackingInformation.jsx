@@ -1,17 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AnimatedProgressWheel from "react-native-progress-wheel";
 import { ScrollView } from "react-native-virtualized-view";
 import { getTrackingNutrition } from "../../api/tracking";
 import { BackButton } from "../../components/BackButton";
+import { Loading } from "../../components/Loading";
 import { TrackingList } from "../../components/tracking/TrackingList";
 import { TrackingWaterItem } from "../../components/tracking/TrackingWaterItem";
 import { PRIMARY_COLOR, SECONDARY_COLOR } from "../../constants/color";
-import { formatDate, getProgress } from "../../utils/formatData";
+import { getUserFromStorage } from "../../utils/asyncStorageUtils";
+import { formatDate } from "../../utils/formatData";
 import AppWrapper from "../../wrappers/AppWrapper";
-import { Loading } from "../../components/Loading";
 export const TrackingInformation = () => {
   const [loading, setLoading] = useState(true);
   const [trackingList, setTrackingList] = useState([]);
@@ -19,12 +20,16 @@ export const TrackingInformation = () => {
   const [mode, setMode] = useState("date");
   const [date, setDate] = useState(new Date());
   const [progress, setProgress] = useState(50);
+  const [recommendCalories, setRecommendCalories] = useState(0);
   const options = { day: "numeric", month: "long", weekday: "short" };
 
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
       const res = await getTrackingNutrition(formatDate(date).toString());
+      const user = await getUserFromStorage();
+      console.log(user.recommendCalories);
+      setRecommendCalories(user.recommendCalories);
       setTrackingList(res.data);
       setProgress(res.data.totalCalories, res.data.recommendCalories);
       setLoading(false);
@@ -36,6 +41,8 @@ export const TrackingInformation = () => {
     const get = async () => {
       const res = await getTrackingNutrition(formatDate(date).toString());
       setTrackingList(res.data);
+      const user = await getUserFromStorage();
+      setRecommendCalories(user.recommendCalories);
     };
     get();
   }, [date]);
@@ -87,7 +94,7 @@ export const TrackingInformation = () => {
           </View>
           <View style={{ marginHorizontal: "auto", marginVertical: 28 }}>
             <AnimatedProgressWheel
-              max={trackingList.recommendCalories || 100}
+              max={recommendCalories || 100}
               size={180}
               width={16}
               rotation={"-90deg"}
@@ -108,7 +115,7 @@ export const TrackingInformation = () => {
             }}
           >
             <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-              {trackingList.recommendCalories}
+              {recommendCalories}
             </Text>
             <Text style={{ fontSize: 22 }}>Kcal goal</Text>
           </View>

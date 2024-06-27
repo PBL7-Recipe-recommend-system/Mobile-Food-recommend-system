@@ -12,10 +12,11 @@ import {
 } from "react-native";
 import global from "../../Styles";
 import { authenticate } from "../../api/auth";
-import { BackButton } from "../../components/BackButton";
+import { getRecommendation } from "../../api/recommendation";
+import { me } from "../../api/users";
 import CustomButton from "../../components/CustomButton";
 import ErrorText from "../../components/ErrorText";
-import SocialConnect from "../../components/SocialConnect";
+import { Loading } from "../../components/Loading";
 import {
   ErrorEmailMessage,
   ErrorPasswordMessage,
@@ -28,14 +29,10 @@ import {
   validatePassword,
 } from "../../utils/validation";
 import AppWrapper from "../../wrappers/AppWrapper";
-import { Loading } from "../../components/Loading";
-import { me } from "../../api/users";
-import { getRecommendation } from "../../api/recommendation";
-import { HealthStepForm } from "../healthInit/HealthStepForm";
 
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("user@gmail.com");
+  const [email, setEmail] = useState("userrr1@gmail.com");
   const [password, setPassword] = useState("Tai2211@");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);

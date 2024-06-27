@@ -398,7 +398,7 @@ export const EditProfile = () => {
                         <Text style={styles.textLabel}>Condition</Text>
                         <CustomDropDown
                           dataItems={ConditionList}
-                          defaultValue={userData.condition}
+                          defaultValue={userData.condition || "none"}
                           setDefaultValue={(value) => {
                             setUserData({ ...userData, condition: value });
                             setIsChange(true);

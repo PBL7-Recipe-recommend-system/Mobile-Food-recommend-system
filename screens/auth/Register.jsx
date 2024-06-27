@@ -41,7 +41,7 @@ const Register = () => {
   });
   const [dataForm, setDataForm] = useState({
     name: "Travis",
-    email: "user@gmail.com",
+    email: "userrr1@gmail.com",
     password: "Tai2211@",
     confirmPassword: "Tai2211@",
   });

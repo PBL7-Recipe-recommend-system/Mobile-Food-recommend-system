@@ -25,8 +25,9 @@ export const PlanMeal = ({ planType }) => {
   const { update, meal } = route.params || {};
 
   useEffect(() => {
-    if (update !== undefined) {
+    if (update !== undefined && selectedData[meal] !== undefined) {
       let newMeal = [];
+      console.log("selectedData[meal]", selectedData[meal]);
       if (selectedData[meal].length < 0) {
         newMeal = [update];
       }
@@ -68,6 +69,7 @@ export const PlanMeal = ({ planType }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("dataSource", dataSource);
       if (dataSource && dataSource.length > 0) {
         let dataForSelectedDate = dataSource.find(
           (item) => item.date === selectedDate

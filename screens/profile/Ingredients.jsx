@@ -119,7 +119,7 @@ export const Ingredients = () => {
               alignItems: "center",
             }}
           >
-            <Searchbar
+            {/* <Searchbar
               placeholder="Search Ingredients"
               onChangeText={handleSearchIngredient}
               value={searchQuery}
@@ -130,24 +130,25 @@ export const Ingredients = () => {
                 borderColor: "#E5E5E5",
                 backgroundColor: "#fff",
               }}
-            />
+            /> */}
             <TouchableOpacity
               onPress={() => setShowModal(true)}
               style={{
                 backgroundColor: SECONDARY_COLOR,
                 borderRadius: 10,
                 height: 50,
-                width: 50,
+                width: "50%",
                 alignItems: "center",
                 justifyContent: "center",
+                marginHorizontal: "auto",
               }}
               className="shadow-inner"
             >
               <Text
-                className="text-2xl font-bold text-center "
+                className="text-md  font-bold text-center "
                 style={{ color: PRIMARY_COLOR }}
               >
-                +
+                Add Ingredients
               </Text>
             </TouchableOpacity>
           </View>

@@ -23,6 +23,7 @@ export const InitPlan = () => {
     try {
       const currentDate = new Date();
       formValue.date = formatDate(currentDate);
+      console.log(formValue);
       await addMealPlan(formValue);
       await me();
       await getMealPlan();

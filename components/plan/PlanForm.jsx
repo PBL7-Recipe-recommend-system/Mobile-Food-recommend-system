@@ -53,7 +53,7 @@ export const PlanForm = ({ value, setValue }) => {
         <TextInput
           style={style.input}
           keyboardType="numeric"
-          onChangeText={(text) => setValue({ ...value, dailyCalorie: text })}
+          onChangeText={(text) => setValue({ ...value, dailyCalories: text })}
         >
           <Text className="text-right " style={{ borderWidth: 1 }}></Text>
         </TextInput>
